@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance/Authentication/Authentication_Controller/authentication_button.dart';
-import 'package:myfinance/Authentication/Authentication_Controller/background.dart';
+import 'package:myfinance/Authentication/Authentication_Controller/Widget/authentication_button.dart';
+import 'package:myfinance/Authentication/Authentication_Controller/Widget/background.dart';
+import 'package:myfinance/Authentication/Registration/register_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -13,7 +14,6 @@ class MyApp extends StatelessWidget {
 
 
 class AuthScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,9 +30,9 @@ class AuthScreen extends StatelessWidget {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      AuthenticationButton("Login", buttonWidth),
+                      AuthenticationButton("Login", buttonWidth, context, true),
                       const SizedBox(height: 15),
-                      AuthenticationButton("Register", buttonWidth),
+                      AuthenticationButton("Register", buttonWidth, context, false),
                       const SizedBox(height: 15),
                     ],
                   );
