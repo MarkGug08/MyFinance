@@ -1,61 +1,73 @@
 import 'package:flutter/material.dart';
 
-Widget email_textfield() {
-  return TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Email',
-      fillColor: Colors.grey[200], // Background color
-      filled: true, // Enable background color
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide.none,
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: Colors.blue, width: 2.0),
-      ),
+InputDecoration buildInputDecoration(String label, {Widget? suffixIcon}) {
+  return InputDecoration(
+    labelText: label,
+    fillColor: Colors.grey[200],
+    filled: true,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide.none,
     ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+    ),
+    suffixIcon: suffixIcon,
+  );
+}
+
+Widget emailTextField() {
+  return TextFormField(
+    decoration: buildInputDecoration('Email'),
     validator: (value) {
       if (value == null || value.isEmpty) {
-        return 'Inserisci la tua email';
+        return 'Enter your email';
       }
       if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-        return 'Inserisci un\'email valida';
+        return 'Enter a valid email';
       }
       return null;
     },
   );
 }
 
-Widget password_textfield() {
-  return TextFormField(
-    decoration: InputDecoration(
-      labelText: 'Password',
-      fillColor: Colors.grey[200], // Background color
-      filled: true, // Enable background color
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide.none,
+
+class PasswordTextField extends StatefulWidget {
+  @override
+  _PasswordTextFieldState createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+  bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: buildInputDecoration(
+        'Password',
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscureText ? Icons.visibility_off : Icons.visibility,
+          ),
+          onPressed: () {
+            setState(() {
+              _obscureText = !_obscureText;
+            });
+          },
+        ),
       ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: Colors.blue, width: 2.0),
-      ),
-    ),
-    obscureText: true,
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Inserisci la tua password';
-      }
-      return null;
-    },
-  );
+      obscureText: _obscureText,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter your password';
+        }
+        return null;
+      },
+    );
+  }
 }
