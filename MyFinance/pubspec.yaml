@@ -76,7 +76,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - lib/Assets/fiori.jpeg
+
    - lib/Assets/Sfondo.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
