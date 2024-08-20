@@ -27,15 +27,7 @@ Widget emailTextField(TextEditingController controller) {
   return TextFormField(
     controller: controller, // Controller to manage the input field's text
     decoration: buildInputDecoration('Email'),
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Enter your email'; // Validation message for empty input
-      }
-      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-        return 'Enter a valid email'; // Validation message for invalid email format
-      }
-      return null; // No error
-    },
+
   );
 }
 
@@ -70,12 +62,6 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         ),
       ),
       obscureText: _obscureText, // Toggle text visibility
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Enter your password'; // Validation message for empty input
-        }
-        return null; // No error
-      },
     );
   }
 }

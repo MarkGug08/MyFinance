@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Authentication/Authentication_Page/Widget/authentication_button.dart';
-import 'package:myfinance/Authentication/Authentication_Page/Widget/background.dart';
+import 'package:myfinance/Authentication/Widget/background.dart';
 
 
 class MyApp extends StatelessWidget {

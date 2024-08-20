@@ -30,7 +30,7 @@ class RegisterScreen extends StatelessWidget {
         const SizedBox(height: 10.0),
         PasswordTextField(_passwordController),   //password field
         const SizedBox(height: 40.0),
-        register_button(_formKey, context, _authController, _usernameController, _emailController, _passwordController),
+        registerButton(_formKey, context, _authController, _usernameController, _emailController, _passwordController),
         const SizedBox(height: 10.0),
       ],
     );

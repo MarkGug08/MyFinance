@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
+import '../../Widget/error.dart';
 
 /// Creates a login button that handles user authentication.
 Widget login_button(
@@ -14,7 +15,7 @@ Widget login_button(
     ) {
   return SizedBox(
     width: double.infinity, // Make the button as wide as its parent
-    height: 50.0, // Set the button's height
+    height: 50.0,
     child: ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
@@ -40,8 +41,16 @@ Widget login_button(
               );
             }
           } catch (e) {
-            // Handle any errors that occur during sign-in
-            // For example, display an error message to the user
+
+            if (e is FirebaseAuthException) {
+
+              String errorMessage = getErrorMessage(e);
+              // Display the error message
+              showError(context, errorMessage);
+            } else {
+
+              showError(context, 'An error occurred: ${e.toString()}');
+            }
 
           }
         }

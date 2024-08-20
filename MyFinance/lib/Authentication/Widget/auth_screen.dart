@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Authentication_Page/Widget/background.dart';
+import 'background.dart';
 
 class AuthScreen extends StatelessWidget {
   final GlobalKey<FormState> formKey;

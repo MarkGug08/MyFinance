@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
+import '../../Widget/error.dart';
 
 /// Creates a button for user registration that handles form submission and navigation.
-Widget register_button(
-    GlobalKey<FormState> _formKey,
+Widget registerButton(
+    GlobalKey<FormState> formKey,
     BuildContext context,
     AuthController authController,
     TextEditingController usernameController,
@@ -24,7 +25,7 @@ Widget register_button(
       ),
       onPressed: () async {
         // Validate the form
-        if (_formKey.currentState!.validate()) {
+        if (formKey.currentState!.validate()) {
           try {
             // Attempt to register the user with the provided details
             await authController.registerUser(
@@ -39,9 +40,16 @@ Widget register_button(
               MaterialPageRoute(builder: (context) => HomePage()),
             );
           } catch (e) {
-            // Handle any errors that occur during registration
-            // For example, you might want to show an error message to the user
 
+            if (e is FirebaseAuthException) {
+
+              String errorMessage = getErrorMessage(e);
+              // Display the error message
+              showError(context, errorMessage);
+            } else {
+
+              showError(context, 'An error occurred: ${e.toString()}');
+            }
           }
         }
       },
