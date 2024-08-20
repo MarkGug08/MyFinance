@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:myfinance/Authentication/Login/login_page.dart';
 import 'package:myfinance/HomePage/home_page.dart';
 
-import '../../Registration/register_page.dart';
-
-Widget login_button(_formKey, context){
+Widget register_button(GlobalKey<FormState> _formKey, BuildContext context) {
   return SizedBox(
     width: double.infinity,
     height: 50.0,
@@ -14,6 +13,7 @@ Widget login_button(_formKey, context){
 
         ),
         backgroundColor: Colors.black,
+
       ),
       onPressed: () {
         if (_formKey.currentState!.validate()) {
@@ -23,7 +23,7 @@ Widget login_button(_formKey, context){
           );
         }
       },
-      child: const Text('Login', style: TextStyle(color: Colors.white),),
+      child: const Text('Agree and register', style: TextStyle(color: Colors.white),),
     ),
   );
 }
