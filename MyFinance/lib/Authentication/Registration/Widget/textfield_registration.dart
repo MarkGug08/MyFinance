@@ -23,8 +23,9 @@ InputDecoration buildInputDecoration(String label, {Widget? suffixIcon}) {
 
 
 
-Widget nameTextField() {
+Widget nameTextField(TextEditingController controller) {
   return TextFormField(
+    controller: controller,
     decoration: buildInputDecoration('Username'),
     validator: (value) {
       if (value == null || value.isEmpty) {
@@ -38,9 +39,9 @@ Widget nameTextField() {
   );
 }
 
-
-Widget emailTextField() {
+Widget emailTextField(TextEditingController controller) {
   return TextFormField(
+    controller: controller,
     decoration: buildInputDecoration('Email'),
     validator: (value) {
       if (value == null || value.isEmpty) {
@@ -54,8 +55,11 @@ Widget emailTextField() {
   );
 }
 
-
 class PasswordTextField extends StatefulWidget {
+  final TextEditingController controller;
+
+  PasswordTextField(this.controller);
+
   @override
   _PasswordTextFieldState createState() => _PasswordTextFieldState();
 }
@@ -66,6 +70,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       decoration: buildInputDecoration(
         'Password',
         suffixIcon: IconButton(
@@ -89,3 +94,4 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     );
   }
 }
+

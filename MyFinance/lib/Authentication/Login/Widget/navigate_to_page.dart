@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Authentication/Registration/register_page.dart';
 
+/// Creates a button to navigate back to the previous page.
 Widget previous_page_button(BuildContext context) {
   return Align(
     alignment: Alignment.topLeft,
@@ -14,14 +15,15 @@ Widget previous_page_button(BuildContext context) {
       child: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () {
-          Navigator.pop(context); //go back to previous page
+          Navigator.pop(context); // Navigate back to the previous page
         },
       ),
     ),
   );
 }
 
-Widget link_to_Register(BuildContext context){
+/// Creates a link to the registration page.
+Widget link_to_Register(BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -30,18 +32,16 @@ Widget link_to_Register(BuildContext context){
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => RegisterScreen()),
+            MaterialPageRoute(builder: (context) => RegisterScreen()), // Navigate to the registration screen
           );
         },
         child: const Text(
           'Register now',
           style: TextStyle(
             color: Colors.blue,
-            decoration: TextDecoration.underline,
           ),
         ),
       ),
     ],
   );
 }
-
