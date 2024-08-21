@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myfinance/MainPage/main_page.dart';
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
 import '../../Widget/error.dart';
@@ -37,7 +38,7 @@ Widget registerButton(
             // If registration is successful, navigate to the HomePage
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => MainPage()),
             );
           } catch (e) {
 
@@ -47,7 +48,6 @@ Widget registerButton(
               // Display the error message
               showError(context, errorMessage);
             } else {
-
               showError(context, 'An error occurred: ${e.toString()}');
             }
           }
