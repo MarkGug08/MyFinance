@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Authentication/Authentication_Page/Widget/authentication_button.dart';
 import 'package:myfinance/Authentication/Widget/background.dart';
+import 'package:myfinance/MainPage/main_page.dart';
 
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: AuthScreen(),
+      home: MainPage(),
     );
   }
 }
