@@ -39,6 +39,7 @@ class CryptoController {
       name: json['name'],
       symbol: json['symbol'].toUpperCase(),
       currentValue: json['quote']['USD']['price'].toDouble(),
+      percentChange24h: json['quote']['USD']['percent_change_24h'].toDouble(),
     );
   }
 }
