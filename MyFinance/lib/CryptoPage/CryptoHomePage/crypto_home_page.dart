@@ -14,7 +14,8 @@ class _MarketPageState extends State<MarketPage> {
   final CryptoController cryptoController = CryptoController();
   final TextEditingController searchController = TextEditingController();
 
-  late Future<List<Crypto>> futureCryptos;
+  List<Crypto> cryptoList = [];
+  List<Crypto> filteredCryptoList = [];
   Timer? _timer;
 
   @override
@@ -22,22 +23,44 @@ class _MarketPageState extends State<MarketPage> {
     super.initState();
     _fetchCryptos();
 
-    // Set up a timer to refresh data every 60 seconds
+
     _timer = Timer.periodic(Duration(seconds: 10), (timer) {
       _fetchCryptos();
     });
+
+    // Add a listener to the searchController to filter the list as the user types.
+    searchController.addListener(_filterCryptos);
   }
 
-  void _fetchCryptos() {
-    print('Fetching cryptos...');
+  /// Fetches the list of cryptocurrencies from the controller and updates the state.
+  void _fetchCryptos() async {
+    try {
+      List<Crypto> cryptos = await cryptoController.getCryptos();
+      setState(() {
+        cryptoList = cryptos;
+        filteredCryptoList = cryptos;
+      });
+    } catch (e) {
+
+    }
+  }
+
+  /// Filters the cryptocurrency list based on the search query.
+  void _filterCryptos() {
     setState(() {
-      futureCryptos = cryptoController.getCryptos();
+      String query = searchController.text.toLowerCase();
+      filteredCryptoList = cryptoList.where((crypto) {
+        // Filter the list by checking if the name or symbol contains the query.
+        return crypto.name.toLowerCase().contains(query) ||
+            crypto.symbol.toLowerCase().contains(query);
+      }).toList();
     });
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer?.cancel(); // Cancel the timer when the widget is disposed.
+    searchController.dispose(); // Dispose the searchController to avoid memory leaks.
     super.dispose();
   }
 
@@ -51,24 +74,13 @@ class _MarketPageState extends State<MarketPage> {
           preferredSize: Size.fromHeight(60.0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: searchbar(searchController),
+            child: searchbar(searchController), // Search bar
           ),
         ),
       ),
-      body: FutureBuilder<List<Crypto>>(
-        future: futureCryptos,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No data available'));
-          } else {
-            return cryptolist(snapshot.data!);
-          }
-        },
-      ),
+      body: filteredCryptoList.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : cryptolist(filteredCryptoList),
     );
   }
 }
