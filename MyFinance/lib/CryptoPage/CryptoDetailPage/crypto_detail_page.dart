@@ -8,32 +8,104 @@ class CryptoDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(crypto.name),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Name: ${crypto.name}',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              'Symbol: ${crypto.symbol}',
-              style: TextStyle(fontSize: 20.0, color: Colors.grey[600]),
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              'Current Value: \$${crypto.currentValue.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 20.0),
-            ),
+    String changeSymbol = crypto.percentChange24h >= 0 ? '+' : '';
+    Color changeColor = crypto.percentChange24h >= 0 ? Colors.green : Colors.red;
 
-          ],
-        ),
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
+            ),
+            child: Column(
+              children: [
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  title: Text(
+                    'Market',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[800],
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  ),
+                  padding: const EdgeInsets.all(16.0),
+                  margin: EdgeInsets.fromLTRB(20, 20, 20, 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                crypto.name,
+                                style: TextStyle(fontSize: 16.0, color: Colors.white),
+                              ),
+                              SizedBox(height: 4.0),
+                              Text(
+                                crypto.symbol,
+                                style: TextStyle(fontSize: 14.0, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '\$${crypto.currentValue.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: 4.0),
+                              Text(
+                                '${changeSymbol}${crypto.percentChange24h.toStringAsFixed(2)}%',
+                                style: TextStyle(
+                                  color: changeColor,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Text(
+                  'Additional details or content could go here',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
