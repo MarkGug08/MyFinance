@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import '../Models/Crypto.dart';
 
@@ -56,22 +57,46 @@ class CryptoController {
   }
 
   /// Fetches and prints the historical data for Bitcoin for the past week using Binance API.
-  Future<void> getBitcoinWeeklyHistory() async {
+  Future<List<FlSpot>> getBitcoinTodayHistory() async {
     try {
       const String symbol = 'BTCUSDT';
-      const String interval = '1d';
-      const int days = 7;
+      const String interval = '1m';
 
+      // Determine the start time for today (00:00 UTC) and current time in milliseconds
+      final DateTime now = DateTime.now().toUtc();
+      final DateTime todayStart = DateTime(now.year, now.month, now.day);
+      final int startTime = todayStart.millisecondsSinceEpoch;
+
+      final int endTime = now.millisecondsSinceEpoch;
+
+
+      // Build the Binance API URL
       final Uri url = Uri.parse(
-          '$binanceBaseUrl?symbol=$symbol&interval=$interval&limit=$days');
+          '$binanceBaseUrl?symbol=$symbol&interval=$interval&startTime=$startTime&endTime=$endTime');
 
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(response.body);
 
+        // Convert the data into FlSpot for the chart
+        List<FlSpot> spots = [];
+        for (int i = 0; i < jsonResponse.length; i++) {
+          var candle = jsonResponse[i];
+          final int timestamp = candle[0];
+          final double close = double.parse(candle[4]);
+          print('Timestamp: $timestamp');
 
 
+          // Convert the timestamp to a fractional hour value for X-axis
+          final DateTime date =
+          DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
+          print('Converted Date: $date');
+          final double timeValue = date.hour + date.minute / 60.0;
+          print('Now: ${DateTime.now().toUtc()}');
+          spots.add(FlSpot(timeValue, close));
+        }
+        return spots;
       } else {
         throw Exception('Failed to load historical data from Binance. Status code: ${response.statusCode}');
       }
