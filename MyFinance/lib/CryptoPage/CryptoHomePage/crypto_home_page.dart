@@ -24,7 +24,7 @@ class _MarketPageState extends State<MarketPage> {
     _fetchCryptos();
 
 
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 10000), (timer) {
       _fetchCryptos();
     });
 
@@ -59,8 +59,8 @@ class _MarketPageState extends State<MarketPage> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Cancel the timer when the widget is disposed.
-    searchController.dispose(); // Dispose the searchController to avoid memory leaks.
+    _timer?.cancel();
+    searchController.dispose();
     super.dispose();
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../Models/Crypto.dart';
+import '../../Widget/line_chart.dart';
 
 class CryptoDetailPage extends StatelessWidget {
   final Crypto crypto;
@@ -8,11 +9,13 @@ class CryptoDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String changeSymbol = crypto.percentChange24h >= 0 ? '+' : '';
-    Color changeColor = crypto.percentChange24h >= 0 ? Colors.green : Colors.red;
+    final changeSymbol = crypto.percentChange24h >= 0 ? '+' : '';
+    final changeColor = crypto.percentChange24h >= 0 ? Colors.green : Colors.red;
 
     return Scaffold(
+      backgroundColor: Color(0xFFFAFAFA),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             decoration: BoxDecoration(
@@ -91,18 +94,24 @@ class CryptoDetailPage extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: Text(
-                  'Additional details or content could go here',
-                  style: TextStyle(color: Colors.black),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Chart',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+                SizedBox(height: 16.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: LineChartWidget(),
+                ),
+              ],
             ),
           ),
         ],

@@ -205,18 +205,18 @@ packages:
     dependency: transitive
     description:
       name: coverage
-      sha256: "3945034e86ea203af7a056d98e98e42a5518fff200d6e8e6647e1886b07e936e"
+      sha256: "576aaab8b1abdd452e0f656c3e73da9ead9d7880e15bdc494189d9c1a1baf0db"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.0"
+    version: "1.9.0"
   crypto:
     dependency: transitive
     description:
       name: crypto
-      sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
+      sha256: ec30d999af904f33454ba22ed9a86162b35e52b44ac4807d1d93c288041d7d27
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.5"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -317,18 +317,18 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: "1003a5a03a61fc9a22ef49f37cbcb9e46c86313a7b2e7029b9390cf8c6fc32cb"
+      sha256: f7d7180c7f99babd4b4c517754d41a09a4943a0f7a69b65c894ca5c68ba66315
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.2.1"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
-      sha256: "6643fe3dbd021e6ccfb751f7882b39df355708afbdeb4130fc50f9305a9d1a3d"
+      sha256: "362e52457ed2b7b180964769c1e04d1e0ea0259fdf7025fdfedd019d4ae2bd88"
       url: "https://pub.dev"
     source: hosted
-    version: "2.17.2"
+    version: "2.17.5"
   fixnum:
     dependency: transitive
     description:
@@ -388,18 +388,18 @@ packages:
     dependency: transitive
     description:
       name: graphs
-      sha256: aedc5a15e78fc65a6e23bcd927f24c64dd995062bcd1ca6eda65a3cff92a4d19
+      sha256: "741bbf84165310a68ff28fe9e727332eef1407342fca52759cb21ad8177bb8d0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   http:
     dependency: "direct main"
     description:
       name: http
-      sha256: "761a297c042deedc1ffbb156d6e2af13886bb305c2a343a4d972504cd67dd938"
+      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.2"
   http_multi_server:
     dependency: transitive
     description:
@@ -516,10 +516,10 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
+      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   mock_exceptions:
     dependency: transitive
     description:
@@ -649,10 +649,10 @@ packages:
     dependency: transitive
     description:
       name: source_map_stack_trace
-      sha256: "84cf769ad83aa6bb61e0aa5a18e53aea683395f196a6f39c4c881fb90ed4f7ae"
+      sha256: c0713a43e323c3302c2abe2a1cc89aa057a387101ebd280371d6a6c9fa68516b
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   source_maps:
     dependency: transitive
     description:
@@ -761,10 +761,10 @@ packages:
     dependency: "direct main"
     description:
       name: uuid
-      sha256: "814e9e88f21a176ae1359149021870e87f7cddaf633ab678a5d2b0bff7fd1ba8"
+      sha256: "83d37c7ad7aaf9aa8e275490669535c8080377cfa7a7004c24dfac53afffaa90"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.0"
+    version: "4.4.2"
   vector_math:
     dependency: transitive
     description:
