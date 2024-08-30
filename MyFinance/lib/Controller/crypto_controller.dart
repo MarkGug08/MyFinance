@@ -1,7 +1,14 @@
 import 'dart:convert';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import '../Models/Crypto.dart';
+
+class CryptoSpot {
+  final double time;
+  final String timeString;
+  final double value;
+
+  CryptoSpot(this.time, this.timeString, this.value);
+}
 
 /// Manages fetching cryptocurrency data from CoinMarketCap and Binance APIs.
 class CryptoController {
@@ -13,7 +20,7 @@ class CryptoController {
   Future<List<Crypto>> getCryptos() async {
     try {
       final cmcResponse = await http.get(
-        Uri.parse('$capMarketUrl?start=1&limit=14&convert=USD'),
+        Uri.parse('$capMarketUrl?start=1&limit=3&convert=USD'),
         headers: {
           'Accept': 'application/json',
           'X-CMC_PRO_API_KEY': capMarketApiKey,
@@ -57,20 +64,16 @@ class CryptoController {
   }
 
   /// Fetches and prints the historical data for Bitcoin for the past week using Binance API.
-  Future<List<FlSpot>> getBitcoinTodayHistory() async {
+  Future<List<CryptoSpot>> getBitcoinTodayHistory() async {
     try {
       const String symbol = 'BTCUSDT';
-      const String interval = '1m';
+      const String interval = '5m'; // Cambiato l'intervallo a 5 minuti
 
-      // Determine the start time for today (00:00 UTC) and current time in milliseconds
       final DateTime now = DateTime.now().toUtc();
       final DateTime todayStart = DateTime(now.year, now.month, now.day);
       final int startTime = todayStart.millisecondsSinceEpoch;
-
       final int endTime = now.millisecondsSinceEpoch;
 
-
-      // Build the Binance API URL
       final Uri url = Uri.parse(
           '$binanceBaseUrl?symbol=$symbol&interval=$interval&startTime=$startTime&endTime=$endTime');
 
@@ -79,26 +82,25 @@ class CryptoController {
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(response.body);
 
-        // Convert the data into FlSpot for the chart
-        List<FlSpot> spots = [];
-        for (int i = 0; i < jsonResponse.length; i++) {
-          var candle = jsonResponse[i];
+        List<CryptoSpot> spots = [];
+        for (var candle in jsonResponse) {
           final int timestamp = candle[0];
           final double close = double.parse(candle[4]);
-          print('Timestamp: $timestamp');
 
-
-          // Convert the timestamp to a fractional hour value for X-axis
           final DateTime date =
           DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
-          print('Converted Date: $date');
           final double timeValue = date.hour + date.minute / 60.0;
-          print('Now: ${DateTime.now().toUtc()}');
-          spots.add(FlSpot(timeValue, close));
+          final String timeString =
+              '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+
+
+
+          spots.add(CryptoSpot(timeValue, timeString, close));
         }
         return spots;
       } else {
-        throw Exception('Failed to load historical data from Binance. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load historical data from Binance. Status code: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Error fetching historical data: $error');

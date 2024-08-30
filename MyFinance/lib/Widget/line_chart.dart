@@ -4,14 +4,13 @@ import 'package:fl_chart/fl_chart.dart';
 
 import '../Controller/crypto_controller.dart';
 
-
 class LineChartWidget extends StatefulWidget {
   @override
   _LineChartWidgetState createState() => _LineChartWidgetState();
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
-  late Future<List<FlSpot>> _bitcoinSpots;
+  late Future<List<CryptoSpot>> _bitcoinSpots;
 
   @override
   void initState() {
@@ -22,7 +21,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<FlSpot>>(
+    return FutureBuilder<List<CryptoSpot>>(
       future: _bitcoinSpots,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,7 +32,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           return Center(child: Text('No data available'));
         }
 
-        List<FlSpot> bitcoinSpots = snapshot.data!;
+        List<CryptoSpot> bitcoinSpots = snapshot.data!;
 
         return Center(
           child: Container(
@@ -71,12 +70,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         final hour = value.toInt();
                         final minute = ((value - hour) * 60).toInt();
 
-
                         if (minute == 0) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
+                          return Container(
                             child: Text(
-                              hour.toString().padLeft(2, '0'),
+                              hour.toString().padLeft(0, '0'),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 10,
@@ -99,13 +96,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 borderData: FlBorderData(
                   show: false,
                 ),
-                minX: bitcoinSpots.first.x-0.1,
-                maxX: bitcoinSpots.last.x+0.1,
-                minY: bitcoinSpots.map((e) => e.y).reduce(min)-1000,
-                maxY: bitcoinSpots.map((e) => e.y).reduce(max)+1000,
+                minX: bitcoinSpots.first.time - 0.1,
+                maxX: bitcoinSpots.last.time + 0.1,
+                minY: bitcoinSpots.map((e) => e.value).reduce(min) - 1000,
+                maxY: bitcoinSpots.map((e) => e.value).reduce(max) + 1000,
                 lineBarsData: [
                   LineChartBarData(
-                    spots: bitcoinSpots,
+                    spots: bitcoinSpots.map((e) => FlSpot(e.time, e.value)).toList(),
                     isCurved: true,
                     color: Colors.black,
                     barWidth: 2.5,
@@ -124,8 +121,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     tooltipRoundedRadius: 8,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
+                        final CryptoSpot spotData = bitcoinSpots.firstWhere((e) => e.time == spot.x);
+
                         return LineTooltipItem(
-                          '${spot.y.toStringAsFixed(2)} USD',
+                          '${spotData.timeString}\n${spot.y.toStringAsFixed(2)} USD',
                           TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
