@@ -20,7 +20,7 @@ class CryptoController {
   Future<List<Crypto>> getCryptos() async {
     try {
       final cmcResponse = await http.get(
-        Uri.parse('$capMarketUrl?start=1&limit=3&convert=USD'),
+        Uri.parse('$capMarketUrl?start=1&limit=7&convert=USD'),
         headers: {
           'Accept': 'application/json',
           'X-CMC_PRO_API_KEY': capMarketApiKey,
@@ -63,11 +63,12 @@ class CryptoController {
     }
   }
 
-  /// Fetches and prints the historical data for Bitcoin for the past week using Binance API.
-  Future<List<CryptoSpot>> getBitcoinTodayHistory() async {
+
+  /// Fetches and prints the historical data for a specific cryptocurrency using Binance API.
+  Future<List<CryptoSpot>> getCryptoTodayHistory(Crypto crypto) async {
     try {
-      const String symbol = 'BTCUSDT';
-      const String interval = '5m'; // Cambiato l'intervallo a 5 minuti
+      final String symbol = crypto.symbol + 'USDT';  // Append 'USDT' to get the trading pair.
+      const String interval = '5m';  // 5-minute intervals for the historical data.
 
       final DateTime now = DateTime.now().toUtc();
       final DateTime todayStart = DateTime(now.year, now.month, now.day);
@@ -93,8 +94,6 @@ class CryptoController {
           final String timeString =
               '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
 
-
-
           spots.add(CryptoSpot(timeValue, timeString, close));
         }
         return spots;
@@ -106,4 +105,5 @@ class CryptoController {
       throw Exception('Error fetching historical data: $error');
     }
   }
+
 }

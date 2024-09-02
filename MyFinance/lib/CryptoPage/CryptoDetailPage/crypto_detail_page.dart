@@ -109,7 +109,7 @@ class CryptoDetailPage extends StatelessWidget {
                 SizedBox(height: 16.0),
                 SizedBox(
                   width: double.infinity,
-                  child: LineChartWidget(),
+                  child: LineChartWidget(crypto: crypto),
                 ),
               ],
             ),
