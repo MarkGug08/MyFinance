@@ -15,12 +15,13 @@ class LineChartWidget extends StatefulWidget {
 
 class _LineChartWidgetState extends State<LineChartWidget> {
   late Future<List<CryptoSpot>> _cryptoSpots;
+  String _selectedPeriod = 'Today';
 
   @override
   void initState() {
     super.initState();
     CryptoController cryptoController = CryptoController();
-    _cryptoSpots = cryptoController.getCryptoTodayHistory(widget.crypto);
+    _cryptoSpots = cryptoController.getCryptoHistory(widget.crypto, _selectedPeriod);
   }
 
   @override
@@ -50,6 +51,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         final double minY = minValue - padding;
         final double maxY = maxValue + padding;
 
+        // Determine x range based on the period
+        final double minX = cryptoSpots.first.time - 0.1;
+        final double maxX = cryptoSpots.last.time + 0.1;
+
         return Center(
           child: Container(
             width: 350,
@@ -61,11 +66,41 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             ),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${widget.crypto.symbol} Price Chart',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  alignment: Alignment.centerLeft,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedPeriod,
+                      items: <String>[
+                        'Today',
+                        'This Week',
+                        'This Month',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newPeriod) {
+                        if (newPeriod != null) {
+                          setState(() {
+                            _selectedPeriod = newPeriod;
+                            // Refresh data for the selected period
+                            CryptoController cryptoController = CryptoController();
+                            _cryptoSpots = cryptoController.getCryptoHistory(widget.crypto, _selectedPeriod);
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.arrow_drop_down,
+                        size: 15,
+                      ),
+                      iconSize: 24,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -88,10 +123,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 40,
+                            reservedSize: 30,
                             interval: yRange / 5,
                             getTitlesWidget: (value, meta) {
-                              // Only show labels that are not at minY, maxY, and grid lines
                               if (value != minY && value != maxY && value % (yRange / 5) != 0) {
                                 String formattedValue;
 
@@ -103,12 +137,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
                                 return Text(
                                   formattedValue,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                  ),
+                                  style: TextStyle(fontSize: 8),
                                 );
                               } else {
-                                return Container(); // Return an empty container to hide unwanted labels
+                                return Container();
                               }
                             },
                           ),
@@ -119,20 +151,44 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                             reservedSize: 40,
                             interval: 1,
                             getTitlesWidget: (value, meta) {
-                              final hour = value.toInt();
-                              final minute = ((value - hour) * 60).toInt();
+                              if (_selectedPeriod == 'Today') {
+                                // Show hours
+                                final hour = value.toInt();
+                                final minute = ((value - hour) * 60).toInt();
 
-                              if (minute == 0) {
+                                if (minute == 0) {
+                                  return Text(
+                                    hour.toString().padLeft(2, '0'),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 6,
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              } else if (_selectedPeriod == 'This Week') {
+                                // Show days of the week
+                                final DateTime date = DateTime.fromMillisecondsSinceEpoch((value * 1000).toInt());
                                 return Text(
-                                  hour.toString().padLeft(2, '0'),
+                                  '${date.day}/${date.month}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 6,
                                   ),
                                 );
-                              } else {
-                                return Container();
+                              } else if (_selectedPeriod == 'This Month') {
+                                // Show days of the month
+                                final DateTime date = DateTime.fromMillisecondsSinceEpoch((value * 1000).toInt());
+                                return Text(
+                                  '${date.day}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 6,
+                                  ),
+                                );
                               }
+                              return Container();
                             },
                           ),
                         ),
@@ -146,15 +202,15 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                       borderData: FlBorderData(
                         show: false,
                       ),
-                      minX: cryptoSpots.first.time - 0.1,
-                      maxX: cryptoSpots.last.time + 0.1,
+                      minX: minX,
+                      maxX: maxX,
                       minY: minY,
                       maxY: maxY,
                       lineBarsData: [
                         LineChartBarData(
                           spots: cryptoSpots.map((e) => FlSpot(e.time, e.value)).toList(),
                           isCurved: true,
-                          color: lineColor, // Dynamic color based on percentChange24h
+                          color: lineColor,
                           barWidth: 2.5,
                           dotData: FlDotData(
                             show: false,

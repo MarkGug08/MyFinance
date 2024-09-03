@@ -20,7 +20,7 @@ class CryptoController {
   Future<List<Crypto>> getCryptos() async {
     try {
       final cmcResponse = await http.get(
-        Uri.parse('$capMarketUrl?start=1&limit=7&convert=USD'),
+        Uri.parse('$capMarketUrl?start=1&limit=3&convert=USD'),
         headers: {
           'Accept': 'application/json',
           'X-CMC_PRO_API_KEY': capMarketApiKey,
@@ -65,14 +65,42 @@ class CryptoController {
 
 
   /// Fetches and prints the historical data for a specific cryptocurrency using Binance API.
-  Future<List<CryptoSpot>> getCryptoTodayHistory(Crypto crypto) async {
+  Future<List<CryptoSpot>> getCryptoHistory(Crypto crypto, String period) async {
     try {
       final String symbol = crypto.symbol + 'USDT';  // Append 'USDT' to get the trading pair.
-      const String interval = '5m';  // 5-minute intervals for the historical data.
+      String interval = '';  // intervals for the historical data.
 
       final DateTime now = DateTime.now().toUtc();
-      final DateTime todayStart = DateTime(now.year, now.month, now.day);
-      final int startTime = todayStart.millisecondsSinceEpoch;
+      final int startTime;
+
+      switch (period) {
+        case 'Today':
+          final DateTime todayStart = DateTime(now.year, now.month, now.day);
+          startTime = todayStart.millisecondsSinceEpoch;
+          interval = '5m';  // 5-minute intervals for the historical data.
+          break;
+
+        case 'This Week':
+          final DateTime weekStart = now.subtract(Duration(days: 6)); // Get the start of the week
+          startTime = DateTime(weekStart.year, weekStart.month, weekStart.day).millisecondsSinceEpoch;
+          interval = '30m';  // 30-minute intervals for the historical data.
+          break;
+
+        case 'This Month':
+          final DateTime monthStart = now.subtract(Duration(days: 29)); // Un mese a partire da oggi (30 giorni inclusi oggi)
+          startTime = DateTime(monthStart.year, monthStart.month, monthStart.day).millisecondsSinceEpoch;
+          interval = '1d';  // 1d intervals for the historical data.
+          break;
+
+        default:
+          throw Exception('Unsupported period: $period');
+      }
+
+      // Debug: Print the selected period, interval, start time, and end time
+      print('Fetching data for $symbol with period: $period, interval: $interval');
+      print('Start time (milliseconds since epoch): $startTime');
+      print('End time (milliseconds since epoch): ${now.millisecondsSinceEpoch}');
+
       final int endTime = now.millisecondsSinceEpoch;
 
       final Uri url = Uri.parse(
@@ -88,22 +116,40 @@ class CryptoController {
           final int timestamp = candle[0];
           final double close = double.parse(candle[4]);
 
-          final DateTime date =
-          DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
-          final double timeValue = date.hour + date.minute / 60.0;
-          final String timeString =
-              '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+          final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
+
+          // Calculate the `timeValue` and `timeString` based on the selected period.
+          double timeValue;
+          String timeString;
+
+          if (period == 'Today') {
+            timeValue = (date.hour * 60 + date.minute) / 60.0; // Time as fraction of the day
+            timeString = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+          } else if (period == 'This Week') {
+            timeValue = date.difference(now.subtract(Duration(days: 6))).inMinutes / 1440.0; // Time as days from start of week
+            timeString = '${date.day}/${date.month}';
+          } else if (period == 'This Month') {
+            // Calcolo a partire dall'inizio del mese relativo
+            timeValue = date.difference(now.subtract(Duration(days: 29))).inDays.toDouble(); // Time as days from start of the last 30 days
+            timeString = '${date.day}/${date.month}';
+          } else {
+            throw Exception('Unsupported period: $period');
+          }
 
           spots.add(CryptoSpot(timeValue, timeString, close));
         }
+
+        // Debug: Print the total number of data points fetched
+        print('Total data points fetched: ${spots.length}');
         return spots;
       } else {
-        throw Exception(
-            'Failed to load historical data from Binance. Status code: ${response.statusCode}');
+        throw Exception('Failed to load historical data from Binance. Status code: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Error fetching historical data: $error');
     }
   }
+
+
 
 }
