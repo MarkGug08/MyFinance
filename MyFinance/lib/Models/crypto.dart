@@ -3,6 +3,8 @@ class Crypto {
   final String symbol;
   final double currentValue;
   final double percentChange24h;
+  final int high24h = 0;
+  final int low24h = 0;
 
 
   Crypto({

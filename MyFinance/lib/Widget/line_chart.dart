@@ -59,10 +59,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           child: Container(
             width: 350,
             height: 300,
+            padding: EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
-              border: Border.all(color: Colors.grey),
             ),
             child: Column(
               children: [
@@ -147,49 +147,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         ),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 40,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) {
-                              if (_selectedPeriod == 'Today') {
-                                // Show hours
-                                final hour = value.toInt();
-                                final minute = ((value - hour) * 60).toInt();
-
-                                if (minute == 0) {
-                                  return Text(
-                                    hour.toString().padLeft(2, '0'),
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 6,
-                                    ),
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              } else if (_selectedPeriod == 'This Week') {
-                                // Show days of the week
-                                final DateTime date = DateTime.fromMillisecondsSinceEpoch((value * 1000).toInt());
-                                return Text(
-                                  '${date.day}/${date.month}',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 6,
-                                  ),
-                                );
-                              } else if (_selectedPeriod == 'This Month') {
-                                // Show days of the month
-                                final DateTime date = DateTime.fromMillisecondsSinceEpoch((value * 1000).toInt());
-                                return Text(
-                                  '${date.day}',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 6,
-                                  ),
-                                );
-                              }
-                              return Container();
-                            },
+                            showTitles: false,
+                            reservedSize: 20,
                           ),
                         ),
                         topTitles: AxisTitles(
@@ -203,7 +162,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         show: false,
                       ),
                       minX: minX,
-                      maxX: maxX,
                       minY: minY,
                       maxY: maxY,
                       lineBarsData: [
