@@ -87,19 +87,14 @@ class CryptoController {
           break;
 
         case 'This Month':
-          final DateTime monthStart = now.subtract(Duration(days: 29)); // Un mese a partire da oggi (30 giorni inclusi oggi)
+          final DateTime monthStart = now.subtract(Duration(days: 29)); // 30 days from today
           startTime = DateTime(monthStart.year, monthStart.month, monthStart.day).millisecondsSinceEpoch;
-          interval = '1d';  // 1d intervals for the historical data.
+          interval = '1d';  // 1-day intervals for the historical data.
           break;
 
         default:
           throw Exception('Unsupported period: $period');
       }
-
-      // Debug: Print the selected period, interval, start time, and end time
-      print('Fetching data for $symbol with period: $period, interval: $interval');
-      print('Start time (milliseconds since epoch): $startTime');
-      print('End time (milliseconds since epoch): ${now.millisecondsSinceEpoch}');
 
       final int endTime = now.millisecondsSinceEpoch;
 
@@ -112,6 +107,9 @@ class CryptoController {
         List<dynamic> jsonResponse = json.decode(response.body);
 
         List<CryptoSpot> spots = [];
+        double highestPrice = double.negativeInfinity;
+        double lowestPrice = double.infinity;
+
         for (var candle in jsonResponse) {
           final int timestamp = candle[0];
           final double close = double.parse(candle[4]);
@@ -129,7 +127,6 @@ class CryptoController {
             timeValue = date.difference(now.subtract(Duration(days: 6))).inMinutes / 1440.0; // Time as days from start of week
             timeString = '${date.day}/${date.month}';
           } else if (period == 'This Month') {
-            // Calcolo a partire dall'inizio del mese relativo
             timeValue = date.difference(now.subtract(Duration(days: 29))).inDays.toDouble(); // Time as days from start of the last 30 days
             timeString = '${date.day}/${date.month}';
           } else {
@@ -137,10 +134,19 @@ class CryptoController {
           }
 
           spots.add(CryptoSpot(timeValue, timeString, close));
+
+          // Update highest and lowest prices
+          if (close > highestPrice) highestPrice = close;
+          if (close < lowestPrice) lowestPrice = close;
         }
 
-        // Debug: Print the total number of data points fetched
-        print('Total data points fetched: ${spots.length}');
+        // Update the crypto object with the calculated high and low values
+        crypto.high24h = highestPrice;
+        crypto.low24h = lowestPrice;
+
+        print(crypto.high24h);
+        print(crypto.low24h);
+
         return spots;
       } else {
         throw Exception('Failed to load historical data from Binance. Status code: ${response.statusCode}');
@@ -149,6 +155,7 @@ class CryptoController {
       throw Exception('Error fetching historical data: $error');
     }
   }
+
 
 
 
