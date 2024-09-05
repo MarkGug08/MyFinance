@@ -19,24 +19,15 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
   @override
   void initState() {
     super.initState();
-    fetchHistoricalData();
-    // Set up a timer to update the data every minute
+
+
     _timer = Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
-      fetchHistoricalData();
+      setState(() {
+      });
     });
   }
 
-  Future<void> fetchHistoricalData() async {
-    try {
 
-      setState(() {
-
-      });
-    } catch (error) {
-      // Handle errors
-      print('Error fetching data: $error');
-    }
-  }
 
   @override
   void dispose() {
@@ -54,7 +45,6 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Your UI here...
           Container(
             decoration: BoxDecoration(
               color: Colors.black,
@@ -181,71 +171,81 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                   ),
                 ),
                 SizedBox(height: 20.0),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFAFAFA),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Highest Price',
-                        style: TextStyle(fontSize: 16.0, color: Colors.black),
-                      ),
-                      Text(
-                        '\$${widget.crypto.high24h.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFFFAFAFA),
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(16.0),
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Highest Price',
+                              style: TextStyle(fontSize: 16.0, color: Colors.green),
+                            ),
+                            Text(
+                              '\$${widget.crypto.high24h.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFAFAFA),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Lowest Price',
-                        style: TextStyle(fontSize: 16.0, color: Colors.black),
-                      ),
-                      Text(
-                        '\$${widget.crypto.low24h.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFFFAFAFA),
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(16.0),
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Lowest Price',
+                              style: TextStyle(fontSize: 16.0, color: Colors.red),
+                            ),
+                            Text(
+                              '\$${widget.crypto.low24h.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),

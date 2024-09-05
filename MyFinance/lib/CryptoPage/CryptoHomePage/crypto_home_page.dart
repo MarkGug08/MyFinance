@@ -35,7 +35,7 @@ class _MarketPageState extends State<MarketPage> {
   /// Fetches the list of cryptocurrencies from the controller and updates the state.
   void _fetchCryptos() async {
     try {
-      List<Crypto> cryptos = await cryptoController.getCryptos();
+      List<Crypto> cryptos = await cryptoController.getCryptos(context);
       setState(() {
         cryptoList = cryptos;
         filteredCryptoList = cryptos;
@@ -46,16 +46,38 @@ class _MarketPageState extends State<MarketPage> {
   }
 
   /// Filters the cryptocurrency list based on the search query.
-  void _filterCryptos() {
+  void _filterCryptos() async {
     setState(() {
       String query = searchController.text.toLowerCase();
       filteredCryptoList = cryptoList.where((crypto) {
-        // Filter the list by checking if the name or symbol contains the query.
         return crypto.name.toLowerCase().contains(query) ||
             crypto.symbol.toLowerCase().contains(query);
       }).toList();
     });
+
+    if (filteredCryptoList.isEmpty && searchController.text.isNotEmpty) {
+      _searchCryptoOnline(searchController.text);
+    }
   }
+
+  void _searchCryptoOnline(String query) async {
+    try {
+      Crypto? crypto = await cryptoController.searchCryptoOnline(query, context);
+      if (crypto != null) {
+        setState(() {
+          filteredCryptoList = [crypto];
+        });
+      } else {
+        setState(() {
+          filteredCryptoList = [];
+        });
+
+      }
+    } catch (e) {
+
+    }
+  }
+
 
   @override
   void dispose() {

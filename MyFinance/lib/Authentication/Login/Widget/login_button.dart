@@ -5,7 +5,7 @@ import 'package:myfinance/MainPage/main_page.dart';
 
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
-import '../../Widget/error.dart';
+import '../../../Widget/error.dart';
 
 /// Creates a login button that handles user authentication.
 Widget login_button(
@@ -47,7 +47,7 @@ Widget login_button(
 
             if (e is FirebaseAuthException) {
 
-              String errorMessage = getErrorMessage(e);
+              String errorMessage = getFirebaseAuthErrorMessage(e);
               // Display the error message
               showError(context, errorMessage);
             } else {

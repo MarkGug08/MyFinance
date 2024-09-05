@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myfinance/MainPage/main_page.dart';
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
-import '../../Widget/error.dart';
+import '../../../Widget/error.dart';
 
 /// Creates a button for user registration that handles form submission and navigation.
 Widget registerButton(
@@ -44,7 +44,7 @@ Widget registerButton(
 
             if (e is FirebaseAuthException) {
 
-              String errorMessage = getErrorMessage(e);
+              String errorMessage = getFirebaseAuthErrorMessage(e);
               // Display the error message
               showError(context, errorMessage);
             } else {
