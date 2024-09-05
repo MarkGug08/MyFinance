@@ -16,7 +16,7 @@ Widget periodDropdown({
           value: value,
           child: Text(
             value,
-            style: TextStyle(fontSize: 14), // Imposta la dimensione del testo
+            style: TextStyle(fontSize: 14),
           ),
         );
       }).toList(),

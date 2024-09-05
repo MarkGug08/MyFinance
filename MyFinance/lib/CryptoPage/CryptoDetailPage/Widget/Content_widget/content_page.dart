@@ -3,8 +3,6 @@ import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/Content_widget/cryp
 import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/Content_widget/price_card.dart';
 import 'package:myfinance/Models/Crypto.dart';
 
-import '../../../../Widget/line_chart.dart';
-
 Widget buildContent(Crypto crypto) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),

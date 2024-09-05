@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -35,6 +33,7 @@ class Line_Chart extends StatelessWidget {
     final double maxY = maxValue + padding;
 
     final double minX = spots.first.x - 0.1;
+    final double maxX = spots.last.x + 0.1;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 1500),
@@ -95,6 +94,7 @@ class Line_Chart extends StatelessWidget {
             show: false,
           ),
           minX: minX,
+          maxX: maxX,
           minY: minY,
           maxY: maxY,
           lineBarsData: [
