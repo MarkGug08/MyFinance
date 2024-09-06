@@ -73,9 +73,7 @@ class _MarketPageState extends State<MarketPage> {
         });
 
       }
-    } catch (e) {
-
-    }
+    } catch (e) {}
   }
 
 

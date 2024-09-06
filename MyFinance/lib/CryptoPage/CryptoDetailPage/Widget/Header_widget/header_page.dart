@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Models/Crypto.dart';
-import 'crypto_info.dart';
+import '../../../../Widget/crypto_info.dart';
 import 'custom_app_bar.dart';
 
 Widget buildHeader(BuildContext context, Crypto crypto) {
@@ -35,11 +35,13 @@ Widget buildHeader(BuildContext context, Crypto crypto) {
           ),
           padding: const EdgeInsets.all(16.0),
           margin: EdgeInsets.fromLTRB(20, 20, 20, 30),
-          child: CryptoInfo(      //info crypto
+          child: CryptoInfo(
             name: crypto.name,
             symbol: crypto.symbol,
             currentValue: crypto.currentValue,
             percentChange: crypto.percentChange24h,
+            color: Colors.white,
+            isFavorite: crypto.isFavorite
           ),
         ),
       ],

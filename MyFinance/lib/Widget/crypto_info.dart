@@ -5,6 +5,8 @@ Widget CryptoInfo({
   required String symbol,
   required double currentValue,
   required double percentChange,
+  required Color color,
+  required bool isFavorite
 }) {
   final changeSymbol = percentChange >= 0 ? '+' : '';
   final changeColor = percentChange >= 0 ? Colors.green : Colors.red;
@@ -18,14 +20,30 @@ Widget CryptoInfo({
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                name,
-                style: TextStyle(fontSize: 16.0, color: Colors.white),
-              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name ,
+                    style: TextStyle(fontSize: 16.0, color: color),
+                  ),
+                  SizedBox(width: 4.0),
+                  if(isFavorite)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Icon(
+                        Icons.bookmark,
+                        size: 20.0,
+                        color: color,
+                      ),
+                    )
+                  ],
+                ),
+
               SizedBox(height: 4.0),
               Text(
                 symbol,
-                style: TextStyle(fontSize: 14.0, color: Colors.white),
+                style: TextStyle(fontSize: 14.0, color: color),
               ),
             ],
           ),
@@ -37,7 +55,7 @@ Widget CryptoInfo({
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: color,
                 ),
               ),
               SizedBox(height: 4.0),
