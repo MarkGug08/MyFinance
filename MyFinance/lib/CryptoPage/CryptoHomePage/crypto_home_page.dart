@@ -102,7 +102,14 @@ class _MarketPageState extends State<MarketPage> {
       ),
       body: filteredCryptoList.isEmpty
           ? Center(child: CircularProgressIndicator())
-          : cryptolist(filteredCryptoList),
+          : cryptolist(filteredCryptoList, toggleFavorite),
     );
+  }
+
+
+  void toggleFavorite(Crypto crypto) {
+    setState(() {
+      crypto.isFavorite = !crypto.isFavorite;
+    });
   }
 }
