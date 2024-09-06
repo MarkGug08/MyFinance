@@ -30,37 +30,38 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
   void _fetchData() {
     CryptoController cryptoController = CryptoController();
     _cryptoSpots = cryptoController.getCryptoHistory(widget.crypto, _selectedPeriod, context);
-
-
   }
 
   void _scheduleNextFetch() {
     final now = DateTime.now();
-    final nextFetchTime = DateTime(
+    final int minuteInterval = 5;
+
+    // Find the next minute multiple of 5
+    final int nextMinute = (now.minute ~/ minuteInterval) * minuteInterval + minuteInterval;
+
+    // Calculate the date and time of the next fetch
+    final DateTime nextFetchTime = DateTime(
       now.year,
       now.month,
       now.day,
       now.hour,
-      (now.minute ~/ 5) * 5 + 5,
-    );
+      nextMinute % 60, // Handle rollover to the next hour if the next minute exceeds 60
+      0, // Initial seconds
+    ).add(Duration(minutes: (nextMinute ~/ 60) * minuteInterval)); // Correct for rollover to a new hour
 
-    if (nextFetchTime.isBefore(now)) {
-      final nextHour = now.add(Duration(hours: 1));
-      final nextFetchTime = DateTime(
-        nextHour.year,
-        nextHour.month,
-        nextHour.day,
-        nextHour.hour,
-        (nextHour.minute ~/ 5) * 5,
-      );
-    }
+    // Add 8 seconds to the next fetch
+    final DateTime nextFetchTimeWithSeconds = nextFetchTime.add(Duration(seconds: 8));
 
-    final timeUntilNextFetch = nextFetchTime.difference(now);
+    final timeUntilNextFetch = nextFetchTimeWithSeconds.difference(now);
+
+    // Cancel any previous timers to avoid overlaps
+    _timer?.cancel();
 
     _timer = Timer(timeUntilNextFetch, () {
       _fetchData();
       setState(() {});
 
+      // Set up the periodic fetch every 5 minutes
       _timer = Timer.periodic(Duration(minutes: 5), (Timer timer) {
         _fetchData();
         setState(() {});
@@ -93,7 +94,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               alignment: Alignment.centerLeft,
-              child: periodDropdown(
+              child: periodDropdown(    // Dropdown menu
                 selectedPeriod: _selectedPeriod,
                 onPeriodChanged: (newPeriod) {
                   setState(() {
@@ -120,7 +121,6 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
                   List<FlSpot> spots = cryptoSpots.map((e) => FlSpot(e.time, e.value)).toList();
                   List<TooltipData> tooltipData = cryptoSpots.map((e) => TooltipData(e.timeString, e.time, e.value)).toList();
 
-
                   return Line_Chart(
                     spots: spots,
                     tooltipData: tooltipData,
@@ -136,4 +136,3 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
     );
   }
 }
-

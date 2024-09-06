@@ -6,17 +6,14 @@ class Line_Chart extends StatelessWidget {
   final List<TooltipData> tooltipData;
   final String selectedPeriod;
   final Color lineColor;
-  final Map<FlSpot, TooltipData> spotToTooltipData;
+
 
   Line_Chart({
     required this.spots,
     required this.tooltipData,
     required this.selectedPeriod,
     required this.lineColor,
-  }) : spotToTooltipData = {
-    for (var data in tooltipData)
-      FlSpot(data.value, data.value): data // Associa i dati personalizzati ai punti
-  };
+  });
 
   @override
   Widget build(BuildContext context) {

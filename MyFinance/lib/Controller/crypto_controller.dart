@@ -77,6 +77,7 @@ class CryptoController {
       String interval = '';
 
       final DateTime now = DateTime.now().toUtc();
+
       final int startTime;
       final int endTime = now.millisecondsSinceEpoch;
 
@@ -160,6 +161,7 @@ class CryptoController {
 
         // Calculate percentage change from the start of the period
         crypto.percentChange24h = ((crypto.currentValue - startPrice) / startPrice) * 100;
+
 
         return spots;
       } else {

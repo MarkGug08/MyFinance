@@ -16,7 +16,7 @@ Widget periodDropdown({
           value: value,
           child: Text(
             value,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 10),
           ),
         );
       }).toList(),
@@ -27,9 +27,8 @@ Widget periodDropdown({
       },
       icon: Icon(
         Icons.arrow_drop_down,
-        size: 24,
+        size: 20,
       ),
-      iconSize: 24,
       dropdownColor: Colors.white,
     ),
   );
