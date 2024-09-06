@@ -62,7 +62,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
       setState(() {});
 
       // Set up the periodic fetch every 5 minutes
-      _timer = Timer.periodic(Duration(minutes: 5), (Timer timer) {
+      _timer = Timer.periodic(Duration(minutes: 5, seconds: 8), (Timer timer) {
         _fetchData();
         setState(() {});
       });
