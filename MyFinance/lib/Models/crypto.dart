@@ -14,10 +14,8 @@ class Crypto {
     required this.percentChange24h,
     this.high24h = 0.0,
     this.low24h = 0.0,
-    this.isFavorite = false,
+    this.isFavorite = true,
   });
 
-// Getter e Setter sono opzionali se non hai bisogno di logica aggiuntiva
-// per high24h e low24h. Se hai solo bisogno di accesso pubblico, puoi
-// omettere i getter e setter e usare direttamente le variabili.
+
 }

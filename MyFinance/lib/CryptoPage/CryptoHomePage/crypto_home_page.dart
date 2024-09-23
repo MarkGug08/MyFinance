@@ -65,6 +65,7 @@ class _MarketPageState extends State<MarketPage> {
       Crypto? crypto = await cryptoController.searchCryptoOnline(query, context);
       if (crypto != null) {
         setState(() {
+          crypto.isFavorite = false;
           filteredCryptoList = [crypto];
         });
       } else {

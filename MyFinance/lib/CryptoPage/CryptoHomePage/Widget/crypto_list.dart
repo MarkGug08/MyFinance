@@ -26,9 +26,9 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
                   toggleFavorite(crypto);
                 },
                 backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                icon: Icons.bookmark,
-                label: 'Favorite',
+                foregroundColor: crypto.isFavorite ? Colors.red : Colors.black,
+                icon: crypto.isFavorite ? Icons.bookmark_remove : Icons.bookmark,
+                label: crypto.isFavorite ? 'Remove' : 'Favorite',
                 borderRadius: BorderRadius.circular(10.0),
                 padding: const EdgeInsets.all(1.0),
               ),
@@ -37,7 +37,6 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
 
           child: GestureDetector(
             onTap: () {
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -52,14 +51,14 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(color: Colors.grey[300]!),
               ),
-                padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: CryptoInfo(
-                  name: crypto.name,
-                  symbol: crypto.symbol,
-                  currentValue: crypto.currentValue,
-                  percentChange: crypto.percentChange24h,
-                  color: Colors.black,
-                  isFavorite: crypto.isFavorite,
+                name: crypto.name,
+                symbol: crypto.symbol,
+                currentValue: crypto.currentValue,
+                percentChange: crypto.percentChange24h,
+                color: Colors.black,
+                isFavorite: crypto.isFavorite,
               ),
             ),
           ),
@@ -68,3 +67,7 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
     ),
   );
 }
+
+
+
+

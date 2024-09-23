@@ -45,6 +45,7 @@ dependencies:
   firebase_auth_mocks: ^0.13.0
   fl_chart: ^0.68.0
   animated_line_chart: ^0.0.3
+  shared_preferences: ^2.0.9
   flutter_slidable:
 
 
