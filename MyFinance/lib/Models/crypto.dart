@@ -14,7 +14,7 @@ class Crypto {
     required this.percentChange24h,
     this.high24h = 0.0,
     this.low24h = 0.0,
-    this.isFavorite = true,
+    required this.isFavorite,
   });
 
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,58 +18,130 @@ class CryptoSpot {
 // Controller to handle fetching data from the API
 class CryptoController {
   static const String binanceBaseUrl = 'https://api.binance.com/api/v3/klines';
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Predefined list of cryptocurrencies with default values
-  final List<Crypto> _predefinedCryptos = [
-    Crypto(name: 'Bitcoin', symbol: 'BTC', currentValue: 0.0, percentChange24h: 0.0),
-    Crypto(name: 'Ethereum', symbol: 'ETH', currentValue: 0.0, percentChange24h: 0.0),
-    Crypto(name: 'Binance Coin', symbol: 'BNB', currentValue: 0.0, percentChange24h: 0.0),
-    Crypto(name: 'Cardano', symbol: 'ADA', currentValue: 0.0, percentChange24h: 0.0),
-    Crypto(name: 'Solana', symbol: 'SOL', currentValue: 0.0, percentChange24h: 0.0),
-    Crypto(name: 'Ripple', symbol: 'XRP', currentValue: 0.0, percentChange24h: 0.0),
-    Crypto(name: 'Polkadot', symbol: 'DOT', currentValue: 0.0, percentChange24h: 0.0),
-    Crypto(name: 'Litecoin', symbol: 'LTC', currentValue: 0.0, percentChange24h: 0.0),
-  ];
+  List<Crypto> _predefinedCryptos = [];
+
+
+  Future<void> fetchCryptosFromFirestore(BuildContext context) async {
+    try {
+      // Query Firestore to get cryptos from the collection
+      QuerySnapshot snapshot = await _firestore.collection('Crypto').get();
+
+      // Clear the existing predefined cryptos list
+      _predefinedCryptos.clear();
+
+      // Iterate over each document in the snapshot
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        // Create a Crypto instance from Firestore data
+        Crypto crypto = Crypto(
+          name: data['name'] ?? '',
+          symbol: data['symbol'] ?? '',
+          currentValue: data['currentValue']?.toDouble() ?? 0.0,
+          percentChange24h: data['percentChange24h']?.toDouble() ?? 0.0,
+          isFavorite: data['isFavorite'] ?? false,
+        );
+
+        if(crypto.isFavorite){
+          _predefinedCryptos.add(crypto);
+        }
+      }
+    } catch (error) {
+      showError(context, 'Error fetching cryptos from Firestore: $error');
+    }
+  }
+
 
   // Fetch data for predefined cryptocurrencies
   Future<List<Crypto>> getCryptos(BuildContext context) async {
+    // Aspetta che i dati siano caricati da Firestore
+    await fetchCryptosFromFirestore(context);
+
     for (var crypto in _predefinedCryptos) {
-      final symbol = crypto.symbol + 'USDT';
 
-      // Build the URL for the Binance API request
-      final Uri url = Uri.parse('$binanceBaseUrl?symbol=$symbol&interval=5m&limit=288');
+      if (crypto.isFavorite) {
 
-      try {
-        final response = await http.get(url);
-        if (response.statusCode == 200) {
-          List<dynamic> jsonResponse = json.decode(response.body);
-          if (jsonResponse.isNotEmpty) {
-            var latestData = jsonResponse.last;
-            var firstData = jsonResponse.first;
+        final symbol = crypto.symbol + 'USDT';
 
-            double currentValue = double.parse(latestData[4]);
-            double price24hAgo = double.parse(firstData[4]);
+        // Costruisci l'URL per la richiesta API di Binance
+        final Uri url = Uri.parse(
+            '$binanceBaseUrl?symbol=$symbol&interval=5m&limit=288');
 
-            // Update the current value of the cryptocurrency
-            crypto.currentValue = currentValue;
+        try {
+          final response = await http.get(url);
+          if (response.statusCode == 200) {
+            List<dynamic> jsonResponse = json.decode(response.body);
 
-            // Calculate percentage change in the last 24 hours
-            crypto.percentChange24h = ((currentValue - price24hAgo) / price24hAgo) * 100;
+            if (jsonResponse.isNotEmpty) {
+              var latestData = jsonResponse.last;
+              var firstData = jsonResponse.first;
+
+              double currentValue = double.parse(latestData[4]);
+              double price24hAgo = double.parse(firstData[4]);
+
+              // Aggiorna il valore corrente della criptovaluta
+              crypto.currentValue = currentValue;
+
+              // Calcola la variazione percentuale nelle ultime 24 ore
+              crypto.percentChange24h =
+                  ((currentValue - price24hAgo) / price24hAgo) * 100;
+            }
+          } else {
+            final errorMessage = handleBinanceError(response.statusCode);
+            showError(context, 'Error fetching data : $errorMessage');
+            break;
           }
-        } else {
-          final errorMessage = handleBinanceError(response.statusCode);
+        } catch (error) {
+          final errorMessage = handleError(error);
           showError(context, 'Error fetching data : $errorMessage');
           break;
         }
-      } catch (error) {
-        final errorMessage = handleError(error);
-        showError(context, 'Error fetching data : $errorMessage');
-        break;
       }
     }
 
     return _predefinedCryptos;
   }
+
+  Future<void> UpdateCrypto(Crypto crypto, bool newIsFavorite, BuildContext context) async {
+    try {
+
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('Crypto')
+          .where('symbol', isEqualTo: crypto.symbol)
+          .get();
+
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot document = querySnapshot.docs.first;
+
+        if(!newIsFavorite){
+          await _firestore.collection('Crypto').doc(document.id).delete();
+        }
+
+      } else {
+        saveCrypto(crypto);
+      }
+    } catch (e) {
+      showError(context, "Sorry we have a problem to found your crypto, please retry");
+    }
+  }
+
+
+  Future<void> saveCrypto(Crypto crypto) async {
+    try {
+      await _firestore.collection('Crypto').add({
+        'name': crypto.name,
+        'symbol': crypto.symbol,
+        'isFavorite': crypto.isFavorite,
+      });
+    } catch (e) {
+      print('Error saving crypto: $e');
+    }
+  }
+
 
   // Fetch historical data for a given cryptocurrency and period
   Future<List<CryptoSpot>> getCryptoHistory(Crypto crypto, String period, BuildContext context) async {
@@ -197,6 +270,7 @@ class CryptoController {
             symbol: query.toUpperCase(),
             currentValue: currentValue,
             percentChange24h: 0.0,
+            isFavorite: false
           );
 
           return crypto;

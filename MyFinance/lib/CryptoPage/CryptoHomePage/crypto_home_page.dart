@@ -110,5 +110,9 @@ class _MarketPageState extends State<MarketPage> {
     setState(() {
       crypto.isFavorite = !crypto.isFavorite;
     });
+    cryptoController.UpdateCrypto(crypto, crypto.isFavorite, context).then((_) {
+      _fetchCryptos();
+      searchController.clear();
+    });
   }
 }
