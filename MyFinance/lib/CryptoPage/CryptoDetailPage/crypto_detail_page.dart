@@ -4,7 +4,6 @@ import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/Header_widget/heade
 import '../../../Models/Crypto.dart';
 import 'Widget/Content_widget/content_page.dart';
 
-
 class CryptoDetailPage extends StatefulWidget {
   final Crypto crypto;
 
@@ -20,7 +19,6 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
   @override
   void initState() {
     super.initState();
-
     _timer = Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
       setState(() {});
     });
@@ -28,7 +26,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Cancel the timer when the widget is disposed
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -45,10 +43,4 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
       ),
     );
   }
-
-
-
-
 }
-
-

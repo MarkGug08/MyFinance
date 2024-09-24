@@ -4,8 +4,6 @@ import 'package:myfinance/Widget/crypto_info.dart';
 import '../../../Models/Crypto.dart';
 import '../../CryptoDetailPage/crypto_detail_page.dart';
 
-
-/// Builds a List of crypto items.
 Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
   return Container(
     color: Color(0xFFFAFAFA),
@@ -16,7 +14,6 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
 
         return Slidable(
           key: ValueKey(crypto.symbol),
-
           endActionPane: ActionPane(
             motion: const ScrollMotion(),
             extentRatio: 0.25,
@@ -34,7 +31,6 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
               ),
             ],
           ),
-
           child: GestureDetector(
             onTap: () {
               Navigator.push(
@@ -67,7 +63,3 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
     ),
   );
 }
-
-
-
-

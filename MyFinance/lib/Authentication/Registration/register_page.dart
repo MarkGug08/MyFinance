@@ -11,7 +11,6 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   final AuthController _authController = AuthController();
 
   @override
@@ -20,15 +19,15 @@ class RegisterScreen extends StatelessWidget {
       formKey: _formKey,
       children: [
         const SizedBox(height: 10.0),
-        previous_page_button(context),    //go back to previous page
+        previous_page_button(context),
         const SizedBox(height: 50.0),
         welcome_text(),
         const SizedBox(height: 40.0),
-        nameTextField(_usernameController),   //username field
+        nameTextField(_usernameController),
         const SizedBox(height: 10.0),
-        emailTextField(_emailController),   //email field
+        emailTextField(_emailController),
         const SizedBox(height: 10.0),
-        PasswordTextField(_passwordController),   //password field
+        PasswordTextField(_passwordController),
         const SizedBox(height: 40.0),
         registerButton(_formKey, context, _authController, _usernameController, _emailController, _passwordController),
         const SizedBox(height: 10.0),

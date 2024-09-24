@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Creates an InputDecoration with customizable styling.
 InputDecoration buildInputDecoration(String label, {Widget? suffixIcon}) {
   return InputDecoration(
     labelText: label,
@@ -18,20 +17,17 @@ InputDecoration buildInputDecoration(String label, {Widget? suffixIcon}) {
       borderRadius: BorderRadius.circular(8.0),
       borderSide: BorderSide(color: Colors.blue, width: 2.0),
     ),
-    suffixIcon: suffixIcon, // Optional icon displayed at the end of the input field
+    suffixIcon: suffixIcon,
   );
 }
 
-/// Creates a text field for email input with validation.
 Widget emailTextField(TextEditingController controller) {
   return TextFormField(
-    controller: controller, // Controller to manage the input field's text
+    controller: controller,
     decoration: buildInputDecoration('Email'),
-
   );
 }
 
-/// Creates a password text field with visibility toggle functionality.
 class PasswordTextField extends StatefulWidget {
   final TextEditingController controller;
 
@@ -42,26 +38,26 @@ class PasswordTextField extends StatefulWidget {
 }
 
 class _PasswordTextFieldState extends State<PasswordTextField> {
-  bool _obscureText = true; // Boolean to toggle password visibility
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: widget.controller, // Controller to manage the input field's text
+      controller: widget.controller,
       decoration: buildInputDecoration(
         'Password',
         suffixIcon: IconButton(
           icon: Icon(
-            _obscureText ? Icons.visibility_off : Icons.visibility, // Toggle icon based on visibility state
+            _obscureText ? Icons.visibility_off : Icons.visibility,
           ),
           onPressed: () {
             setState(() {
-              _obscureText = !_obscureText; // Toggle the password visibility
+              _obscureText = !_obscureText;
             });
           },
         ),
       ),
-      obscureText: _obscureText, // Toggle text visibility
+      obscureText: _obscureText,
     );
   }
 }

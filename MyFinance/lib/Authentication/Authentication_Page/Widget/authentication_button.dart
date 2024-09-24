@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:myfinance/Authentication/Login/login_page.dart';
 import 'package:myfinance/Authentication/Registration/register_page.dart';
 
-Widget AuthenticationButton(String typeofButton, double buttonWidth, BuildContext context, bool isLogin){    //Button to manage redirection between login and registration
+Widget AuthenticationButton(String typeofButton, double buttonWidth, BuildContext context, bool isLogin) {
   return ElevatedButton(
     onPressed: () {
-      if(isLogin){    //redirect to the page
+      if (isLogin) {
         GoToLoginPage(context);
-      }else{
+      } else {
         GoToRegistrationPage(context);
       }
     },
@@ -29,17 +29,16 @@ Widget AuthenticationButton(String typeofButton, double buttonWidth, BuildContex
   );
 }
 
-void GoToLoginPage(BuildContext context){
+void GoToLoginPage(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) =>LoginScreen()),
+    MaterialPageRoute(builder: (context) => LoginScreen()),
   );
 }
 
-void GoToRegistrationPage(BuildContext context){
+void GoToRegistrationPage(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) =>RegisterScreen()),
+    MaterialPageRoute(builder: (context) => RegisterScreen()),
   );
 }
-

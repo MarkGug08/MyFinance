@@ -7,7 +7,6 @@ class Line_Chart extends StatelessWidget {
   final String selectedPeriod;
   final Color lineColor;
 
-
   Line_Chart({
     required this.spots,
     required this.tooltipData,
@@ -119,13 +118,13 @@ class Line_Chart extends StatelessWidget {
               fitInsideVertically: true,
               getTooltipItems: (touchedSpots) {
                 return touchedSpots.map((spot) {
-                  final TooltipData data = tooltipData.firstWhere((e) => e.time == spot.x );
+                  final TooltipData data = tooltipData.firstWhere((e) => e.time == spot.x);
                   return LineTooltipItem(
-                      '${data.timeString}\n${spot.y.toStringAsFixed(2)} USD',
-                      TextStyle(
+                    '${data.timeString}\n${spot.y.toStringAsFixed(2)} USD',
+                    TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                  ),
+                    ),
                   );
                 }).toList();
               },

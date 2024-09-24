@@ -19,7 +19,7 @@ Widget buildHeader(BuildContext context, Crypto crypto) {
     ),
     child: Column(
       children: [
-        CustomAppBar(context, 'Market'),    //customBar
+        CustomAppBar(context, 'Market'),
         Container(
           decoration: BoxDecoration(
             color: Colors.grey[800],
@@ -41,13 +41,10 @@ Widget buildHeader(BuildContext context, Crypto crypto) {
             currentValue: crypto.currentValue,
             percentChange: crypto.percentChange24h,
             color: Colors.white,
-            isFavorite: crypto.isFavorite
+            isFavorite: crypto.isFavorite,
           ),
         ),
       ],
     ),
   );
 }
-
-
-

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-Widget Background(){  //background for the authentication screen
+Widget Background(){
   return Container(
     decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('lib/Assets/Sfondo.webp'),  //background
+          image: AssetImage('lib/Assets/Sfondo.webp'),
           fit: BoxFit.cover
         )
     ),

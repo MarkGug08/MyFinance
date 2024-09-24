@@ -23,23 +23,19 @@ class _MarketPageState extends State<MarketPage> {
     super.initState();
     _fetchCryptos();
 
-
     _timer = Timer.periodic(Duration(seconds: 10000), (timer) {
       _fetchCryptos();
     });
 
     searchController.addListener(() {
       if (searchController.text.isEmpty) {
-
         setState(() {
           filteredCryptoList = cryptoList;
         });
       }
     });
-
   }
 
-  /// Fetches the list of cryptocurrencies from the controller and updates the state.
   void _fetchCryptos() async {
     try {
       List<Crypto> cryptos = await cryptoController.getCryptos(context);
@@ -47,15 +43,10 @@ class _MarketPageState extends State<MarketPage> {
         cryptoList = cryptos;
         filteredCryptoList = cryptos;
       });
-    } catch (e) {
-
-    }
+    } catch (e) {}
   }
 
-
-
   void _searchCryptoOnline() async {
-
     String query = searchController.text.toLowerCase();
 
     try {
@@ -69,11 +60,9 @@ class _MarketPageState extends State<MarketPage> {
         setState(() {
           filteredCryptoList = cryptoList;
         });
-
       }
     } catch (e) {}
   }
-
 
   @override
   void dispose() {
@@ -118,9 +107,6 @@ class _MarketPageState extends State<MarketPage> {
           : cryptolist(filteredCryptoList, toggleFavorite),
     );
   }
-
-
-
 
   void toggleFavorite(Crypto crypto) {
     setState(() {

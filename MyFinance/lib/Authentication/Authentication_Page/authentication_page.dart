@@ -3,16 +3,14 @@ import 'package:myfinance/Authentication/Authentication_Page/Widget/authenticati
 import 'package:myfinance/Authentication/Widget/background.dart';
 import 'package:myfinance/MainPage/main_page.dart';
 
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MainPage(),
+      home: AuthScreen(),
     );
   }
 }
-
 
 class AuthScreen extends StatelessWidget {
   @override
@@ -27,7 +25,7 @@ class AuthScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  double buttonWidth = constraints.maxWidth * 0.8;    //80% of the screen
+                  double buttonWidth = constraints.maxWidth * 0.8;
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

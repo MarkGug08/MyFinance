@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// Displays an error message as a Snackbar
 void showError(BuildContext context, String message) {
   final snackBar = SnackBar(
     content: Text(message),
@@ -12,7 +11,6 @@ void showError(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-// Method to handle network and JSON parsing errors
 String handleError(dynamic error) {
   if (error is SocketException) {
     return 'Connection error: Please check your internet connection.';
@@ -25,7 +23,6 @@ String handleError(dynamic error) {
   }
 }
 
-// Method to handle specific Binance API errors
 String handleBinanceError(int statusCode) {
   switch (statusCode) {
     case 400:
@@ -45,7 +42,6 @@ String handleBinanceError(int statusCode) {
   }
 }
 
-// Method to handle Firebase Auth specific errors
 String getFirebaseAuthErrorMessage(FirebaseAuthException e) {
   switch (e.code) {
     case 'user-not-found':

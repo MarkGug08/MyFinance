@@ -35,33 +35,25 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
   void _scheduleNextFetch() {
     final now = DateTime.now();
     final int minuteInterval = 5;
-
-    // Find the next minute multiple of 5
     final int nextMinute = (now.minute ~/ minuteInterval) * minuteInterval + minuteInterval;
-
-    // Calculate the date and time of the next fetch
     final DateTime nextFetchTime = DateTime(
       now.year,
       now.month,
       now.day,
       now.hour,
-      nextMinute % 60, // Handle rollover to the next hour if the next minute exceeds 60
-      0, // Initial seconds
-    ).add(Duration(minutes: (nextMinute ~/ 60) * minuteInterval)); // Correct for rollover to a new hour
+      nextMinute % 60,
+      0,
+    ).add(Duration(minutes: (nextMinute ~/ 60) * minuteInterval));
 
-    // Add 8 seconds to the next fetch
     final DateTime nextFetchTimeWithSeconds = nextFetchTime.add(Duration(seconds: 8));
-
     final timeUntilNextFetch = nextFetchTimeWithSeconds.difference(now);
 
-    // Cancel any previous timers to avoid overlaps
     _timer?.cancel();
 
     _timer = Timer(timeUntilNextFetch, () {
       _fetchData();
       setState(() {});
 
-      // Set up the periodic fetch every 5 minutes
       _timer = Timer.periodic(Duration(minutes: 5, seconds: 8), (Timer timer) {
         _fetchData();
         setState(() {});
@@ -94,7 +86,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               alignment: Alignment.centerLeft,
-              child: periodDropdown(    // Dropdown menu
+              child: periodDropdown(
                 selectedPeriod: _selectedPeriod,
                 onPeriodChanged: (newPeriod) {
                   setState(() {
@@ -117,7 +109,6 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
                   }
 
                   List<CryptoSpot> cryptoSpots = snapshot.data!;
-
                   List<FlSpot> spots = cryptoSpots.map((e) => FlSpot(e.time, e.value)).toList();
                   List<TooltipData> tooltipData = cryptoSpots.map((e) => TooltipData(e.timeString, e.time, e.value)).toList();
 

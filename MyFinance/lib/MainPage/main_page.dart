@@ -20,8 +20,8 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MainContent(selectedIndex: _selectedIndex), // Using the custom MainContent widget
-      bottomNavigationBar: CustomBottomNavigationBar( // Using the custom BottomNavigationBar widget
+      body: MainContent(selectedIndex: _selectedIndex),
+      bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
