@@ -28,8 +28,15 @@ class _MarketPageState extends State<MarketPage> {
       _fetchCryptos();
     });
 
-    // Add a listener to the searchController to filter the list as the user types.
-    searchController.addListener(_filterCryptos);
+    searchController.addListener(() {
+      if (searchController.text.isEmpty) {
+
+        setState(() {
+          filteredCryptoList = cryptoList;
+        });
+      }
+    });
+
   }
 
   /// Fetches the list of cryptocurrencies from the controller and updates the state.
@@ -45,22 +52,12 @@ class _MarketPageState extends State<MarketPage> {
     }
   }
 
-  /// Filters the cryptocurrency list based on the search query.
-  void _filterCryptos() async {
-    setState(() {
-      String query = searchController.text.toLowerCase();
-      filteredCryptoList = cryptoList.where((crypto) {
-        return crypto.name.toLowerCase().contains(query) ||
-            crypto.symbol.toLowerCase().contains(query);
-      }).toList();
-    });
 
-    if (filteredCryptoList.isEmpty && searchController.text.isNotEmpty) {
-      _searchCryptoOnline(searchController.text);
-    }
-  }
 
-  void _searchCryptoOnline(String query) async {
+  void _searchCryptoOnline() async {
+
+    String query = searchController.text.toLowerCase();
+
     try {
       Crypto? crypto = await cryptoController.searchCryptoOnline(query, context);
       if (crypto != null) {
@@ -70,7 +67,7 @@ class _MarketPageState extends State<MarketPage> {
         });
       } else {
         setState(() {
-          filteredCryptoList = [];
+          filteredCryptoList = cryptoList;
         });
 
       }
@@ -95,15 +92,34 @@ class _MarketPageState extends State<MarketPage> {
           preferredSize: Size.fromHeight(60.0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: searchbar(searchController), // Search bar
+            child: Row(
+              children: [
+                Expanded(
+                  child: searchbar(searchController),
+                ),
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    _searchCryptoOnline();
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
       body: filteredCryptoList.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+        child: Text(
+          'No saved cryptocurrencies.',
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+      )
           : cryptolist(filteredCryptoList, toggleFavorite),
     );
   }
+
+
 
 
   void toggleFavorite(Crypto crypto) {

@@ -17,8 +17,9 @@ class CryptoSpot {
 
 // Controller to handle fetching data from the API
 class CryptoController {
-  static const String binanceBaseUrl = 'https://api.binance.com/api/v3/klines';
+  final String binanceBaseUrl = 'https://api.binance.com/api/v3/klines';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String CoingeckoListCrypto = 'https://api.coingecko.com/api/v3/coins/list';
 
   // Predefined list of cryptocurrencies with default values
   List<Crypto> _predefinedCryptos = [];
@@ -57,16 +58,15 @@ class CryptoController {
 
   // Fetch data for predefined cryptocurrencies
   Future<List<Crypto>> getCryptos(BuildContext context) async {
-    // Aspetta che i dati siano caricati da Firestore
+
     await fetchCryptosFromFirestore(context);
 
     for (var crypto in _predefinedCryptos) {
 
-      if (crypto.isFavorite) {
 
         final symbol = crypto.symbol + 'USDT';
 
-        // Costruisci l'URL per la richiesta API di Binance
+
         final Uri url = Uri.parse(
             '$binanceBaseUrl?symbol=$symbol&interval=5m&limit=288');
 
@@ -82,10 +82,10 @@ class CryptoController {
               double currentValue = double.parse(latestData[4]);
               double price24hAgo = double.parse(firstData[4]);
 
-              // Aggiorna il valore corrente della criptovaluta
+
               crypto.currentValue = currentValue;
 
-              // Calcola la variazione percentuale nelle ultime 24 ore
+
               crypto.percentChange24h =
                   ((currentValue - price24hAgo) / price24hAgo) * 100;
             }
@@ -99,7 +99,7 @@ class CryptoController {
           showError(context, 'Error fetching data : $errorMessage');
           break;
         }
-      }
+
     }
 
     return _predefinedCryptos;
@@ -251,9 +251,24 @@ class CryptoController {
 
   // Search for a cryptocurrency online by its name
   Future<Crypto?> searchCryptoOnline(String query, BuildContext context) async {
-    // Construct the symbol by appending 'USDT' to the query
-    final String symbol = query.toUpperCase() + 'USDT';
-    final Uri url = Uri.parse('$binanceBaseUrl?symbol=$symbol&interval=5m&limit=1');
+    String symboltoResearch = query.toUpperCase();
+    String symbol = symboltoResearch;
+
+    print(symboltoResearch);
+    if (symboltoResearch.length > 3) {
+      String? foundSymbol = await getSymbolFromName(query);
+      if (foundSymbol != null) {
+        symboltoResearch = foundSymbol + 'USDT';
+        symbol = foundSymbol;
+      } else {
+        return null;
+      }
+    } else {
+      symboltoResearch += 'USDT';
+    }
+
+
+    final Uri url = Uri.parse('$binanceBaseUrl?symbol=$symboltoResearch&interval=5m&limit=288');
 
     try {
       final response = await http.get(url);
@@ -261,27 +276,54 @@ class CryptoController {
         List<dynamic> jsonResponse = json.decode(response.body);
         if (jsonResponse.isNotEmpty) {
           var latestData = jsonResponse.last;
-
+          var firstData = jsonResponse.first;
           double currentValue = double.parse(latestData[4]);
+          double price24hAgo = double.parse(firstData[4]);
 
-          // Create a new Crypto instance with the fetched data
+
           Crypto crypto = Crypto(
             name: query.toUpperCase(),
-            symbol: query.toUpperCase(),
+            symbol: symbol,
             currentValue: currentValue,
-            percentChange24h: 0.0,
-            isFavorite: false
+            percentChange24h: ((currentValue - price24hAgo) / price24hAgo) * 100,
+            isFavorite: false,
           );
 
           return crypto;
         }
       } else {
-        final errorMessage = handleBinanceError(response.statusCode);
-        //showError(context, errorMessage);
+
       }
     } catch (error) {
       showError(context, 'Error fetching online crypto: ${error.toString()}');
     }
+
     return null;
   }
+
+  Future<String?> getSymbolFromName(String name) async {
+    final Uri url = Uri.parse(CoingeckoListCrypto);
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        List<dynamic> coins = json.decode(response.body);
+
+        for (var coin in coins) {
+
+          if (coin['name'].toString().toLowerCase() == name.toLowerCase()) {
+
+            return coin['symbol'].toString().toUpperCase();
+          }
+        }
+      }
+    } catch (error) {
+      print('Error fetching symbol: $error');
+    }
+
+
+    return null;
+  }
+
+
 }
