@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myfinance/CryptoPage/CryptoHomePage/crypto_home_page.dart';
+import 'package:myfinance/MainPage/main_page.dart';
 
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
-import '../../Widget/error.dart';
+import '../../../Widget/error.dart';
 
 /// Creates a login button that handles user authentication.
 Widget login_button(
@@ -35,16 +37,17 @@ Widget login_button(
 
             // If the user is signed in successfully, navigate to the home page
             if (user != null) {
-              Navigator.push(
+              Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => MainPage()),
+                    (Route<dynamic> route) => false,
               );
             }
           } catch (e) {
 
             if (e is FirebaseAuthException) {
 
-              String errorMessage = getErrorMessage(e);
+              String errorMessage = getFirebaseAuthErrorMessage(e);
               // Display the error message
               showError(context, errorMessage);
             } else {
