@@ -211,7 +211,7 @@ class CryptoController {
     String symbol = symboltoResearch;
 
     if (symboltoResearch.length > 3) {
-      String? foundSymbol = await getSymbolFromName(query);
+      String? foundSymbol = await getSymbolFromName(context, query);
       if (foundSymbol != null) {
         symboltoResearch = foundSymbol + 'USDT';
         symbol = foundSymbol;
@@ -252,7 +252,7 @@ class CryptoController {
     return null;
   }
 
-  Future<String?> getSymbolFromName(String name) async {
+  Future<String?> getSymbolFromName(BuildContext context, String name) async {
     final Uri url = Uri.parse(CoingeckoListCrypto);
 
     try {
@@ -267,7 +267,8 @@ class CryptoController {
         }
       }
     } catch (error) {
-
+      final errorMessage = handleError(error);
+      showError(context, 'Error fetching data: $errorMessage');
     }
 
     return null;
