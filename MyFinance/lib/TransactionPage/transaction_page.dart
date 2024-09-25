@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
+import 'package:myfinance/TransactionPage/Widget/transaction_chart.dart';
 import 'package:myfinance/Widget/price_card.dart';
 import 'Widget/transaction_form.dart';
 
@@ -10,7 +11,6 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionPageState extends State<TransactionPage> {
   bool _isFormVisible = false;
-  TransactionController transactionController = new TransactionController();
 
 
   @override
@@ -43,6 +43,7 @@ class _TransactionPageState extends State<TransactionPage> {
                     PriceCard(title: "Expenses", price: 5, priceColor: Colors.red),
                   ],
                 ),
+                TransactionLineChartWidget(),
               ],
             ),
           ),

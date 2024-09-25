@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../Controller/crypto_controller.dart';
 import '../../../../Models/Crypto.dart';
 import '../../../../Widget/line_chart.dart';
-import 'menu_dropdown.dart';
+import '../../../../Widget/menu_dropdown.dart';
 
 class CryptoLineChartWidget extends StatefulWidget {
   final Crypto crypto;
