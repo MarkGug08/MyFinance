@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../Widget/custom_app_bar.dart';
 
-
 Widget buildHeader(BuildContext context) {
   return Container(
     decoration: BoxDecoration(
@@ -21,7 +20,7 @@ Widget buildHeader(BuildContext context) {
         CustomAppBar(context, 'Bentornato'),
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey[800],
+            //color: Colors.grey[800],
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             boxShadow: [
               BoxShadow(
@@ -33,8 +32,32 @@ Widget buildHeader(BuildContext context) {
             ],
           ),
           padding: const EdgeInsets.all(16.0),
-          margin: EdgeInsets.fromLTRB(20, 20, 20, 30),
-
+          margin: EdgeInsets.fromLTRB(0, 0, 20, 30),
+          child: const Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Balance',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    '£50.400,00',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     ),
