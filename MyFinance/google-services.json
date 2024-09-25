@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1056931152928",
+    "project_id": "myfinance-afb2a",
+    "storage_bucket": "myfinance-afb2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1056931152928:android:c90494c43d227fde7d2845",
+        "android_client_info": {
+          "package_name": "com.myfinance.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1x3b5C0lW0dWMUHx6LW0FcGO5eGEYJkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
