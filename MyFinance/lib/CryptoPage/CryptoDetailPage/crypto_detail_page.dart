@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/Header_widget/header_page.dart';
 import '../../../Models/Crypto.dart';
-import 'Widget/Content_widget/content_page.dart';
+import 'Widget/ContentWidget/content_page.dart';
+import 'Widget/HeaderWidget/header_page.dart';
+
 
 class CryptoDetailPage extends StatefulWidget {
   final Crypto crypto;
