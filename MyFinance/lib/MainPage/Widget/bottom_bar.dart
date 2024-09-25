@@ -15,9 +15,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.attach_money_outlined),
+          label: 'Transaction'
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.show_chart),
           label: 'Market',
         ),
+
       ],
       currentIndex: currentIndex,
       selectedItemColor: Colors.blue,

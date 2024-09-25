@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/ContentWidget/price_card.dart';
+import 'package:myfinance/Widget/price_card.dart';
 import 'package:myfinance/Models/Crypto.dart';
 
 import 'crypto_chart.dart';

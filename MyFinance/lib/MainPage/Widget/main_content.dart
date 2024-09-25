@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfinance/TransactionPage/transaction_page.dart';
 
 
 import '../../CryptoPage/CryptoHomePage/crypto_home_page.dart';
@@ -12,6 +13,7 @@ class MainContent extends StatelessWidget {
 
   static List<Widget> pages = <Widget>[
     HomePage(),
+    TransactionPage(),
     MarketPage(),
   ];
 
