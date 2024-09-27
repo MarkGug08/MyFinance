@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance/Controller/transaction_controller.dart';
 import 'package:myfinance/TransactionPage/Widget/transaction_chart.dart';
 import 'package:myfinance/Widget/price_card.dart';
 import 'Widget/transaction_form.dart';
@@ -16,6 +15,7 @@ class _TransactionPageState extends State<TransactionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Statistics'),
@@ -32,8 +32,7 @@ class _TransactionPageState extends State<TransactionPage> {
       ),
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          Container(
             child: Column(
               children: [
                 Row(
@@ -43,7 +42,10 @@ class _TransactionPageState extends State<TransactionPage> {
                     PriceCard(title: "Expenses", price: 5, priceColor: Colors.red),
                   ],
                 ),
-                TransactionLineChartWidget(),
+                SizedBox(
+                  width: double.infinity,
+                  child: TransactionLineChartWidget(),
+                )
               ],
             ),
           ),

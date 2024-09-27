@@ -4,7 +4,7 @@ import 'package:myfinance/Widget/error.dart';
 import '../Models/Transaction.dart';
 
 class TransactionSpot {
-  final double time;
+  double time;
   final String timeString;
   final double value;
 
@@ -13,7 +13,6 @@ class TransactionSpot {
 
 class TransactionController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<UserTransaction> _predefinedTransactions = [];
 
   Future<void> saveTransaction({
     required TextEditingController amountController,
@@ -24,7 +23,7 @@ class TransactionController {
   }) async {
     try {
       double amount = double.parse(amountController.text);
-      if (!tipeTransaction) {
+      if (!tipeTransaction && amount > 0) {
         amount *= -1;
       }
       String description = descriptionController.text;
@@ -46,11 +45,38 @@ class TransactionController {
     }
   }
 
-  Future<List<TransactionSpot>> loadUserTransactions(BuildContext context) async {
-    List<TransactionSpot> transactionSpots = [];
+  Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context) async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('transactions').get();
-      _predefinedTransactions.clear();
+      final DateTime now = DateTime.now();
+      DateTime startTime;
+
+
+      switch (period) {
+        case 'Today':
+          startTime = now.subtract(Duration(hours: 24));
+          break;
+
+        case 'This Week':
+          startTime = now.subtract(Duration(days: 7));
+          break;
+
+        case 'This Month':
+          startTime = now.subtract(Duration(days: 31));
+          break;
+
+        default:
+          throw Exception('Unsupported period: $period');
+      }
+
+      QuerySnapshot snapshot = await _firestore
+          .collection('transactions')
+          .where('dateTime', isGreaterThanOrEqualTo: startTime)
+          .get();
+
+      List<TransactionSpot> transactionSpots = [];
+
+      int positionXaxis = 0;
+      double balance = 0;
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -61,25 +87,55 @@ class TransactionController {
           Description: data['Description'] ?? 'No description',
         );
 
-        _predefinedTransactions.add(transaction);
+        double timeValue;
+        String timeString;
+        final DateTime transactionDate = transaction.dateTime;
 
-        double time = transaction.dateTime.millisecondsSinceEpoch.toDouble();
-        String timeString = '${transaction.dateTime.day}/${transaction.dateTime.month} ${transaction.dateTime.hour}:${transaction.dateTime.minute}';
-        transactionSpots.add(TransactionSpot(time, timeString, transaction.amount));
+        if (period == 'Today') {
+          timeValue = (positionXaxis + 1).toDouble();
+          timeString = '${transactionDate.hour.toString().padLeft(2, '0')}:${transactionDate.minute.toString().padLeft(2, '0')}:${transactionDate.second.toString().padLeft(2, '0')}';
+        } else if (period == 'This Week') {
+
+          timeValue = (positionXaxis + 1).toDouble();
+          timeString = '${transactionDate.day}/${transactionDate.month} ${transactionDate.hour}:${transactionDate.minute}:${transactionDate.second}';
+        } else if (period == 'This Month') {
+
+          timeValue = (positionXaxis + 1).toDouble();
+          timeString = '${transactionDate.day}/${transactionDate.month} ${transactionDate.hour}:${transactionDate.minute}:${transactionDate.second}';
+        } else {
+          throw Exception('Unsupported period: $period');
+        }
+
+
+        balance += transaction.amount;
+        transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
+        positionXaxis++;
       }
+
+      return transactionSpots;
     } catch (error) {
-      showError(context, 'Error fetching transactions from Firestore: $error');
+      showError(context, 'Error fetching transaction history: $error');
       return [];
     }
+  }
+
+
+  List<TransactionSpot> redistributeXValues(List<TransactionSpot> transactionSpots) {
 
     transactionSpots.sort((a, b) => a.time.compareTo(b.time));
 
-    for (TransactionSpot a in transactionSpots) {
-      print(a.value);
-      print(a.timeString);
-      print(a.time);
+    int numSpots = transactionSpots.length;
+
+    for (int i = 0; i < numSpots; i++) {
+
+      transactionSpots[i].time = (i + 1).toDouble();
+      print(transactionSpots[i].time);
     }
 
     return transactionSpots;
   }
+
+
+
+
 }

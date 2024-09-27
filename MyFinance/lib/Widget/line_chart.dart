@@ -57,7 +57,7 @@ class Line_Chart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   if (value != minY && value != maxY) {
                     String formattedValue;
-                    if (value >= 1000) {
+                    if (value >= 1000 || value * -1 >= 1000) {
                       formattedValue = '${(value / 1000).toStringAsFixed(2)}k';
                     } else {
                       formattedValue = value.toStringAsFixed(2);
