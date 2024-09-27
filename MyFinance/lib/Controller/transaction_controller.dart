@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Widget/error.dart';
 import '../Models/Transaction.dart';
+import '../Models/User.dart';
 
 class TransactionSpot {
   double time;
@@ -13,6 +14,8 @@ class TransactionSpot {
 
 class TransactionController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  double Income = 0;
+  double Expenses = 0;
 
   Future<void> saveTransaction({
     required TextEditingController amountController,
@@ -45,7 +48,7 @@ class TransactionController {
     }
   }
 
-  Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context) async {
+  Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context, UserApp user) async {
     try {
       final DateTime now = DateTime.now();
       DateTime startTime;
@@ -106,11 +109,19 @@ class TransactionController {
           throw Exception('Unsupported period: $period');
         }
 
+        CalcolateTransactionsMovements(transaction.amount);
 
         balance += transaction.amount;
         transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
         positionXaxis++;
       }
+
+
+      user.Income = Income;
+      user.Expenses = Expenses;
+
+      print(user.Income);
+      print(user.Expenses);
 
       return transactionSpots;
     } catch (error) {
@@ -120,22 +131,14 @@ class TransactionController {
   }
 
 
-  List<TransactionSpot> redistributeXValues(List<TransactionSpot> transactionSpots) {
 
-    transactionSpots.sort((a, b) => a.time.compareTo(b.time));
+  void CalcolateTransactionsMovements(double transaction){
 
-    int numSpots = transactionSpots.length;
-
-    for (int i = 0; i < numSpots; i++) {
-
-      transactionSpots[i].time = (i + 1).toDouble();
-      print(transactionSpots[i].time);
+      if(transaction >= 0){
+        Income += transaction;
+      }else{
+        Expenses += transaction;
+      }
     }
-
-    return transactionSpots;
-  }
-
-
-
 
 }

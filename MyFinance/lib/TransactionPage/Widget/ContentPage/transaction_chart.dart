@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../../../../Controller/transaction_controller.dart';
-import '../../../../Widget/line_chart.dart';
-import '../../Widget/menu_dropdown.dart';
+import '../../../../../Controller/transaction_controller.dart';
+import '../../../../../Widget/line_chart.dart';
+import '../../../Models/User.dart';
+import '../../../Widget/menu_dropdown.dart';
 
 class TransactionLineChartWidget extends StatefulWidget {
+
+  UserApp user;
+
+  TransactionLineChartWidget({required this.user});
   @override
   _TransactionLineChartWidgetState createState() => _TransactionLineChartWidgetState();
 }
@@ -24,7 +29,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
 
   void _fetchData() {
     TransactionController transactionController = TransactionController();
-    _transactionSpots = transactionController.getTransactionHistory(_selectedPeriod, context);
+    _transactionSpots = transactionController.getTransactionHistory(_selectedPeriod, context, widget.user);
 
     _transactionSpots.then((_) {
       setState(() {});
