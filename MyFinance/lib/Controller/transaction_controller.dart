@@ -130,6 +130,7 @@ class TransactionController {
   }
 
   Future<List<UserTransaction>> getTransaction() async {
+    transactions.clear();
     try {
 
       QuerySnapshot snapshot = await _firestore.collection('transactions').get();

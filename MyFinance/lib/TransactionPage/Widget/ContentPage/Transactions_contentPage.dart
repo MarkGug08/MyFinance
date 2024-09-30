@@ -46,7 +46,7 @@ Widget TransactionsContentPage(BuildContext context, UserApp user, bool isFormVi
             child: Container(
               padding: EdgeInsets.all(16),
               color: Colors.white,
-              child: TransactionForm(),
+              child: TransactionForm(user: user),
             ),
           ),
         ),

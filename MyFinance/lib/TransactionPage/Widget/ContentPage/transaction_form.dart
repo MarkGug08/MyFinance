@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
+import 'package:myfinance/Models/User.dart';
 
 class TransactionForm extends StatefulWidget {
+  UserApp user;
+
+  TransactionForm({required this.user});
   @override
   _TransactionFormState createState() => _TransactionFormState();
 }
@@ -26,6 +30,7 @@ class _TransactionFormState extends State<TransactionForm> {
       ).then((_) {
         _amountController.clear();
         _descriptionController.clear();
+        widget.user.control = true;
         setState(() {
           _selectedDate = DateTime.now();
           _isIncome = true;

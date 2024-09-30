@@ -31,7 +31,8 @@ class _TransactionPageState extends State<TransactionPage> {
 
   Future<void> FetchTransactions() async {
     transactions = await transactionController.getTransaction();
-    print(transactions.length);
+    widget.user.control = false;
+
   }
 
   @override
@@ -43,6 +44,9 @@ class _TransactionPageState extends State<TransactionPage> {
   void _startAutoReload() {
     _timer = Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
       _reloadPage();
+      if(widget.user.control){
+        FetchTransactions();
+      }
     });
   }
 

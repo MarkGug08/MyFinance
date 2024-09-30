@@ -7,19 +7,17 @@ import '../../../Models/User.dart';
 import '../../../Widget/menu_dropdown.dart';
 
 class TransactionLineChartWidget extends StatefulWidget {
-
-  UserApp user;
+  final UserApp user;
 
   TransactionLineChartWidget({required this.user});
+
   @override
   _TransactionLineChartWidgetState createState() => _TransactionLineChartWidgetState();
 }
 
 class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget> {
   late Future<List<TransactionSpot>> _transactionSpots;
-
   String _selectedPeriod = 'Today';
-  Timer? _timer;
 
   @override
   void initState() {
@@ -27,19 +25,19 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
     _fetchData();
   }
 
+  @override
+  void didUpdateWidget(TransactionLineChartWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+      _fetchData();
+  }
+
   void _fetchData() {
     TransactionController transactionController = TransactionController();
-    _transactionSpots = transactionController.getTransactionHistory(_selectedPeriod, context, widget.user);
+    _transactionSpots = transactionController.getTransactionHistory(_selectedPeriod, context, widget.user,);
 
     _transactionSpots.then((_) {
       setState(() {});
     });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   @override
@@ -73,7 +71,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                   onPeriodChanged: (newPeriod) {
                     setState(() {
                       _selectedPeriod = newPeriod;
-                      _fetchData();
+                      _fetchData(); // Aggiorna i dati quando cambia il periodo
                     });
                   },
                 ),
@@ -83,7 +81,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                   future: _transactionSpots,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: Container());
+                      return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -91,10 +89,15 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                     }
 
                     List<TransactionSpot> transactionSpots = snapshot.data!;
-                    List<FlSpot> spots = transactionSpots.map((e) => FlSpot(e.time, e.value)).toList();
-                    List<TooltipData> tooltipData = transactionSpots.map((e) => TooltipData(e.timeString, e.time, e.value)).toList();
+                    List<FlSpot> spots = transactionSpots
+                        .map((e) => FlSpot(e.time, e.value))
+                        .toList();
+                    List<TooltipData> tooltipData = transactionSpots
+                        .map((e) => TooltipData(e.timeString, e.time, e.value))
+                        .toList();
 
-                    final Color lineColor = transactionSpots.last.value >= 0 ? Colors.green : Colors.red;
+                    final Color lineColor =
+                    transactionSpots.last.value >= 0 ? Colors.green : Colors.red;
 
                     return Line_Chart(
                       spots: spots,
