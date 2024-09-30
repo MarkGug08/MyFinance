@@ -16,6 +16,7 @@ class TransactionController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   double Income = 0;
   double Expenses = 0;
+  List<UserTransaction> transactions = [];
 
   Future<void> saveTransaction({
     required TextEditingController amountController,
@@ -120,8 +121,6 @@ class TransactionController {
       user.Income = Income;
       user.Expenses = Expenses;
 
-      print(user.Income);
-      print(user.Expenses);
 
       return transactionSpots;
     } catch (error) {
@@ -130,7 +129,31 @@ class TransactionController {
     }
   }
 
+  Future<List<UserTransaction>> getTransaction() async {
+    try {
 
+      QuerySnapshot snapshot = await _firestore.collection('transactions').get();
+
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        UserTransaction transaction = UserTransaction(
+          amount: data['amount'] != null ? data['amount'] as double : 0.0,
+          dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
+          Description: data['description'] ?? 'No description',
+        );
+
+        transactions.add(transaction);
+      }
+
+      transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+
+      return transactions;
+    } catch (error) {
+
+      return [];
+    }
+  }
 
   void CalcolateTransactionsMovements(double transaction){
 

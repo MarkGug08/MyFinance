@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
+import 'package:myfinance/Models/Transaction.dart';
 import 'package:myfinance/TransactionPage/Widget/ContentPage/Transactions_contentPage.dart';
 import 'package:myfinance/TransactionPage/Widget/HeaderPage/transactions_HeaderPage.dart';
 import '../Models/User.dart';
@@ -18,11 +19,19 @@ class _TransactionPageState extends State<TransactionPage> {
   bool _isFormVisible = false;
   TransactionController transactionController = TransactionController();
   Timer? _timer;
+  List<UserTransaction> transactions = [];
 
   @override
   void initState() {
     super.initState();
+    FetchTransactions();
     _startAutoReload();
+  }
+
+
+  Future<void> FetchTransactions() async {
+    transactions = await transactionController.getTransaction();
+    print(transactions.length);
   }
 
   @override
@@ -55,7 +64,7 @@ class _TransactionPageState extends State<TransactionPage> {
           });
         },
       ),
-      body: TransactionsContentpage(context, widget.user, _isFormVisible),
+      body: TransactionsContentPage(context, widget.user, _isFormVisible, transactions),
     );
   }
 }
