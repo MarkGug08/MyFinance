@@ -28,7 +28,10 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
   @override
   void didUpdateWidget(TransactionLineChartWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if(widget.user.control){
       _fetchData();
+    }
+
   }
 
   void _fetchData() {
