@@ -47,6 +47,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        margin: EdgeInsets.symmetric(vertical: 15),
         width: 350,
         height: 300,
         padding: EdgeInsets.only(bottom: 20),
@@ -63,7 +64,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
           child: Column(
             children: [
               Container(
@@ -74,7 +75,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                   onPeriodChanged: (newPeriod) {
                     setState(() {
                       _selectedPeriod = newPeriod;
-                      _fetchData(); // Aggiorna i dati quando cambia il periodo
+                      _fetchData();
                     });
                   },
                 ),
