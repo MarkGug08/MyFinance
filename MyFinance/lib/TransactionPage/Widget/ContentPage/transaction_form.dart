@@ -18,13 +18,22 @@ class _TransactionFormState extends State<TransactionForm> {
   final _descriptionController = TextEditingController();
   bool _isIncome = true;
   DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
+      final selectedDateTime = DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+        _selectedTime.hour,
+        _selectedTime.minute,
+      );
+
       transactionController.saveTransaction(
         amountController: _amountController,
         descriptionController: _descriptionController,
-        selectedDate: _selectedDate,
+        selectedDate: selectedDateTime,
         context: context,
         tipeTransaction: _isIncome,
       ).then((_) {
@@ -33,6 +42,7 @@ class _TransactionFormState extends State<TransactionForm> {
         widget.user.control = true;
         setState(() {
           _selectedDate = DateTime.now();
+          _selectedTime = TimeOfDay.now();
           _isIncome = true;
         });
       });
@@ -50,6 +60,19 @@ class _TransactionFormState extends State<TransactionForm> {
     if (pickedDate != null) {
       setState(() {
         _selectedDate = pickedDate;
+      });
+    }
+  }
+
+  void _pickTime() async {
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        _selectedTime = pickedTime;
       });
     }
   }
@@ -112,10 +135,19 @@ class _TransactionFormState extends State<TransactionForm> {
           SizedBox(height: 16),
           ListTile(
             title: Text(
-              DateFormat.yMMMd().format(_selectedDate),
+              'Transaction Date: ${DateFormat.yMMMd().format(_selectedDate)}',
             ),
+            subtitle: Text('Tap to select a date'),
             trailing: Icon(Icons.calendar_today),
             onTap: _pickDate,
+          ),
+          ListTile(
+            title: Text(
+              'Transaction Time: ${_selectedTime.format(context)}',
+            ),
+            subtitle: Text('Tap to select a time'),
+            trailing: Icon(Icons.access_time),
+            onTap: _pickTime,
           ),
           SizedBox(height: 32),
           ElevatedButton(
