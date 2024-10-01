@@ -12,6 +12,7 @@ Widget periodDropdown({
           'Today',
           'This Week',
           'This Month',
+          'All'
         ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,

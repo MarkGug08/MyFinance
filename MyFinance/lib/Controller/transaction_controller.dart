@@ -52,33 +52,35 @@ class TransactionController {
   Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context, UserApp user) async {
     try {
       final DateTime now = DateTime.now();
-      DateTime startTime;
+      DateTime? startTime;
 
-
-      switch (period) {
-        case 'Today':
-          startTime = now.subtract(Duration(hours: 24));
-          break;
-
-        case 'This Week':
-          startTime = now.subtract(Duration(days: 7));
-          break;
-
-        case 'This Month':
-          startTime = now.subtract(Duration(days: 31));
-          break;
-
-        default:
-          throw Exception('Unsupported period: $period');
+      if (period != 'All') {
+        switch (period) {
+          case 'Today':
+            startTime = now.subtract(Duration(hours: 24));
+            break;
+          case 'This Week':
+            startTime = now.subtract(Duration(days: 7));
+            break;
+          case 'This Month':
+            startTime = now.subtract(Duration(days: 31));
+            break;
+          default:
+            throw Exception('Unsupported period: $period');
+        }
       }
 
-      QuerySnapshot snapshot = await _firestore
-          .collection('transactions')
-          .where('dateTime', isGreaterThanOrEqualTo: startTime)
-          .get();
+      Query query = _firestore.collection('transactions');
+
+      if (startTime != null) {
+        query = query.where('dateTime', isGreaterThanOrEqualTo: startTime);
+      }
+
+      query = query.orderBy('dateTime', descending: false);
+
+      QuerySnapshot snapshot = await query.get();
 
       List<TransactionSpot> transactionSpots = [];
-
       int positionXaxis = 0;
       double balance = 0;
 
@@ -91,24 +93,8 @@ class TransactionController {
           Description: data['Description'] ?? 'No description',
         );
 
-        double timeValue;
-        String timeString;
-        final DateTime transactionDate = transaction.dateTime;
-
-        if (period == 'Today') {
-          timeValue = (positionXaxis + 1).toDouble();
-          timeString = '${transactionDate.hour.toString().padLeft(2, '0')}:${transactionDate.minute.toString().padLeft(2, '0')}:${transactionDate.second.toString().padLeft(2, '0')}';
-        } else if (period == 'This Week') {
-
-          timeValue = (positionXaxis + 1).toDouble();
-          timeString = '${transactionDate.day}/${transactionDate.month} ${transactionDate.hour}:${transactionDate.minute}:${transactionDate.second}';
-        } else if (period == 'This Month') {
-
-          timeValue = (positionXaxis + 1).toDouble();
-          timeString = '${transactionDate.day}/${transactionDate.month} ${transactionDate.hour}:${transactionDate.minute}:${transactionDate.second}';
-        } else {
-          throw Exception('Unsupported period: $period');
-        }
+        double timeValue = (positionXaxis + 1).toDouble();
+        String timeString = '${transaction.dateTime.day}/${transaction.dateTime.month} ${transaction.dateTime.hour}:${transaction.dateTime.minute}:${transaction.dateTime.second}';
 
         CalcolateTransactionsMovements(transaction.amount);
 
@@ -117,10 +103,8 @@ class TransactionController {
         positionXaxis++;
       }
 
-
       user.Income = Income;
       user.Expenses = Expenses;
-
 
       return transactionSpots;
     } catch (error) {
@@ -132,7 +116,6 @@ class TransactionController {
   Future<List<UserTransaction>> getTransaction() async {
     transactions.clear();
     try {
-
       QuerySnapshot snapshot = await _firestore.collection('transactions').get();
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
@@ -151,18 +134,15 @@ class TransactionController {
 
       return transactions;
     } catch (error) {
-
       return [];
     }
   }
 
-  void CalcolateTransactionsMovements(double transaction){
-
-      if(transaction >= 0){
-        Income += transaction;
-      }else{
-        Expenses += transaction;
-      }
+  void CalcolateTransactionsMovements(double transaction) {
+    if (transaction >= 0) {
+      Income += transaction;
+    } else {
+      Expenses += transaction;
     }
-
+  }
 }

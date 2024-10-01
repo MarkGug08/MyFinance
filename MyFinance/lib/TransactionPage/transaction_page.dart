@@ -46,6 +46,7 @@ class _TransactionPageState extends State<TransactionPage> {
       _reloadPage();
       if(widget.user.control){
         FetchTransactions();
+        _isFormVisible = false;
       }
     });
   }
