@@ -246,6 +246,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  draggable_menu:
+    dependency: "direct main"
+    description:
+      name: draggable_menu
+      sha256: "1a748cea94fa64263e7708a98f5bc9d0fa560bfaffd521df4d607ea4393bfbd8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.1"
   ed25519_edwards:
     dependency: transitive
     description:

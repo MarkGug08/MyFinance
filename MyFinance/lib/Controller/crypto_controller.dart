@@ -22,7 +22,7 @@ class CryptoController {
 
   Future<void> fetchCryptosFromFirestore(BuildContext context) async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('Crypto').get();
+      QuerySnapshot snapshot = await _firestore.collection('crypto').get();
       _predefinedCryptos.clear();
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
@@ -85,7 +85,7 @@ class CryptoController {
   Future<void> UpdateCrypto(Crypto crypto, bool newIsFavorite, BuildContext context) async {
     try {
       QuerySnapshot querySnapshot = await _firestore
-          .collection('Crypto')
+          .collection('crypto')
           .where('symbol', isEqualTo: crypto.symbol)
           .get();
 
@@ -93,7 +93,7 @@ class CryptoController {
         DocumentSnapshot document = querySnapshot.docs.first;
 
         if (!newIsFavorite) {
-          await _firestore.collection('Crypto').doc(document.id).delete();
+          await _firestore.collection('crypto').doc(document.id).delete();
         }
       } else {
         saveCrypto(crypto);
@@ -105,7 +105,7 @@ class CryptoController {
 
   Future<void> saveCrypto(Crypto crypto) async {
     try {
-      await _firestore.collection('Crypto').add({
+      await _firestore.collection('crypto').add({
         'name': crypto.name,
         'symbol': crypto.symbol,
         'isFavorite': crypto.isFavorite,
@@ -156,6 +156,8 @@ class CryptoController {
         double lowestPrice = double.infinity;
         double startPrice = 0.0;
 
+
+        int positionXaxis = 0;
         for (var i = 0; i < jsonResponse.length; i++) {
           var candle = jsonResponse[i];
           final int timestamp = candle[0];
@@ -170,19 +172,21 @@ class CryptoController {
           String timeString;
 
           if (period == 'Today') {
-            timeValue = (date.difference(now.subtract(Duration(hours: 24))).inMinutes / 60.0);
+            timeValue = (positionXaxis + 1).toDouble();
             timeString = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
           } else if (period == 'This Week') {
-            timeValue = date.difference(now.subtract(Duration(days: 6))).inMinutes / 1440.0;
+            timeValue = (positionXaxis + 1).toDouble();
             timeString = '${date.day}/${date.month}';
           } else if (period == 'This Month') {
-            timeValue = date.difference(now.subtract(Duration(days: 30))).inHours.toDouble();
+            timeValue = (positionXaxis + 1).toDouble();
             timeString = '${date.day}/${date.month}';
           } else {
             throw Exception('Unsupported period: $period');
           }
 
           spots.add(CryptoSpot(timeValue, timeString, close));
+
+          positionXaxis++;
 
           if (close > highestPrice) highestPrice = close;
           if (close < lowestPrice) lowestPrice = close;

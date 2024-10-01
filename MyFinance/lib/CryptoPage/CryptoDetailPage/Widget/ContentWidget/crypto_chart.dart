@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/Content_widget/menu_dropdown.dart';
 import '../../../../Controller/crypto_controller.dart';
 import '../../../../Models/Crypto.dart';
 import '../../../../Widget/line_chart.dart';
+import '../../../../Widget/menu_dropdown.dart';
 
 class CryptoLineChartWidget extends StatefulWidget {
   final Crypto crypto;

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/Content_widget/crypto_chart.dart';
-import 'package:myfinance/CryptoPage/CryptoDetailPage/Widget/Content_widget/price_card.dart';
+import 'package:myfinance/Widget/price_card.dart';
 import 'package:myfinance/Models/Crypto.dart';
+
+import 'crypto_chart.dart';
 
 Widget buildContent(Crypto crypto) {
   return Padding(

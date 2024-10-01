@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Models/Crypto.dart';
 import '../../../../Widget/crypto_info.dart';
-import 'custom_app_bar.dart';
+import '../../../../Widget/custom_app_bar.dart';
 
 Widget buildHeader(BuildContext context, Crypto crypto) {
   return Container(

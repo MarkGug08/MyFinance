@@ -47,6 +47,7 @@ dependencies:
   animated_line_chart: ^0.0.3
   shared_preferences: ^2.0.9
   flutter_slidable:
+  draggable_menu: ^4.4.1
 
 
 

@@ -8,11 +8,12 @@ Widget CustomAppBar(BuildContext context, String text) {
       text,
       style: TextStyle(color: Colors.white),
     ),
-    leading: IconButton(
+    leading: Navigator.canPop(context) ? IconButton(
       icon: Icon(Icons.arrow_back, color: Colors.white),
       onPressed: () {
         Navigator.pop(context);
       },
-    ),
+    ) : null,
   );
 }
+
