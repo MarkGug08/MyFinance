@@ -145,4 +145,17 @@ class TransactionController {
       Expenses += transaction;
     }
   }
+
+
+
+  double CalcolateTotalBalance(){
+    getTransaction();
+    double balance = 0;
+
+    for(UserTransaction x in transactions){
+      balance += x.amount;
+    }
+
+    return balance;
+  }
 }
