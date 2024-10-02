@@ -138,6 +138,44 @@ class TransactionController {
     }
   }
 
+  Future<List<TransactionSpot>> getTransactionHistoryWithoutTime(BuildContext context) async {
+    try {
+      Query query = _firestore.collection('transactions');
+      query = query.orderBy('dateTime', descending: false);
+
+      QuerySnapshot snapshot = await query.get();
+
+      List<TransactionSpot> transactionSpots = [];
+      int positionXaxis = 0;
+      double balance = 0;
+
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        UserTransaction transaction = UserTransaction(
+          amount: data['amount'] != null ? data['amount'] as double : 0.0,
+          dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
+          Description: data['Description'] ?? 'No description',
+        );
+
+        double timeValue = (positionXaxis + 1).toDouble();
+        String timeString = '${transaction.dateTime.day}/${transaction.dateTime.month} ${transaction.dateTime.hour}:${transaction.dateTime.minute}:${transaction.dateTime.second}';
+
+        CalcolateTransactionsMovements(transaction.amount);
+
+        balance += transaction.amount;
+        transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
+        positionXaxis++;
+      }
+
+
+      return transactionSpots;
+    } catch (error) {
+      showError(context, 'Error fetching transaction history: $error');
+      return [];
+    }
+  }
+
   void CalcolateTransactionsMovements(double transaction) {
     if (transaction >= 0) {
       Income += transaction;
@@ -147,9 +185,30 @@ class TransactionController {
   }
 
 
+  Future<List<UserTransaction>> get10Transactions() async {
+    await getTransaction();
 
-  double CalcolateTotalBalance(){
-    getTransaction();
+    List<UserTransaction> history = [];
+
+    if(transactions.length > 10){
+      for (int i = 0; i < 10; i++){
+        history.add(transactions[i]);
+      }
+    }else{
+      for(UserTransaction x in transactions){
+        history.add(x);
+      }
+    }
+
+    return history;
+
+  }
+
+
+
+  Future<double> CalcolateTotalBalance() async {
+    await getTransaction();
+
     double balance = 0;
 
     for(UserTransaction x in transactions){

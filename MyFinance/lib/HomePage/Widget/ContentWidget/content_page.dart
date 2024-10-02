@@ -1,14 +1,19 @@
-
 import 'package:flutter/material.dart';
+import 'package:myfinance/HomePage/Widget/ContentWidget/Widget/transactions_chart.dart';
+import '../../../Controller/transaction_controller.dart';
+import '../../../Models/Transaction.dart';
 
 Widget buildContent(BuildContext context) {
+
+  TransactionController transactionController = TransactionController();
+
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Chart',
+          'Transaction Movements',
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -16,7 +21,6 @@ Widget buildContent(BuildContext context) {
         ),
         SizedBox(height: 16.0),
         Container(
-          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10.0),
@@ -29,13 +33,80 @@ Widget buildContent(BuildContext context) {
               ),
             ],
           ),
-          child: SizedBox(
-            width: double.infinity,
-            child: Text("ciao")
+          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16.0),
+          child: TransactionLineChartHomePage(),
+        ),
+        SizedBox(height: 16.0),
+        const Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Last 24 Hours',
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        SizedBox(height: 20.0),
+        SizedBox(
+          height: 180.0,
+          child: FutureBuilder<List<UserTransaction>>(
+            future: transactionController.getTransaction(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center();
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error loading transactions'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No transactions available'));
+              } else {
 
+                DateTime now = DateTime.now();
+                List<UserTransaction> transactions = snapshot.data!
+                    .where((transaction) =>
+                now.difference(transaction.dateTime).inHours < 24)
+                    .toList();
+
+                if (transactions.isEmpty) {
+                  return Center(child: Text('No transactions in the last 24 hours'));
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) {
+                    UserTransaction transaction = transactions[index];
+                    return Column(
+                      children: [
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                          title: Text(
+                            transaction.Description,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          subtitle: Text(
+                            '${transaction.dateTime.day}/${transaction.dateTime.month}/${transaction.dateTime.year}',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                          trailing: Text(
+                            '${transaction.amount.toStringAsFixed(2)} €',
+                            style: TextStyle(
+                              color: transaction.amount >= 0 ? Colors.green : Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Divider()
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        ),
       ],
     ),
   );
