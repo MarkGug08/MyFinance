@@ -31,9 +31,7 @@ class Line_Chart extends StatelessWidget {
     final double minX = spots.first.x - 0.1;
     final double maxX = spots.last.x + 0.1;
 
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 1500),
-      child: LineChart(
+    return LineChart(
         LineChartData(
           gridData: FlGridData(
             show: true,
@@ -104,8 +102,16 @@ class Line_Chart extends StatelessWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: lineColor.withOpacity(0.3),
+                gradient: LinearGradient(
+                  colors: [
+                    lineColor.withOpacity(0.3),
+                    lineColor.withOpacity(0),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
+
             ),
           ],
           lineTouchData: LineTouchData(
@@ -137,7 +143,6 @@ class Line_Chart extends StatelessWidget {
           ),
         ),
         key: ValueKey<String>(selectedPeriod),
-      ),
     );
   }
 }

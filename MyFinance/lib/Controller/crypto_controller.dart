@@ -111,7 +111,7 @@ class CryptoController {
         'isFavorite': crypto.isFavorite,
       });
     } catch (e) {
-      print('Error saving crypto: $e');
+
     }
   }
 
