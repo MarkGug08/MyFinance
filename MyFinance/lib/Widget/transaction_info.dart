@@ -8,8 +8,8 @@ Widget TransactionInfo({
 }) {
   final changeColor = currentValue >= 0 ? Colors.green : Colors.red;
 
-
-  String formattedTime = '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  String formattedTime =
+      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,28 +17,31 @@ Widget TransactionInfo({
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                description,
-                style: TextStyle(fontSize: 16.0, color: color),
-              ),
-              SizedBox(height: 4.0),
-              Text(
-                '${time.day.toString().padLeft(2, '0')}/${time.month.toString().padLeft(2, '0')}/${time.year} $formattedTime',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.0,
+          // Colonna per descrizione e data/ora
+          Expanded( // Usa Expanded qui per consentire il ridimensionamento
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  description,
+                  style: TextStyle(fontSize: 16.0, color: color),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+                SizedBox(height: 4.0),
+                Text(
+                  '${time.day.toString().padLeft(2, '0')}/${time.month.toString().padLeft(2, '0')}/${time.year} $formattedTime',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14.0,
+                  ),
+                ),
+              ],
+            ),
           ),
 
-
+          // Colonna per il valore e l'icona
           Column(
-
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Row(
@@ -62,7 +65,6 @@ Widget TransactionInfo({
                   ),
                 ],
               ),
-
             ],
           ),
         ],

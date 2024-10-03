@@ -82,6 +82,8 @@ Widget buildContent(BuildContext context, UserApp user) {
                           contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
                           title: Text(
                             transaction.Description,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
