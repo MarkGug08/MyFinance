@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/MainPage/main_page.dart';
 import '../../../Controller/auth_controller.dart';
-import '../../../HomePage/home_page.dart';
 import '../../../Models/User.dart';
 import '../../../Widget/error.dart';
 
@@ -13,6 +12,8 @@ Widget registerButton(
     TextEditingController usernameController,
     TextEditingController emailController,
     TextEditingController passwordController,
+    bool isLoading,
+    Function(bool) setLoading,
     ) {
   return SizedBox(
     width: double.infinity,
@@ -24,28 +25,27 @@ Widget registerButton(
         ),
         backgroundColor: Colors.black,
       ),
-      onPressed: () async {
+      onPressed: isLoading ? null : () async {
+        setLoading(true);
         if (formKey.currentState!.validate()) {
           try {
-              User? user = await authController.registerUser(
+            User? user = await authController.registerUser(
               username: usernameController.text,
               email: emailController.text,
               password: passwordController.text,
+            );
+
+            if (user != null) {
+              UserApp userApp = UserApp(
+                Income: 0,
+                Expenses: 0,
+                UserEmail: user.email.toString(),
               );
-
-
-              if (user != null) {
-
-                UserApp userApp = UserApp(
-                  Income: 0,
-                  Expenses: 0,
-                  UserEmail: user.email.toString(),
-                );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainPage(user: userApp)),
-                );
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage(user: userApp)),
+              );
+            }
           } catch (e) {
             if (e is FirebaseAuthException) {
               String errorMessage = getFirebaseAuthErrorMessage(e);
@@ -53,10 +53,16 @@ Widget registerButton(
             } else {
               showError(context, 'An error occurred: ${e.toString()}');
             }
+          } finally {
+            setLoading(false);
           }
+        } else {
+          setLoading(false);
         }
       },
-      child: const Text(
+      child: isLoading
+          ? CircularProgressIndicator(color: Colors.white)
+          : const Text(
         'Agree and register',
         style: TextStyle(color: Colors.white),
       ),

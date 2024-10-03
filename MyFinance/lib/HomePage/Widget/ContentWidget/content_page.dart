@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../Models/User.dart';
 import 'Widget/24history.dart';
 import 'Widget/transactions_chart.dart';
