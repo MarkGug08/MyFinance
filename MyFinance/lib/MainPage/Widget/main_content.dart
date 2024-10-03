@@ -7,16 +7,16 @@ import '../../Models/User.dart';
 
 class MainContent extends StatelessWidget {
   final int selectedIndex;
-  final UserApp user1 = UserApp(Income: 0, Expenses: 0);
+  UserApp user;
 
 
   late final List<Widget> pages;
 
-  MainContent({required this.selectedIndex}) {
+  MainContent({required this.selectedIndex, required this.user}) {
     pages = <Widget>[
       HomePage(),
-      TransactionPage(user: user1),
-      MarketPage(),
+      TransactionPage(user: user),
+      MarketPage(user: user),
     ];
   }
 

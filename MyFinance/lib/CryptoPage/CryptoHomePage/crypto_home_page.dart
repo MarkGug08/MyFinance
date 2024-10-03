@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:myfinance/Models/User.dart';
 import '../../Controller/crypto_controller.dart';
 import 'Widget/searchbar.dart';
 import '../../Models/Crypto.dart';
 import 'Widget/crypto_list.dart';
 
 class MarketPage extends StatefulWidget {
+  UserApp user;
+
+  MarketPage({required this.user});
+
   @override
   _MarketPageState createState() => _MarketPageState();
 }
@@ -38,7 +43,7 @@ class _MarketPageState extends State<MarketPage> {
 
   void _fetchCryptos() async {
     try {
-      List<Crypto> cryptos = await cryptoController.getCryptos(context);
+      List<Crypto> cryptos = await cryptoController.getCryptos(context, widget.user);
       setState(() {
         cryptoList = cryptos;
         filteredCryptoList = cryptos;
@@ -50,7 +55,7 @@ class _MarketPageState extends State<MarketPage> {
     String query = searchController.text.toLowerCase();
 
     try {
-      Crypto? crypto = await cryptoController.searchCryptoOnline(query, context);
+      Crypto? crypto = await cryptoController.searchCryptoOnline(query, context, widget.user);
       if (crypto != null) {
         setState(() {
           crypto.isFavorite = false;
@@ -112,7 +117,7 @@ class _MarketPageState extends State<MarketPage> {
     setState(() {
       crypto.isFavorite = !crypto.isFavorite;
     });
-    cryptoController.UpdateCrypto(crypto, crypto.isFavorite, context).then((_) {
+    cryptoController.UpdateCrypto(crypto, crypto.isFavorite, context, widget.user).then((_) {
       _fetchCryptos();
       searchController.clear();
     });
