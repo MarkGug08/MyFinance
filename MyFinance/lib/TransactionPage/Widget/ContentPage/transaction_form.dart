@@ -36,6 +36,7 @@ class _TransactionFormState extends State<TransactionForm> {
         selectedDate: selectedDateTime,
         context: context,
         tipeTransaction: _isIncome,
+        user: widget.user,
       ).then((_) {
         _amountController.clear();
         _descriptionController.clear();

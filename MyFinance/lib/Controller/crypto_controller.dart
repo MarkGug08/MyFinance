@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfinance/Models/User.dart';
 
 import '../Models/Crypto.dart';
 import '../Widget/error.dart';
@@ -20,9 +21,9 @@ class CryptoController {
   final String CoingeckoListCrypto = 'https://api.coingecko.com/api/v3/coins/list';
   List<Crypto> _predefinedCryptos = [];
 
-  Future<void> fetchCryptosFromFirestore(BuildContext context) async {
+  Future<void> fetchCryptosFromFirestore(BuildContext context, UserApp user) async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('crypto').get();
+      QuerySnapshot snapshot = await _firestore.collection('crypto').where('user', isEqualTo: user.UserEmail ).get();
       _predefinedCryptos.clear();
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
@@ -34,6 +35,7 @@ class CryptoController {
           currentValue: data['currentValue']?.toDouble() ?? 0.0,
           percentChange24h: data['percentChange24h']?.toDouble() ?? 0.0,
           isFavorite: data['isFavorite'] ?? false,
+          user: data['user'] ?? ''
         );
 
         if (crypto.isFavorite) {
@@ -45,8 +47,8 @@ class CryptoController {
     }
   }
 
-  Future<List<Crypto>> getCryptos(BuildContext context) async {
-    await fetchCryptosFromFirestore(context);
+  Future<List<Crypto>> getCryptos(BuildContext context, UserApp user) async {
+    await fetchCryptosFromFirestore(context, user);
 
     for (var crypto in _predefinedCryptos) {
       final symbol = crypto.symbol + 'USDT';
@@ -82,11 +84,12 @@ class CryptoController {
     return _predefinedCryptos;
   }
 
-  Future<void> UpdateCrypto(Crypto crypto, bool newIsFavorite, BuildContext context) async {
+  Future<void> UpdateCrypto(Crypto crypto, bool newIsFavorite, BuildContext context, UserApp user) async {
     try {
       QuerySnapshot querySnapshot = await _firestore
           .collection('crypto')
           .where('symbol', isEqualTo: crypto.symbol)
+          .where('user', isEqualTo: user.UserEmail)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -96,19 +99,20 @@ class CryptoController {
           await _firestore.collection('crypto').doc(document.id).delete();
         }
       } else {
-        saveCrypto(crypto);
+        saveCrypto(crypto, user);
       }
     } catch (e) {
       showError(context, "Sorry we have a problem to found your crypto, please retry");
     }
   }
 
-  Future<void> saveCrypto(Crypto crypto) async {
+  Future<void> saveCrypto(Crypto crypto, UserApp user) async {
     try {
       await _firestore.collection('crypto').add({
         'name': crypto.name,
         'symbol': crypto.symbol,
         'isFavorite': crypto.isFavorite,
+        'user' : user.UserEmail
       });
     } catch (e) {
 
@@ -210,7 +214,7 @@ class CryptoController {
     }
   }
 
-  Future<Crypto?> searchCryptoOnline(String query, BuildContext context) async {
+  Future<Crypto?> searchCryptoOnline(String query, BuildContext context, UserApp user) async {
     String symboltoResearch = query.toUpperCase();
     String symbol = symboltoResearch;
 
@@ -244,6 +248,7 @@ class CryptoController {
             currentValue: currentValue,
             percentChange24h: ((currentValue - price24hAgo) / price24hAgo) * 100,
             isFavorite: false,
+            user: user.UserEmail
           );
 
           return crypto;

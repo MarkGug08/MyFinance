@@ -30,7 +30,7 @@ class _TransactionPageState extends State<TransactionPage> {
 
 
   Future<void> FetchTransactions() async {
-    transactions = await transactionController.getTransaction();
+    transactions = await transactionController.getTransaction(widget.user);
     widget.user.control = false;
 
   }

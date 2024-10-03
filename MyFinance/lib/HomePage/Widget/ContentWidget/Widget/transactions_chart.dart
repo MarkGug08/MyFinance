@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:myfinance/Models/User.dart';
 import '../../../../../../Controller/transaction_controller.dart';
 import '../../../../Widget/line_chart.dart';
 
 class TransactionLineChartHomePage extends StatefulWidget {
+  UserApp user;
+
+  TransactionLineChartHomePage ({required this.user});
   @override
   _TransactionLineChartHomePageState createState() => _TransactionLineChartHomePageState();
 }
@@ -20,7 +24,7 @@ class _TransactionLineChartHomePageState extends State<TransactionLineChartHomeP
 
   void _fetchData() {
     TransactionController transactionController = TransactionController();
-    _transactionSpots = transactionController.getTransactionHistoryWithoutTime(context);
+    _transactionSpots = transactionController.getTransactionHistoryWithoutTime(context, widget.user);
 
     _transactionSpots.then((_) {
       setState(() {});

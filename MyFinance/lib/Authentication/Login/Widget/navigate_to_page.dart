@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfinance/Authentication/Authentication_Page/authentication_page.dart';
 import 'package:myfinance/Authentication/Registration/register_page.dart';
 
 Widget previous_page_button(BuildContext context) {
@@ -14,7 +15,7 @@ Widget previous_page_button(BuildContext context) {
       child: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AuthScreen()));
         },
       ),
     ),

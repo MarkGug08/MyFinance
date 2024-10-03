@@ -24,6 +24,7 @@ class TransactionController {
     required DateTime selectedDate,
     required bool tipeTransaction,
     required BuildContext context,
+    required UserApp user
   }) async {
     try {
       double amount = double.parse(amountController.text);
@@ -36,12 +37,14 @@ class TransactionController {
         amount: amount,
         Description: description,
         dateTime: selectedDate,
+        user: user.UserEmail
       );
 
       await _firestore.collection('transactions').add({
         'amount': transaction.amount,
         'description': transaction.Description,
         'dateTime': transaction.dateTime,
+        'user': transaction.user
       });
     } catch (e) {
       String error = handleError(e);
@@ -70,13 +73,13 @@ class TransactionController {
         }
       }
 
-      Query query = _firestore.collection('transactions');
+      Query query = _firestore.collection('transactions')
+          .where('user', isEqualTo: user.UserEmail)
+          .orderBy('dateTime', descending: false);
 
       if (startTime != null) {
         query = query.where('dateTime', isGreaterThanOrEqualTo: startTime);
       }
-
-      query = query.orderBy('dateTime', descending: false);
 
       QuerySnapshot snapshot = await query.get();
 
@@ -91,6 +94,7 @@ class TransactionController {
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
           Description: data['Description'] ?? 'No description',
+          user: data['user'] ?? ''
         );
 
         double timeValue = (positionXaxis + 1).toDouble();
@@ -113,10 +117,10 @@ class TransactionController {
     }
   }
 
-  Future<List<UserTransaction>> getTransaction() async {
+  Future<List<UserTransaction>> getTransaction(UserApp user) async {
     transactions.clear();
     try {
-      QuerySnapshot snapshot = await _firestore.collection('transactions').get();
+      QuerySnapshot snapshot = await _firestore.collection('transactions').where('user', isEqualTo: user.UserEmail).get();
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -125,6 +129,7 @@ class TransactionController {
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
           Description: data['description'] ?? 'No description',
+          user: data['user'] ?? ''
         );
 
         transactions.add(transaction);
@@ -138,10 +143,9 @@ class TransactionController {
     }
   }
 
-  Future<List<TransactionSpot>> getTransactionHistoryWithoutTime(BuildContext context) async {
+  Future<List<TransactionSpot>> getTransactionHistoryWithoutTime(BuildContext context, UserApp user) async {
     try {
-      Query query = _firestore.collection('transactions');
-      query = query.orderBy('dateTime', descending: false);
+      Query query = _firestore.collection('transactions').where('user', isEqualTo: user.UserEmail).orderBy('dateTime', descending: false);
 
       QuerySnapshot snapshot = await query.get();
 
@@ -156,6 +160,7 @@ class TransactionController {
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
           Description: data['Description'] ?? 'No description',
+            user: data['user'] ?? ''
         );
 
         double timeValue = (positionXaxis + 1).toDouble();
@@ -185,29 +190,12 @@ class TransactionController {
   }
 
 
-  Future<List<UserTransaction>> get10Transactions() async {
-    await getTransaction();
-
-    List<UserTransaction> history = [];
-
-    if(transactions.length > 10){
-      for (int i = 0; i < 10; i++){
-        history.add(transactions[i]);
-      }
-    }else{
-      for(UserTransaction x in transactions){
-        history.add(x);
-      }
-    }
-
-    return history;
-
-  }
 
 
 
-  Future<double> CalcolateTotalBalance() async {
-    await getTransaction();
+
+  Future<double> CalcolateTotalBalance(UserApp user) async {
+    await getTransaction(user);
 
     double balance = 0;
 
