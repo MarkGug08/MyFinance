@@ -18,7 +18,6 @@ Widget draggableMenu(BuildContext context, List<UserTransaction> transactions) {
         ),
         child: Column(
           children: [
-
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

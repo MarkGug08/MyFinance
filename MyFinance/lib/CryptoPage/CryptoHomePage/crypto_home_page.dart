@@ -79,6 +79,7 @@ class _MarketPageState extends State<MarketPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFAFAFA),
       appBar: AppBar(
         backgroundColor: Color(0xFFFAFAFA),
         title: Center(child: Text('Market')),
