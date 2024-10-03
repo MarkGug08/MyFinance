@@ -28,6 +28,7 @@ class _TransactionFormState extends State<TransactionForm> {
         _selectedDate.day,
         _selectedTime.hour,
         _selectedTime.minute,
+        DateTime.now().second,
       );
 
       transactionController.saveTransaction(
@@ -86,6 +87,18 @@ class _TransactionFormState extends State<TransactionForm> {
         shrinkWrap: true,
         children: [
           TextFormField(
+            controller: _descriptionController,
+            decoration: InputDecoration(
+              labelText: 'Title',
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a title';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
             controller: _amountController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -121,18 +134,7 @@ class _TransactionFormState extends State<TransactionForm> {
             },
           ),
           SizedBox(height: 16),
-          TextFormField(
-            controller: _descriptionController,
-            decoration: InputDecoration(
-              labelText: 'Description',
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a description';
-              }
-              return null;
-            },
-          ),
+
           SizedBox(height: 16),
           ListTile(
             title: Text(
