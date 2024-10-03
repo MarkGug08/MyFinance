@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget TransactionInfo({
-  required String description,
+  required String title,
   required double currentValue,
   required DateTime time,
   required Color color,
@@ -17,13 +17,12 @@ Widget TransactionInfo({
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Colonna per descrizione e data/ora
-          Expanded( // Usa Expanded qui per consentire il ridimensionamento
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  description,
+                  title,
                   style: TextStyle(fontSize: 16.0, color: color),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -40,7 +39,7 @@ Widget TransactionInfo({
             ),
           ),
 
-          // Colonna per il valore e l'icona
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

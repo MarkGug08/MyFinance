@@ -43,7 +43,7 @@ class Last24 extends StatelessWidget {
                     ListTile(
                       contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
                       title: Text(
-                        transaction.Description,
+                        transaction.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),

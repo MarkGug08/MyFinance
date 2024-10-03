@@ -15,7 +15,7 @@ class _TransactionFormState extends State<TransactionForm> {
   TransactionController transactionController = TransactionController();
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _titleController = TextEditingController();
   bool _isIncome = true;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
@@ -33,14 +33,14 @@ class _TransactionFormState extends State<TransactionForm> {
 
       transactionController.saveTransaction(
         amountController: _amountController,
-        descriptionController: _descriptionController,
+        titleController: _titleController,
         selectedDate: selectedDateTime,
         context: context,
         tipeTransaction: _isIncome,
         user: widget.user,
       ).then((_) {
         _amountController.clear();
-        _descriptionController.clear();
+        _titleController.clear();
         widget.user.control = true;
         setState(() {
           _selectedDate = DateTime.now();
@@ -87,7 +87,7 @@ class _TransactionFormState extends State<TransactionForm> {
         shrinkWrap: true,
         children: [
           TextFormField(
-            controller: _descriptionController,
+            controller: _titleController,
             decoration: InputDecoration(
               labelText: 'Title',
             ),

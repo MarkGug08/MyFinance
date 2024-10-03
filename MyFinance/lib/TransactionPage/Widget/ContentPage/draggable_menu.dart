@@ -57,7 +57,7 @@ Widget draggableMenu(BuildContext context, List<UserTransaction> transactions) {
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: TransactionInfo(
-                          description: transaction.Description,
+                          title: transaction.title,
                           currentValue: transaction.amount,
                           time: transaction.dateTime,
                           color: Colors.black,

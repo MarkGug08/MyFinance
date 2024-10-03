@@ -20,7 +20,7 @@ class TransactionController {
 
   Future<void> saveTransaction({
     required TextEditingController amountController,
-    required TextEditingController descriptionController,
+    required TextEditingController titleController,
     required DateTime selectedDate,
     required bool tipeTransaction,
     required BuildContext context,
@@ -31,18 +31,18 @@ class TransactionController {
       if (!tipeTransaction && amount > 0) {
         amount *= -1;
       }
-      String description = descriptionController.text;
+      String title = titleController.text;
 
       UserTransaction transaction = UserTransaction(
         amount: amount,
-        Description: description,
+        title: title,
         dateTime: selectedDate,
         user: user.UserEmail
       );
 
       await _firestore.collection('transactions').add({
         'amount': transaction.amount,
-        'description': transaction.Description,
+        'title': transaction.title,
         'dateTime': transaction.dateTime,
         'user': transaction.user
       });
@@ -93,7 +93,7 @@ class TransactionController {
         UserTransaction transaction = UserTransaction(
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
-          Description: data['Description'] ?? 'No description',
+          title: data['title'] ?? 'No title',
           user: data['user'] ?? ''
         );
 
@@ -128,7 +128,7 @@ class TransactionController {
         UserTransaction transaction = UserTransaction(
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
-          Description: data['description'] ?? 'No description',
+          title: data['title'] ?? 'No title',
           user: data['user'] ?? ''
         );
 
@@ -159,7 +159,7 @@ class TransactionController {
         UserTransaction transaction = UserTransaction(
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
-          Description: data['Description'] ?? 'No description',
+          title: data['title'] ?? 'No title',
             user: data['user'] ?? ''
         );
 
