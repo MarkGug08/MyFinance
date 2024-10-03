@@ -5,13 +5,16 @@ import 'Widget/main_content.dart';
 
 
 class MainPage extends StatefulWidget {
+  UserApp user;
+
+  MainPage({required this.user});
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  final UserApp user = UserApp(Income: 0, Expenses: 0, UserEmail: 'test@deve.com');
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -22,7 +25,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MainContent(selectedIndex: _selectedIndex, user: user),
+      body: MainContent(selectedIndex: _selectedIndex, user: widget.user),
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedIndex,
         onItemTapped: _onItemTapped,

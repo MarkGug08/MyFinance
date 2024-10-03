@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/CryptoPage/CryptoHomePage/crypto_home_page.dart';
 import 'package:myfinance/MainPage/main_page.dart';
+import 'package:myfinance/Models/User.dart';
 
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
@@ -33,9 +34,12 @@ Widget login_button(
             );
 
             if (user != null) {
+
+              UserApp userApp = UserApp(Income: 0, Expenses: 0, UserEmail: user.email.toString());
+
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => MainPage()),
+                MaterialPageRoute(builder: (context) => MainPage(user: userApp)),
                     (Route<dynamic> route) => false,
               );
             }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myfinance/MainPage/main_page.dart';
 import '../../../Controller/auth_controller.dart';
 import '../../../HomePage/home_page.dart';
+import '../../../Models/User.dart';
 import '../../../Widget/error.dart';
 
 Widget registerButton(
@@ -26,16 +27,25 @@ Widget registerButton(
       onPressed: () async {
         if (formKey.currentState!.validate()) {
           try {
-            await authController.registerUser(
+              User? user = await authController.registerUser(
               username: usernameController.text,
               email: emailController.text,
               password: passwordController.text,
-            );
+              );
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MainPage()),
-            );
+
+              if (user != null) {
+
+                UserApp userApp = UserApp(
+                  Income: 0,
+                  Expenses: 0,
+                  UserEmail: user.email.toString(),
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainPage(user: userApp)),
+                );
+              }
           } catch (e) {
             if (e is FirebaseAuthException) {
               String errorMessage = getFirebaseAuthErrorMessage(e);
