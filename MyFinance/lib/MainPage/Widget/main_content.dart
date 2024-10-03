@@ -14,7 +14,7 @@ class MainContent extends StatelessWidget {
 
   MainContent({required this.selectedIndex, required this.user}) {
     pages = <Widget>[
-      HomePage(),
+      HomePage(user: user),
       TransactionPage(user: user),
       MarketPage(user: user),
     ];

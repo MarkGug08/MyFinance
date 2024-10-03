@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/HomePage/Widget/ContentWidget/Widget/transactions_chart.dart';
+import 'package:myfinance/Models/User.dart';
 import '../../../Controller/transaction_controller.dart';
 import '../../../Models/Transaction.dart';
 
-Widget buildContent(BuildContext context) {
+Widget buildContent(BuildContext context, UserApp user) {
 
   TransactionController transactionController = TransactionController();
 
@@ -34,7 +35,7 @@ Widget buildContent(BuildContext context) {
             ],
           ),
           padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16.0),
-          child: TransactionLineChartHomePage(),
+          child: TransactionLineChartHomePage(user: user),
         ),
         SizedBox(height: 16.0),
         const Align(
@@ -50,7 +51,7 @@ Widget buildContent(BuildContext context) {
         SizedBox(
           height: 180.0,
           child: FutureBuilder<List<UserTransaction>>(
-            future: transactionController.getTransaction(),
+            future: transactionController.getTransaction(user),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center();
@@ -82,7 +83,7 @@ Widget buildContent(BuildContext context) {
                           title: Text(
                             transaction.Description,
                             style: TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 18.0,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -95,6 +96,7 @@ Widget buildContent(BuildContext context) {
                             style: TextStyle(
                               color: transaction.amount >= 0 ? Colors.green : Colors.red,
                               fontWeight: FontWeight.bold,
+                              fontSize: 16
                             ),
                           ),
                         ),

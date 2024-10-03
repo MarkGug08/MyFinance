@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
-import '../../../Widget/custom_app_bar.dart';
+import 'package:myfinance/HomePage/Widget/HeaderContent/Widget/Modal_menu.dart';
+import 'package:myfinance/Models/User.dart';
 
-Widget buildHeader(BuildContext context) {
+import 'Widget/Balance.dart';
+
+Widget buildHeader(BuildContext context, UserApp user) {
   TransactionController controller = TransactionController();
 
   return Container(
@@ -24,94 +27,41 @@ Widget buildHeader(BuildContext context) {
     ),
     child: Column(
       children: [
-        CustomAppBar(context, 'Bentornato, User'),
-        FutureBuilder<double>(
-          future: controller.CalcolateTotalBalance(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: CircularProgressIndicator(color: Colors.white),
-              );
-            } else if (snapshot.hasError) {
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  'Errore: ${snapshot.error}',
-                  style: TextStyle(color: Colors.white),
+        SizedBox(height: 20.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Bentornato, User',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-              );
-            } else if (snapshot.hasData) {
-              final double balance = snapshot.data ?? 0.0;
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 8,
-                      offset: Offset(0, 3),
+              ),
+              IconButton(
+                icon: Icon(Icons.account_circle, color: Colors.white, size: 28),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.grey[850],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                     ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(20.0),
-                margin: EdgeInsets.fromLTRB(20, 10, 20, 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.account_balance_wallet,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                        SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Balance',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            SizedBox(height: 6),
-                            Text(
-                              '£${balance.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white.withOpacity(0.8),
-                      size: 12,
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  'Nessun dato disponibile',
-                  style: TextStyle(color: Colors.white),
-                ),
-              );
-            }
-          },
+                    builder: (BuildContext context) {
+                      return ModalMenu(user);
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
+
+        balanceWidget(controller, user),
       ],
     ),
   );
