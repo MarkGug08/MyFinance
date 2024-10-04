@@ -1,9 +1,7 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfinance/Models/User.dart';
-
 import '../../../../Authentication/Login/login_page.dart';
 
 Widget ModalMenu(UserApp user){
@@ -49,7 +47,7 @@ Widget ModalMenu(UserApp user){
             SizedBox(height: 10),
             ElevatedButton.icon(
               onPressed: () {
-                // Chiude l'applicazione
+
                 SystemNavigator.pop();
               },
               style: ElevatedButton.styleFrom(

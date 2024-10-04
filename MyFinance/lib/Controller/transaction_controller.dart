@@ -10,6 +10,10 @@ class TransactionSpot {
   final double value;
 
   TransactionSpot(this.time, this.timeString, this.value);
+
+  TransactionSpot copy(){
+    return TransactionSpot(time, timeString, value);
+  }
 }
 
 class TransactionController {
@@ -87,6 +91,8 @@ class TransactionController {
       int positionXaxis = 0;
       double balance = 0;
 
+
+
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
@@ -106,6 +112,15 @@ class TransactionController {
         transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
         positionXaxis++;
       }
+
+      if(transactionSpots.length == 1){
+        TransactionSpot x  = TransactionSpot(1, 'Start', 0);
+        transactionSpots[0].time += 1;
+        TransactionSpot y = transactionSpots[0];
+        transactionSpots[0] = x;
+        transactionSpots.add(y);
+      }
+
 
       user.Income = Income;
       user.Expenses = Expenses;
@@ -171,6 +186,15 @@ class TransactionController {
         balance += transaction.amount;
         transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
         positionXaxis++;
+      }
+
+
+      if(transactionSpots.length == 1){
+        TransactionSpot x  = TransactionSpot(1, 'Start', 0);
+        transactionSpots[0].time += 1;
+        TransactionSpot y = transactionSpots[0];
+        transactionSpots[0] = x;
+        transactionSpots.add(y);
       }
 
 

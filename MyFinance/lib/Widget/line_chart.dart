@@ -31,6 +31,7 @@ class Line_Chart extends StatelessWidget {
     final double minX = spots.first.x - 0.1;
     final double maxX = spots.last.x + 0.1;
 
+
     return LineChart(
         LineChartData(
           gridData: FlGridData(
