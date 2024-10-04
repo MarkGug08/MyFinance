@@ -4,15 +4,17 @@ import 'package:myfinance/Controller/transaction_controller.dart';
 import 'package:myfinance/Models/User.dart';
 
 class TransactionForm extends StatefulWidget {
-  UserApp user;
+  final UserApp user;
+  final Function onTransactionSaved;
 
-  TransactionForm({required this.user});
+  TransactionForm({required this.user, required this.onTransactionSaved});
+
   @override
   _TransactionFormState createState() => _TransactionFormState();
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  TransactionController transactionController = TransactionController();
+  final TransactionController transactionController = TransactionController();
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _titleController = TextEditingController();
@@ -28,7 +30,6 @@ class _TransactionFormState extends State<TransactionForm> {
         _selectedDate.day,
         _selectedTime.hour,
         _selectedTime.minute,
-        DateTime.now().second,
       );
 
       transactionController.saveTransaction(
@@ -42,6 +43,8 @@ class _TransactionFormState extends State<TransactionForm> {
         _amountController.clear();
         _titleController.clear();
         widget.user.control = true;
+        Navigator.pop(context);
+        widget.onTransactionSaved();
         setState(() {
           _selectedDate = DateTime.now();
           _selectedTime = TimeOfDay.now();
@@ -83,13 +86,23 @@ class _TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: ListView(
-        shrinkWrap: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          Text(
+            'New Transaction',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16),
           TextFormField(
             controller: _titleController,
             decoration: InputDecoration(
               labelText: 'Title',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.title),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -98,11 +111,14 @@ class _TransactionFormState extends State<TransactionForm> {
               return null;
             },
           ),
+          SizedBox(height: 16),
           TextFormField(
             controller: _amountController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: 'Amount',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.attach_money),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -114,7 +130,10 @@ class _TransactionFormState extends State<TransactionForm> {
           SizedBox(height: 16),
           DropdownButtonFormField<bool>(
             value: _isIncome,
-            decoration: InputDecoration(labelText: 'Type'),
+            decoration: InputDecoration(
+              labelText: 'Type',
+              border: OutlineInputBorder(),
+            ),
             items: [
               DropdownMenuItem(
                 value: true,
@@ -134,8 +153,6 @@ class _TransactionFormState extends State<TransactionForm> {
             },
           ),
           SizedBox(height: 16),
-
-          SizedBox(height: 16),
           ListTile(
             title: Text(
               'Transaction Date: ${DateFormat.yMMMd().format(_selectedDate)}',
@@ -152,11 +169,19 @@ class _TransactionFormState extends State<TransactionForm> {
             trailing: Icon(Icons.access_time),
             onTap: _pickTime,
           ),
-          SizedBox(height: 32),
-          ElevatedButton(
+          SizedBox(height: 16),
+          ElevatedButton.icon(
             onPressed: _submitForm,
-            child: Text('Save Transaction'),
+            icon: Icon(Icons.save),
+            label: Text('Save Transaction'),
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
           ),
+          SizedBox(height: 16),
         ],
       ),
     );

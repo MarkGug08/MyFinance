@@ -5,6 +5,7 @@ import 'package:myfinance/Models/Transaction.dart';
 import 'package:myfinance/TransactionPage/Widget/ContentPage/Transactions_contentPage.dart';
 import 'package:myfinance/TransactionPage/Widget/HeaderPage/transactions_HeaderPage.dart';
 import '../Models/User.dart';
+import 'Widget/ContentPage/transaction_form.dart';
 
 class TransactionPage extends StatefulWidget {
   final UserApp user;
@@ -16,7 +17,6 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
-  bool _isFormVisible = false;
   TransactionController transactionController = TransactionController();
   Timer? _timer;
   List<UserTransaction> transactions = [];
@@ -28,11 +28,14 @@ class _TransactionPageState extends State<TransactionPage> {
     _startAutoReload();
   }
 
-
   Future<void> FetchTransactions() async {
+    transactions.clear();
     transactions = await transactionController.getTransaction(widget.user);
     widget.user.control = false;
 
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -43,19 +46,35 @@ class _TransactionPageState extends State<TransactionPage> {
 
   void _startAutoReload() {
     _timer = Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
-      _reloadPage();
-      if(widget.user.control){
+
+      if (widget.user.control) {
         FetchTransactions();
-        _isFormVisible = false;
+
       }
     });
   }
 
-  void _reloadPage() {
-    setState(() {
 
+
+
+  void _showTransactionFormModal() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: TransactionForm(
+            user: widget.user,
+            onTransactionSaved: FetchTransactions,
+          ),
+        );
+      },
+    ).then((value) {
+      _startAutoReload();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +82,9 @@ class _TransactionPageState extends State<TransactionPage> {
       backgroundColor: Color(0xFFFAFAFA),
       appBar: TransactionsHeaderpage(
         context,
-        onToggleForm: () {
-          setState(() {
-            _isFormVisible = !_isFormVisible;
-          });
-        },
+        onToggleForm: _showTransactionFormModal,
       ),
-      body: TransactionsContentPage(context, widget.user, _isFormVisible, transactions),
+      body: TransactionsContentPage(context, widget.user, transactions),
     );
   }
 }

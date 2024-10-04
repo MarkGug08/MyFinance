@@ -6,7 +6,7 @@ import 'package:myfinance/TransactionPage/Widget/ContentPage/transaction_form.da
 import 'package:myfinance/Widget/price_card.dart';
 import '../../../Models/User.dart';
 
-Widget TransactionsContentPage(BuildContext context, UserApp user, bool isFormVisible, List<UserTransaction> transactions) {
+Widget TransactionsContentPage(BuildContext context, UserApp user, List<UserTransaction> transactions) {
   return Stack(
     children: [
       Column(
@@ -32,24 +32,7 @@ Widget TransactionsContentPage(BuildContext context, UserApp user, bool isFormVi
           ),
         ],
       ),
-
       draggableMenu(context, transactions),
-
-      if (isFormVisible)
-        Positioned(
-          top: 20,
-          left: 10,
-          right: 10,
-          child: Material(
-            elevation: 5,
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              padding: EdgeInsets.all(16),
-              color: Colors.white,
-              child: TransactionForm(user: user),
-            ),
-          ),
-        ),
     ],
   );
 }
