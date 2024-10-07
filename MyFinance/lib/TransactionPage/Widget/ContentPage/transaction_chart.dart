@@ -8,8 +8,9 @@ import '../../../Widget/menu_dropdown.dart';
 
 class TransactionLineChartWidget extends StatefulWidget {
   final UserApp user;
+  TransactionController controller = TransactionController();
 
-  TransactionLineChartWidget({required this.user});
+  TransactionLineChartWidget({required this.user, required this.controller});
 
   @override
   _TransactionLineChartWidgetState createState() => _TransactionLineChartWidgetState();
@@ -28,19 +29,14 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
   @override
   void didUpdateWidget(TransactionLineChartWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(widget.user.control){
+    if (widget.user.control) {
       _fetchData();
     }
-
   }
 
-  void _fetchData() {
-    TransactionController transactionController = TransactionController();
-    _transactionSpots = transactionController.getTransactionHistory(_selectedPeriod, context, widget.user,);
-
-    _transactionSpots.then((_) {
-      setState(() {});
-    });
+  Future<void> _fetchData() async {
+    widget.user.control = true;
+    _transactionSpots = widget.controller.getTransactionHistory(_selectedPeriod, context, widget.user);
   }
 
   @override

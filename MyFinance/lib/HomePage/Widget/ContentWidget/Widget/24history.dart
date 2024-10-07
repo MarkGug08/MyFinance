@@ -1,72 +1,66 @@
 import 'package:flutter/material.dart';
-
-import '../../../../Controller/transaction_controller.dart';
+import 'package:myfinance/Controller/transaction_controller.dart';
 import '../../../../Models/Transaction.dart';
 import '../../../../Models/User.dart';
 
 class Last24 extends StatelessWidget {
   final UserApp user;
+  TransactionController controller = TransactionController();
 
-  const Last24({required this.user});
+  Last24({required this.user, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    TransactionController transactionController = TransactionController();
+
+    DateTime now = DateTime.now();
+    List<UserTransaction> last24HoursTransactions = controller.transactions
+        .where((transaction) =>
+    transaction.user == user.UserEmail &&
+        now.difference(transaction.dateTime).inHours < 24)
+        .toList();
+
+
+    if (last24HoursTransactions.isEmpty) {
+      return Center(child: Text('No transactions in the last 24 hours'));
+    }
+
+
     return SizedBox(
       height: 180.0,
-      child: FutureBuilder<List<UserTransaction>>(
-        future: transactionController.getTransaction(user),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading transactions'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No transactions available'));
-          } else {
-            DateTime now = DateTime.now();
-            List<UserTransaction> transactions = snapshot.data!
-                .where((transaction) => now.difference(transaction.dateTime).inHours < 24)
-                .toList();
-
-            if (transactions.isEmpty) {
-              return Center(child: Text('No transactions in the last 24 hours'));
-            }
-
-            return ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: transactions.length,
-              itemBuilder: (context, index) {
-                UserTransaction transaction = transactions[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
-                      title: Text(
-                        transaction.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-                      ),
-                      subtitle: Text(
-                        '${transaction.dateTime.day}/${transaction.dateTime.month}/${transaction.dateTime.year}',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                      trailing: Text(
-                        '${transaction.amount.toStringAsFixed(2)} €',
-                        style: TextStyle(
-                          color: transaction.amount >= 0 ? Colors.green : Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    Divider(),
-                  ],
-                );
-              },
-            );
-          }
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: last24HoursTransactions.length,
+        itemBuilder: (context, index) {
+          UserTransaction transaction = last24HoursTransactions[index];
+          return Column(
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                title: Text(
+                  transaction.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                subtitle: Text(
+                  '${transaction.dateTime.day}/${transaction.dateTime.month}/${transaction.dateTime.year}',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                trailing: Text(
+                  '${transaction.amount.toStringAsFixed(2)} €',
+                  style: TextStyle(
+                    color: transaction.amount >= 0 ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Divider(),
+            ],
+          );
         },
       ),
     );

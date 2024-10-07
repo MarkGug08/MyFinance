@@ -9,32 +9,33 @@ import 'Widget/ContentPage/transaction_form.dart';
 
 class TransactionPage extends StatefulWidget {
   final UserApp user;
+  final TransactionController controller;
 
-  TransactionPage({required this.user});
+  TransactionPage({required this.user, required this.controller});
 
   @override
   _TransactionPageState createState() => _TransactionPageState();
 }
 
 class _TransactionPageState extends State<TransactionPage> {
-  TransactionController transactionController = TransactionController();
   Timer? _timer;
-  List<UserTransaction> transactions = [];
 
   @override
   void initState() {
     super.initState();
-    FetchTransactions();
+    _fetchTransactions();
     _startAutoReload();
   }
 
-  Future<void> FetchTransactions() async {
-    transactions.clear();
-    transactions = await transactionController.getTransaction(widget.user);
+  Future<void> _fetchTransactions() async {
     widget.user.control = false;
 
+    await widget.controller.getTransaction(widget.user);
+
     if (mounted) {
-      setState(() {});
+      setState(() {
+        widget.controller.transactions = widget.controller.transactions;
+      });
     }
   }
 
@@ -46,16 +47,11 @@ class _TransactionPageState extends State<TransactionPage> {
 
   void _startAutoReload() {
     _timer = Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
-
       if (widget.user.control) {
-        FetchTransactions();
-
+        _fetchTransactions();
       }
     });
   }
-
-
-
 
   void _showTransactionFormModal() {
     showModalBottomSheet(
@@ -66,15 +62,15 @@ class _TransactionPageState extends State<TransactionPage> {
           padding: EdgeInsets.all(16),
           child: TransactionForm(
             user: widget.user,
-            onTransactionSaved: FetchTransactions,
+            onTransactionSaved: () {
+              _fetchTransactions();
+            },
+            transactionController: widget.controller,
           ),
         );
       },
-    ).then((value) {
-      _startAutoReload();
-    });
+    );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +80,7 @@ class _TransactionPageState extends State<TransactionPage> {
         context,
         onToggleForm: _showTransactionFormModal,
       ),
-      body: TransactionsContentPage(context, widget.user, transactions),
+      body: TransactionsContentPage(context, widget.user, widget.controller.transactions, widget.controller),
     );
   }
 }

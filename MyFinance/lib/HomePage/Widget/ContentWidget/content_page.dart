@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:myfinance/Controller/transaction_controller.dart';
 import '../../../Models/User.dart';
 import 'Widget/24history.dart';
 import 'Widget/transactions_chart.dart';
 
 class buildContent extends StatelessWidget {
   final UserApp user;
+  TransactionController controller = TransactionController();
 
-  const buildContent({required this.user});
+  buildContent({required this.user, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class buildContent extends StatelessWidget {
               ],
             ),
             padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16.0),
-            child: TransactionLineChartHomePage(user: user),
+            child: TransactionLineChartHomePage(user: user, transactionController: controller),
           ),
           SizedBox(height: 16.0),
           const Align(
@@ -50,7 +52,7 @@ class buildContent extends StatelessWidget {
               ),
             ),
           ),
-          Last24(user: user),
+          Last24(user: user, controller: controller,),
         ],
       ),
     );

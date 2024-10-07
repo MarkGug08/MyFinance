@@ -6,15 +6,15 @@ import 'package:myfinance/Models/User.dart';
 class TransactionForm extends StatefulWidget {
   final UserApp user;
   final Function onTransactionSaved;
+  TransactionController transactionController = TransactionController();
 
-  TransactionForm({required this.user, required this.onTransactionSaved});
+  TransactionForm({required this.user, required this.onTransactionSaved, required this.transactionController});
 
   @override
   _TransactionFormState createState() => _TransactionFormState();
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  final TransactionController transactionController = TransactionController();
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _titleController = TextEditingController();
@@ -32,7 +32,7 @@ class _TransactionFormState extends State<TransactionForm> {
         _selectedTime.minute,
       );
 
-      transactionController.saveTransaction(
+      widget.transactionController.saveTransaction(
         amountController: _amountController,
         titleController: _titleController,
         selectedDate: selectedDateTime,

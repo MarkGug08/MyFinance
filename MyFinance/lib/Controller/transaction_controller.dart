@@ -58,8 +58,11 @@ class TransactionController {
 
   Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context, UserApp user) async {
     try {
+      Income = 0;
+      Expenses = 0;
       final DateTime now = DateTime.now();
       DateTime? startTime;
+
 
       if (period != 'All') {
         switch (period) {
@@ -77,44 +80,42 @@ class TransactionController {
         }
       }
 
-      Query query = _firestore.collection('transactions')
-          .where('user', isEqualTo: user.UserEmail)
-          .orderBy('dateTime', descending: false);
+
+      List<UserTransaction> filteredTransactions = transactions
+          .where((transaction) => transaction.user == user.UserEmail)
+          .toList();
 
       if (startTime != null) {
-        query = query.where('dateTime', isGreaterThanOrEqualTo: startTime);
+
+        filteredTransactions = filteredTransactions
+            .where((transaction) => transaction.dateTime.isAfter(startTime!))
+            .toList();
       }
 
-      QuerySnapshot snapshot = await query.get();
+
+      filteredTransactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
       List<TransactionSpot> transactionSpots = [];
       int positionXaxis = 0;
       double balance = 0;
 
 
-
-      for (QueryDocumentSnapshot doc in snapshot.docs) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-        UserTransaction transaction = UserTransaction(
-          amount: data['amount'] != null ? data['amount'] as double : 0.0,
-          dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
-          title: data['title'] ?? 'No title',
-          user: data['user'] ?? ''
-        );
-
+      for (UserTransaction transaction in filteredTransactions) {
         double timeValue = (positionXaxis + 1).toDouble();
         String timeString = '${transaction.dateTime.day}/${transaction.dateTime.month} ${transaction.dateTime.hour}:${transaction.dateTime.minute}:${transaction.dateTime.second}';
 
+
         CalcolateTransactionsMovements(transaction.amount);
+
 
         balance += transaction.amount;
         transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
         positionXaxis++;
       }
 
-      if(transactionSpots.length == 1){
-        TransactionSpot x  = TransactionSpot(1, 'Start', 0);
+
+      if (transactionSpots.length == 1) {
+        TransactionSpot x = TransactionSpot(1, 'Start', 0);
         transactionSpots[0].time += 1;
         TransactionSpot y = transactionSpots[0];
         transactionSpots[0] = x;
@@ -132,7 +133,7 @@ class TransactionController {
     }
   }
 
-  Future<List<UserTransaction>> getTransaction(UserApp user) async {
+  Future<void> getTransaction(UserApp user) async {
     transactions.clear();
     try {
       QuerySnapshot snapshot = await _firestore.collection('transactions').where('user', isEqualTo: user.UserEmail).get();
@@ -147,37 +148,33 @@ class TransactionController {
           user: data['user'] ?? ''
         );
 
-        transactions.add(transaction);
+        if (!transactions.any((t) => t.dateTime == transaction.dateTime && t.amount == transaction.amount)) {
+          transactions.add(transaction);
+        }
+
       }
 
       transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
-      return transactions;
+
     } catch (error) {
-      return [];
+
     }
   }
 
   Future<List<TransactionSpot>> getTransactionHistoryWithoutTime(BuildContext context, UserApp user) async {
     try {
-      Query query = _firestore.collection('transactions').where('user', isEqualTo: user.UserEmail).orderBy('dateTime', descending: false);
+      List<UserTransaction> filteredTransactions = transactions
+          .where((transaction) => transaction.user == user.UserEmail)
+          .toList();
 
-      QuerySnapshot snapshot = await query.get();
+      filteredTransactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
       List<TransactionSpot> transactionSpots = [];
       int positionXaxis = 0;
       double balance = 0;
 
-      for (QueryDocumentSnapshot doc in snapshot.docs) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-        UserTransaction transaction = UserTransaction(
-          amount: data['amount'] != null ? data['amount'] as double : 0.0,
-          dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
-          title: data['title'] ?? 'No title',
-            user: data['user'] ?? ''
-        );
-
+      for (UserTransaction transaction in filteredTransactions) {
         double timeValue = (positionXaxis + 1).toDouble();
         String timeString = '${transaction.dateTime.day}/${transaction.dateTime.month} ${transaction.dateTime.hour}:${transaction.dateTime.minute}:${transaction.dateTime.second}';
 
@@ -188,15 +185,13 @@ class TransactionController {
         positionXaxis++;
       }
 
-
-      if(transactionSpots.length == 1){
-        TransactionSpot x  = TransactionSpot(1, 'Start', 0);
+      if (transactionSpots.length == 1) {
+        TransactionSpot x = TransactionSpot(1, 'Start', 0);
         transactionSpots[0].time += 1;
         TransactionSpot y = transactionSpots[0];
         transactionSpots[0] = x;
         transactionSpots.add(y);
       }
-
 
       return transactionSpots;
     } catch (error) {
@@ -213,13 +208,7 @@ class TransactionController {
     }
   }
 
-
-
-
-
-
   Future<double> CalcolateTotalBalance(UserApp user) async {
-    await getTransaction(user);
 
     double balance = 0;
 

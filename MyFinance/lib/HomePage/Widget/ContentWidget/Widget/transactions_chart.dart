@@ -7,8 +7,9 @@ import '../../../../Widget/line_chart.dart';
 
 class TransactionLineChartHomePage extends StatefulWidget {
   UserApp user;
+  TransactionController transactionController = TransactionController();
 
-  TransactionLineChartHomePage ({required this.user});
+  TransactionLineChartHomePage ({required this.user, required this.transactionController});
   @override
   _TransactionLineChartHomePageState createState() => _TransactionLineChartHomePageState();
 }
@@ -23,8 +24,8 @@ class _TransactionLineChartHomePageState extends State<TransactionLineChartHomeP
   }
 
   void _fetchData() {
-    TransactionController transactionController = TransactionController();
-    _transactionSpots = transactionController.getTransactionHistoryWithoutTime(context, widget.user);
+
+    _transactionSpots = widget.transactionController.getTransactionHistoryWithoutTime(context, widget.user);
 
     _transactionSpots.then((_) {
       setState(() {});
