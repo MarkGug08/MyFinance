@@ -42,8 +42,8 @@ class _TransactionFormState extends State<TransactionForm> {
       ).then((_) {
         _amountController.clear();
         _titleController.clear();
-        widget.user.control = true;
-        widget.user.chart = true;
+        widget.transactionController.canReload = true;
+        widget.transactionController.canLine = true;
         Navigator.pop(context);
         widget.onTransactionSaved();
         setState(() {

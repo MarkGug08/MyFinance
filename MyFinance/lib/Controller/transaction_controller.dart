@@ -20,6 +20,8 @@ class TransactionController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   double Income = 0;
   double Expenses = 0;
+  bool canReload = false;
+  bool canLine = false;
   List<UserTransaction> transactions = [];
 
   Future<void> saveTransaction({
