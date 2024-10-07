@@ -74,17 +74,15 @@ class TransactionController {
 
 
       transactions.removeWhere((transaction) => transaction.id == transactionId);
-
-
-
       await _firestore.collection('transactions').doc(transactionId).delete();
-
 
     } catch (e) {
       String error = handleError(e);
       showError(context, "Failed to delete transaction: $error");
-      print(error);
     }
+
+    canReload = true;
+    canLine = true;
 
   }
 
