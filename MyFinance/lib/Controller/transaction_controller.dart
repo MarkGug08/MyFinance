@@ -40,23 +40,54 @@ class TransactionController {
       String title = titleController.text;
 
       UserTransaction transaction = UserTransaction(
+        id: '',
         amount: amount,
         title: title,
         dateTime: selectedDate,
         user: user.UserEmail
       );
 
-      await _firestore.collection('transactions').add({
+      DocumentReference docRef = await _firestore.collection('transactions').add({
+        'id': transaction.id,
         'amount': transaction.amount,
         'title': transaction.title,
         'dateTime': transaction.dateTime,
         'user': transaction.user
       });
+
+      transaction.id = docRef.id;
+
+      await _firestore.collection('transactions').doc(transaction.id).update({
+        'id': transaction.id,
+      });
+
+
     } catch (e) {
       String error = handleError(e);
       showError(context, error);
     }
   }
+
+
+  Future<void> deleteTransaction(String transactionId, BuildContext context) async {
+    try {
+
+
+      transactions.removeWhere((transaction) => transaction.id == transactionId);
+
+
+
+      await _firestore.collection('transactions').doc(transactionId).delete();
+
+
+    } catch (e) {
+      String error = handleError(e);
+      showError(context, "Failed to delete transaction: $error");
+      print(error);
+    }
+
+  }
+
 
   Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context, UserApp user) async {
     try {
@@ -144,6 +175,7 @@ class TransactionController {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
         UserTransaction transaction = UserTransaction(
+          id: data['id'] ?? '' ,
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
           title: data['title'] ?? 'No title',

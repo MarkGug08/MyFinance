@@ -1,76 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:myfinance/Models/Transaction.dart';
-import '../../../Widget/transaction_info.dart';
+import 'package:myfinance/Widget/transaction_info.dart';
+import 'package:myfinance/Controller/transaction_controller.dart';
 
-Widget draggableMenu(BuildContext context, List<UserTransaction> transactions) {
-  return DraggableScrollableSheet(
-    initialChildSize: 0.3,
-    minChildSize: 0.3,
-    maxChildSize: 0.87,
-    builder: (BuildContext context, ScrollController scrollController) {
-      return Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+class DraggableMenu extends StatefulWidget {
+  final List<UserTransaction> transactions;
+  final TransactionController controller;
+
+  DraggableMenu({required this.transactions, required this.controller});
+
+  @override
+  _DraggableMenuState createState() => _DraggableMenuState();
+}
+
+class _DraggableMenuState extends State<DraggableMenu> {
+  late List<UserTransaction> _transactions;
+
+  @override
+  void initState() {
+    super.initState();
+    _transactions = widget.transactions;
+  }
+
+  Future<void> deleteTransaction(String transactionId, BuildContext context) async {
+    await widget.controller.deleteTransaction(transactionId, context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.3,
+      minChildSize: 0.3,
+      maxChildSize: 0.87,
+      builder: (BuildContext context, ScrollController scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 8,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: _transactions.length,
+            itemBuilder: (context, index) {
+              UserTransaction transaction = _transactions[index];
+
+              return Dismissible(
+                key: ValueKey(transaction.id),
+                onDismissed: (direction) async {
+                  setState(() {
+                    _transactions.removeAt(index);
+                  });
+                  await deleteTransaction(transaction.id, context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Transaction deleted")),
+                  );
+                },
+                background: Container(color: Colors.red),
+                child: TransactionInfo(
+                  title: transaction.title,
+                  currentValue: transaction.amount,
+                  time: transaction.dateTime,
+                  color: Colors.black,
                 ),
-              ],
-            ),
-
-            SizedBox(height: 10),
-
-            Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) {
-                    UserTransaction transaction = transactions[index];
-
-                    return Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.grey.shade300, width: 1),
-                        ),
-                        color: Colors.white,
-                      ),
-                      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: TransactionInfo(
-                          title: transaction.title,
-                          currentValue: transaction.amount,
-                          time: transaction.dateTime,
-                          color: Colors.black,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 }

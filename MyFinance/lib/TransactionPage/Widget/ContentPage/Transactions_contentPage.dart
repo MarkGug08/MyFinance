@@ -32,7 +32,7 @@ Widget TransactionsContentPage(BuildContext context, UserApp user, List<UserTran
           ),
         ],
       ),
-      draggableMenu(context, transactions),
+      DraggableMenu(transactions: transactions, controller: controller),
     ],
   );
 }
