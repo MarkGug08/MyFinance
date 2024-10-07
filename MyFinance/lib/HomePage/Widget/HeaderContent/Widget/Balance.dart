@@ -20,7 +20,6 @@ Widget balanceWidget(TransactionController controller, UserApp user) {
           ),
         );
       } else if (snapshot.hasData) {
-        print(controller.transactions.length);
         final double balance = snapshot.data ?? 0.0;
         return Container(
           decoration: BoxDecoration(

@@ -34,7 +34,7 @@ class _TransactionPageState extends State<TransactionPage> {
 
     if (mounted) {
       setState(() {
-        widget.controller.transactions = widget.controller.transactions;
+
       });
     }
   }

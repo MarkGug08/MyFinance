@@ -43,6 +43,7 @@ class _TransactionFormState extends State<TransactionForm> {
         _amountController.clear();
         _titleController.clear();
         widget.user.control = true;
+        widget.user.chart = true;
         Navigator.pop(context);
         widget.onTransactionSaved();
         setState(() {

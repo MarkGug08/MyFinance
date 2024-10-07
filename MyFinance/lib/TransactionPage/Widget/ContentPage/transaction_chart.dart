@@ -29,14 +29,19 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
   @override
   void didUpdateWidget(TransactionLineChartWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.user.control) {
+    if (widget.user.chart) {
+
       _fetchData();
+      widget.user.chart = false;
     }
   }
 
   Future<void> _fetchData() async {
+    widget.user.chart = true;
     widget.user.control = true;
     _transactionSpots = widget.controller.getTransactionHistory(_selectedPeriod, context, widget.user);
+
+
   }
 
   @override
