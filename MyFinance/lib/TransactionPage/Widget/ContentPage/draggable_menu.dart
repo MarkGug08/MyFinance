@@ -117,6 +117,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
                 key: ValueKey(transaction.id),
                 endActionPane: ActionPane(
                   motion: ScrollMotion(),
+                  extentRatio: 0.25,
                   children: [
                     SlidableAction(
                       onPressed: (context) {

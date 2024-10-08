@@ -60,6 +60,11 @@ class _TransactionPageState extends State<TransactionPage> {
       builder: (BuildContext context) {
         return Container(
           padding: EdgeInsets.all(16),
+
+          decoration: BoxDecoration(
+            color: Color(0xFFFAFAFA),
+            borderRadius: BorderRadius.circular(15),
+          ),
           child: TransactionForm(
             user: widget.user,
             onTransactionSaved: () {
