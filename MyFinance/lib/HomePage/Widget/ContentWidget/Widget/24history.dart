@@ -26,7 +26,7 @@ class Last24 extends StatelessWidget {
 
 
     return SizedBox(
-      height: 180.0,
+      height: 150.0,
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: last24HoursTransactions.length,
@@ -50,7 +50,7 @@ class Last24 extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[600]),
                 ),
                 trailing: Text(
-                  '${transaction.amount.toStringAsFixed(2)} €',
+                  '${transaction.amount.toStringAsFixed(2)} \$',
                   style: TextStyle(
                     color: transaction.amount >= 0 ? Colors.green : Colors.red,
                     fontWeight: FontWeight.bold,

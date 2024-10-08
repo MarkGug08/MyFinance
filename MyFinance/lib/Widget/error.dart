@@ -23,7 +23,7 @@ String handleError(dynamic error) {
   }else if (error is FirebaseException){
     return 'Firebase error occurred: ${error.message}';
   } else {
-    return 'Unexpected error: Please check your internet connection';
+    return 'Unexpected error: ${error.message}';
   }
 }
 

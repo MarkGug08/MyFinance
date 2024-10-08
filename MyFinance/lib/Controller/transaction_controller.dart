@@ -243,6 +243,23 @@ class TransactionController {
     }
   }
 
+  double CalcolatePreviousBalance(){
+    DateTime now = DateTime.now();
+    DateTime yesterday = DateTime(now.year, now.month, now.day - 1, 23, 59, 59);
+
+    double balance = 0;
+
+
+    for (UserTransaction transaction in transactions){
+      if(transaction.dateTime.isBefore(yesterday)){
+
+        balance += transaction.amount;
+      }
+    }
+
+    return balance;
+  }
+
   Future<double> CalcolateTotalBalance(UserApp user, BuildContext context) async {
 
 

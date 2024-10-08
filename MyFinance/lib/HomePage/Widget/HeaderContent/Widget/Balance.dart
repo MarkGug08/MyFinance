@@ -32,6 +32,30 @@ class BalanceWidget extends StatelessWidget {
           );
         } else if (snapshot.hasData) {
           final double balance = snapshot.data ?? 0.0;
+          final double previousBalance = controller.CalcolatePreviousBalance();
+
+          String balanceChangeText;
+          IconData balanceIcon;
+          Color balanceIconColor;
+          Color balanceLineColor;
+
+          if (balance > previousBalance) {
+            balanceChangeText = 'Increased by \$${(balance - previousBalance).toStringAsFixed(2)}';
+            balanceIcon = Icons.arrow_upward;
+            balanceIconColor = Colors.greenAccent;
+            balanceLineColor = Colors.greenAccent;
+          } else if (balance < previousBalance) {
+            balanceChangeText = 'Decreased by \$${(previousBalance - balance).toStringAsFixed(2)}';
+            balanceIcon = Icons.arrow_downward;
+            balanceIconColor = Colors.redAccent;
+            balanceLineColor = Colors.redAccent;
+          } else {
+            balanceChangeText = 'No change';
+            balanceIcon = Icons.remove;
+            balanceIconColor = Colors.grey;
+            balanceLineColor = Colors.grey;
+          }
+
           return Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -50,23 +74,22 @@ class BalanceWidget extends StatelessWidget {
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             margin: EdgeInsets.fromLTRB(20, 10, 20, 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.account_balance_wallet_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
+                        Icon(
+                          Icons.account_balance_wallet_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        SizedBox(width: 8),
                         Text(
                           'Your Balance',
                           style: TextStyle(
@@ -75,41 +98,42 @@ class BalanceWidget extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        SizedBox(height: 6),
-                        Text(
-                          '£${balance.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                       ],
                     ),
+                    SizedBox(height: 10),
+                    Text(
+                      '\$${balance.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 6),
                   ],
                 ),
-
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: Colors.white.withOpacity(0.3),
-                      margin: EdgeInsets.symmetric(horizontal: 10),
+                    Icon(
+                      balanceIcon,
+                      color: balanceIconColor,
+                      size: 24,
                     ),
-
-
-                        Text(
-                          'Updated Today',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        SizedBox(height: 6),
-
+                    SizedBox(height: 4),
+                    Text(
+                      balanceChangeText,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      width: 60,
+                      height: 4,
+                      color: balanceLineColor,
+                    ),
                   ],
                 ),
               ],

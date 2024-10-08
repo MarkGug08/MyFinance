@@ -20,7 +20,7 @@ class buildContent extends StatelessWidget {
           Text(
             'Transaction Movements',
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
             ),
           ),

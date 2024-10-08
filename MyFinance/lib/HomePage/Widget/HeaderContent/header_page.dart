@@ -32,7 +32,7 @@ class HeaderWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
