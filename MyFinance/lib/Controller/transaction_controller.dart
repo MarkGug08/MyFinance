@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Widget/error.dart';
 import '../Models/Transaction.dart';
@@ -11,7 +13,7 @@ class TransactionSpot {
 
   TransactionSpot(this.time, this.timeString, this.value);
 
-  TransactionSpot copy(){
+  TransactionSpot copy() {
     return TransactionSpot(time, timeString, value);
   }
 }
@@ -24,14 +26,25 @@ class TransactionController {
   bool canLine = false;
   List<UserTransaction> transactions = [];
 
+  Future<bool> _checkConnectivity(BuildContext context) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      showError(context, "No Internet connection. Please try again later.");
+      return false;
+    }
+    return true;
+  }
+
   Future<void> saveTransaction({
     required TextEditingController amountController,
     required TextEditingController titleController,
     required DateTime selectedDate,
     required bool tipeTransaction,
     required BuildContext context,
-    required UserApp user
+    required UserApp user,
   }) async {
+    if (!(await _checkConnectivity(context))) return;
+
     try {
       double amount = double.parse(amountController.text);
       if (!tipeTransaction && amount > 0) {
@@ -44,7 +57,7 @@ class TransactionController {
         amount: amount,
         title: title,
         dateTime: selectedDate,
-        user: user.UserEmail
+        user: user.UserEmail,
       );
 
       DocumentReference docRef = await _firestore.collection('transactions').add({
@@ -52,30 +65,28 @@ class TransactionController {
         'amount': transaction.amount,
         'title': transaction.title,
         'dateTime': transaction.dateTime,
-        'user': transaction.user
+        'user': transaction.user,
       });
 
       transaction.id = docRef.id;
 
       await _firestore.collection('transactions').doc(transaction.id).update({
         'id': transaction.id,
-      });
-
-
+      }).timeout(const Duration(seconds: 5));
     } catch (e) {
+      FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: false);
       String error = handleError(e);
       showError(context, error);
+      return;
     }
   }
 
-
   Future<void> deleteTransaction(String transactionId, BuildContext context) async {
+    if (!(await _checkConnectivity(context))) return;
+
     try {
-
-
       transactions.removeWhere((transaction) => transaction.id == transactionId);
       await _firestore.collection('transactions').doc(transactionId).delete();
-
     } catch (e) {
       String error = handleError(e);
       showError(context, "Failed to delete transaction: $error");
@@ -83,17 +94,15 @@ class TransactionController {
 
     canReload = true;
     canLine = true;
-
   }
 
-
   Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context, UserApp user) async {
+
     try {
       Income = 0;
       Expenses = 0;
       final DateTime now = DateTime.now();
       DateTime? startTime;
-
 
       if (period != 'All') {
         switch (period) {
@@ -111,18 +120,15 @@ class TransactionController {
         }
       }
 
-
       List<UserTransaction> filteredTransactions = transactions
           .where((transaction) => transaction.user == user.UserEmail)
           .toList();
 
       if (startTime != null) {
-
         filteredTransactions = filteredTransactions
             .where((transaction) => transaction.dateTime.isAfter(startTime!))
             .toList();
       }
-
 
       filteredTransactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
@@ -130,20 +136,16 @@ class TransactionController {
       int positionXaxis = 0;
       double balance = 0;
 
-
       for (UserTransaction transaction in filteredTransactions) {
         double timeValue = (positionXaxis + 1).toDouble();
         String timeString = '${transaction.dateTime.day}/${transaction.dateTime.month} ${transaction.dateTime.hour}:${transaction.dateTime.minute}:${transaction.dateTime.second}';
 
-
         CalcolateTransactionsMovements(transaction.amount);
-
 
         balance += transaction.amount;
         transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
         positionXaxis++;
       }
-
 
       if (transactionSpots.length == 1) {
         TransactionSpot x = TransactionSpot(1, 'Start', 0);
@@ -152,7 +154,6 @@ class TransactionController {
         transactionSpots[0] = x;
         transactionSpots.add(y);
       }
-
 
       user.Income = Income;
       user.Expenses = Expenses;
@@ -164,7 +165,9 @@ class TransactionController {
     }
   }
 
-  Future<void> getTransaction(UserApp user) async {
+  Future<void> getTransaction(UserApp user, BuildContext context) async {
+    if (!(await _checkConnectivity(context))) return;
+
     transactions.clear();
     try {
       QuerySnapshot snapshot = await _firestore.collection('transactions').where('user', isEqualTo: user.UserEmail).get();
@@ -173,28 +176,28 @@ class TransactionController {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
         UserTransaction transaction = UserTransaction(
-          id: data['id'] ?? '' ,
+          id: data['id'] ?? '',
           amount: data['amount'] != null ? data['amount'] as double : 0.0,
           dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
           title: data['title'] ?? 'No title',
-          user: data['user'] ?? ''
+          user: data['user'] ?? '',
         );
 
         if (!transactions.any((t) => t.dateTime == transaction.dateTime && t.amount == transaction.amount)) {
           transactions.add(transaction);
         }
-
       }
 
       transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-
-
     } catch (error) {
-
+      String errorMessage = handleError(error);
+      showError(context, 'Error fetching transactions: $errorMessage');
     }
   }
 
   Future<List<TransactionSpot>> getTransactionHistoryWithoutTime(BuildContext context, UserApp user) async {
+
+
     try {
       List<UserTransaction> filteredTransactions = transactions
           .where((transaction) => transaction.user == user.UserEmail)
@@ -240,11 +243,12 @@ class TransactionController {
     }
   }
 
-  Future<double> CalcolateTotalBalance(UserApp user) async {
+  Future<double> CalcolateTotalBalance(UserApp user, BuildContext context) async {
+
 
     double balance = 0;
 
-    for(UserTransaction x in transactions){
+    for (UserTransaction x in transactions) {
       balance += x.amount;
     }
 

@@ -20,7 +20,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    widget.controller.getTransaction(widget.user);
+    widget.controller.getTransaction(widget.user, context);
   }
 
   void _onItemTapped(int index) {

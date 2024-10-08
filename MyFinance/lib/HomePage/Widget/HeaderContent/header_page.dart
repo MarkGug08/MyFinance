@@ -65,7 +65,7 @@ class HeaderWidget extends StatelessWidget {
               ],
             ),
           ),
-          balanceWidget(controller, user),
+          BalanceWidget(controller: controller, user: user)
         ],
       ),
     );

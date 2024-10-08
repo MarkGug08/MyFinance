@@ -48,6 +48,7 @@ dependencies:
   shared_preferences: ^2.0.9
   flutter_slidable:
   draggable_menu: ^4.4.1
+  connectivity_plus: ^3.0.3
 
 
 

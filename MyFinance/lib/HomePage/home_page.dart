@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFFFAFAFA),
       body: FutureBuilder(
-        future: controller.getTransaction(user),
+        future: controller.getTransaction(user, context),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
 
           if (snapshot.connectionState == ConnectionState.waiting) {

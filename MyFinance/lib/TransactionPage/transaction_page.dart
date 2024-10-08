@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
 import 'package:myfinance/Models/Transaction.dart';
 import 'package:myfinance/TransactionPage/Widget/ContentPage/Transactions_contentPage.dart';
 import 'package:myfinance/TransactionPage/Widget/HeaderPage/transactions_HeaderPage.dart';
 import '../Models/User.dart';
+import '../Widget/error.dart';
 import 'Widget/ContentPage/transaction_form.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -29,13 +31,17 @@ class _TransactionPageState extends State<TransactionPage> {
 
   Future<void> _fetchTransactions() async {
     widget.controller.canReload = false;
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult != ConnectivityResult.none) {
+      await widget.controller.getTransaction(widget.user, context);
 
-    await widget.controller.getTransaction(widget.user);
+      if (mounted) {
+        setState(() {
 
-    if (mounted) {
-      setState(() {
-
-      });
+        });
+      }
+    }else{
+      showError(context, "No Internet connection. Please try again later.");
     }
   }
 
