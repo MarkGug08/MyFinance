@@ -34,8 +34,13 @@ class BalanceWidget extends StatelessWidget {
           final double balance = snapshot.data ?? 0.0;
           return Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              gradient: LinearGradient(
+                colors: [Colors.black, Colors.grey.shade800],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(15.0),
+              border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
@@ -45,28 +50,29 @@ class BalanceWidget extends StatelessWidget {
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(16.0),
             margin: EdgeInsets.fromLTRB(20, 10, 20, 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
                 Row(
                   children: [
                     Icon(
-                      Icons.account_balance_wallet,
+                      Icons.account_balance_wallet_rounded,
                       color: Colors.white,
-                      size: 24,
+                      size: 20,
                     ),
                     SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Balance',
+                          'Your Balance',
                           style: TextStyle(
                             color: Colors.white70,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                         SizedBox(height: 6),
@@ -74,7 +80,7 @@ class BalanceWidget extends StatelessWidget {
                           '£${balance.toStringAsFixed(2)}',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -82,10 +88,29 @@ class BalanceWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white.withOpacity(0.8),
-                  size: 12,
+
+                Row(
+                  children: [
+
+                    Container(
+                      width: 1,
+                      height: 40,
+                      color: Colors.white.withOpacity(0.3),
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                    ),
+
+
+                        Text(
+                          'Updated Today',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+
+                  ],
                 ),
               ],
             ),
