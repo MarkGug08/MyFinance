@@ -107,7 +107,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple, // Nuovo colore
+                    color: Colors.deepPurple,
                   ),
                 ),
                 SizedBox(height: 16),
@@ -119,7 +119,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.deepPurple),
                     ),
-                    prefixIcon: Icon(Icons.title, color: Colors.deepPurple), // Nuova icona
+                    prefixIcon: Icon(Icons.title, color: Colors.deepPurple),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -138,7 +138,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: Colors.deepPurple),
                     ),
-                    prefixIcon: Icon(Icons.money, color: Colors.deepPurple), // Nuova icona
+                    prefixIcon: Icon(Icons.money, color: Colors.deepPurple),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -182,7 +182,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     style: TextStyle(color: Colors.black87),
                   ),
                   subtitle: Text('Tap to select a date'),
-                  trailing: Icon(Icons.calendar_today, color: Colors.deepPurple), // Nuova icona
+                  trailing: Icon(Icons.calendar_today, color: Colors.deepPurple),
                   onTap: _pickDate,
                 ),
                 ListTile(
@@ -191,7 +191,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     style: TextStyle(color: Colors.black87),
                   ),
                   subtitle: Text('Tap to select a time'),
-                  trailing: Icon(Icons.access_time, color: Colors.deepPurple), // Nuova icona
+                  trailing: Icon(Icons.access_time, color: Colors.deepPurple),
                   onTap: _pickTime,
                 ),
                 SizedBox(height: 16),
@@ -200,7 +200,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   icon: Icon(Icons.save),
                   label: Text('Save Transaction'),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.deepPurple, minimumSize: Size(double.infinity, 48), // Colore del testo
+                    foregroundColor: Colors.white, backgroundColor: Colors.deepPurple, minimumSize: Size(double.infinity, 48),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

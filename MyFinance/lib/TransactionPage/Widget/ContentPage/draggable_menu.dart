@@ -57,6 +57,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
                     content: Text("Transaction deleted"),
+                    duration: Duration(seconds: 1),
                   ),
                 );
 
