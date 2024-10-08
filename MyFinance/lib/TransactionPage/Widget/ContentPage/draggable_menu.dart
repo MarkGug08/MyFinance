@@ -130,9 +130,11 @@ class _DraggableMenuState extends State<DraggableMenu> {
                   ],
                 ),
                 child: Container(
+                    margin: EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
+
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.2),
@@ -198,7 +200,9 @@ class _DraggableMenuState extends State<DraggableMenu> {
                     ),
                   ),
                 ),
+
               );
+
             },
           ),
         );
