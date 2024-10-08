@@ -35,6 +35,8 @@ class TransactionController {
     return true;
   }
 
+
+
   Future<void> saveTransaction({
     required TextEditingController amountController,
     required TextEditingController titleController,
@@ -45,6 +47,7 @@ class TransactionController {
   }) async {
     if (!(await _checkConnectivity(context))) return;
 
+    
     try {
       double amount = double.parse(amountController.text);
       if (!tipeTransaction && amount > 0) {
@@ -95,6 +98,38 @@ class TransactionController {
     canReload = true;
     canLine = true;
   }
+
+  Future<void> getTransaction(UserApp user, BuildContext context) async {
+    if (!(await _checkConnectivity(context))) return;
+
+    transactions.clear();
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('transactions').where('user', isEqualTo: user.UserEmail).get();
+
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        UserTransaction transaction = UserTransaction(
+          id: data['id'] ?? '',
+          amount: data['amount'] != null ? data['amount'] as double : 0.0,
+          dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
+          title: data['title'] ?? 'No title',
+          user: data['user'] ?? '',
+        );
+
+        if (!transactions.any((t) => t.dateTime == transaction.dateTime && t.amount == transaction.amount)) {
+          transactions.add(transaction);
+        }
+      }
+
+      transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    } catch (error) {
+      String errorMessage = handleError(error);
+      showError(context, 'Error fetching transactions: $errorMessage');
+    }
+  }
+
+
 
   Future<List<TransactionSpot>> getTransactionHistory(String period, BuildContext context, UserApp user) async {
 
@@ -165,35 +200,7 @@ class TransactionController {
     }
   }
 
-  Future<void> getTransaction(UserApp user, BuildContext context) async {
-    if (!(await _checkConnectivity(context))) return;
 
-    transactions.clear();
-    try {
-      QuerySnapshot snapshot = await _firestore.collection('transactions').where('user', isEqualTo: user.UserEmail).get();
-
-      for (QueryDocumentSnapshot doc in snapshot.docs) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-        UserTransaction transaction = UserTransaction(
-          id: data['id'] ?? '',
-          amount: data['amount'] != null ? data['amount'] as double : 0.0,
-          dateTime: data['dateTime'] != null ? (data['dateTime'] as Timestamp).toDate() : DateTime.now(),
-          title: data['title'] ?? 'No title',
-          user: data['user'] ?? '',
-        );
-
-        if (!transactions.any((t) => t.dateTime == transaction.dateTime && t.amount == transaction.amount)) {
-          transactions.add(transaction);
-        }
-      }
-
-      transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-    } catch (error) {
-      String errorMessage = handleError(error);
-      showError(context, 'Error fetching transactions: $errorMessage');
-    }
-  }
 
   Future<List<TransactionSpot>> getTransactionHistoryWithoutTime(BuildContext context, UserApp user) async {
 

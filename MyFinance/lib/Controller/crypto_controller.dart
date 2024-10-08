@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfinance/Models/User.dart';
-
 import '../Models/Crypto.dart';
 import '../Widget/error.dart';
 
@@ -21,21 +21,34 @@ class CryptoController {
   final String CoingeckoListCrypto = 'https://api.coingecko.com/api/v3/coins/list';
   List<Crypto> _predefinedCryptos = [];
 
-  Future<void> fetchCryptosFromFirestore(BuildContext context, UserApp user) async {
+  Future<bool> _checkConnectivity(BuildContext context) async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      showError(context, "No Internet connection. Please try again later.");
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> fetchCryptosFromFirestore(BuildContext context,
+      UserApp user) async {
+    if (!(await _checkConnectivity(context))) return;
+
     try {
-      QuerySnapshot snapshot = await _firestore.collection('crypto').where('user', isEqualTo: user.UserEmail ).get();
+      QuerySnapshot snapshot = await _firestore.collection('crypto').where(
+          'user', isEqualTo: user.UserEmail).get();
       _predefinedCryptos.clear();
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
         Crypto crypto = Crypto(
-          name: data['name'] ?? '',
-          symbol: data['symbol'] ?? '',
-          currentValue: data['currentValue']?.toDouble() ?? 0.0,
-          percentChange24h: data['percentChange24h']?.toDouble() ?? 0.0,
-          isFavorite: data['isFavorite'] ?? false,
-          user: data['user'] ?? ''
+            name: data['name'] ?? '',
+            symbol: data['symbol'] ?? '',
+            currentValue: data['currentValue']?.toDouble() ?? 0.0,
+            percentChange24h: data['percentChange24h']?.toDouble() ?? 0.0,
+            isFavorite: data['isFavorite'] ?? false,
+            user: data['user'] ?? ''
         );
 
         if (crypto.isFavorite) {
@@ -48,11 +61,14 @@ class CryptoController {
   }
 
   Future<List<Crypto>> getCryptos(BuildContext context, UserApp user) async {
+    if (!(await _checkConnectivity(context))) return [];
+
     await fetchCryptosFromFirestore(context, user);
 
     for (var crypto in _predefinedCryptos) {
       final symbol = crypto.symbol + 'USDT';
-      final Uri url = Uri.parse('$binanceBaseUrl?symbol=$symbol&interval=5m&limit=288');
+      final Uri url = Uri.parse(
+          '$binanceBaseUrl?symbol=$symbol&interval=5m&limit=288');
 
       try {
         final response = await http.get(url);
@@ -67,7 +83,8 @@ class CryptoController {
             double price24hAgo = double.parse(firstData[4]);
 
             crypto.currentValue = currentValue;
-            crypto.percentChange24h = ((currentValue - price24hAgo) / price24hAgo) * 100;
+            crypto.percentChange24h =
+                ((currentValue - price24hAgo) / price24hAgo) * 100;
           }
         } else {
           final errorMessage = handleBinanceError(response.statusCode);
@@ -84,7 +101,10 @@ class CryptoController {
     return _predefinedCryptos;
   }
 
-  Future<void> UpdateCrypto(Crypto crypto, bool newIsFavorite, BuildContext context, UserApp user) async {
+  Future<void> UpdateCrypto(Crypto crypto, bool newIsFavorite,
+      BuildContext context, UserApp user) async {
+    if (!(await _checkConnectivity(context))) return;
+
     try {
       QuerySnapshot querySnapshot = await _firestore
           .collection('crypto')
@@ -99,27 +119,30 @@ class CryptoController {
           await _firestore.collection('crypto').doc(document.id).delete();
         }
       } else {
-        saveCrypto(crypto, user);
+        saveCrypto(crypto, user, context);
       }
     } catch (e) {
-      showError(context, "Sorry we have a problem to found your crypto, please retry");
+      showError(context,
+          "Sorry we have a problem to found your crypto, please retry");
     }
   }
 
-  Future<void> saveCrypto(Crypto crypto, UserApp user) async {
+  Future<void> saveCrypto(Crypto crypto, UserApp user,
+      BuildContext context) async {
     try {
       await _firestore.collection('crypto').add({
         'name': crypto.name,
         'symbol': crypto.symbol,
         'isFavorite': crypto.isFavorite,
-        'user' : user.UserEmail
+        'user': user.UserEmail
       });
     } catch (e) {
-
+      showError(context, "Error saving crypto: ${handleError(e)}");
     }
   }
 
-  Future<List<CryptoSpot>> getCryptoHistory(Crypto crypto, String period, BuildContext context) async {
+  Future<List<CryptoSpot>> getCryptoHistory(Crypto crypto, String period,
+      BuildContext context) async {
     try {
       final String symbol = crypto.symbol + 'USDT';
       String interval = '';
@@ -136,13 +159,16 @@ class CryptoController {
 
         case 'This Week':
           final DateTime weekStart = now.subtract(Duration(days: 6));
-          startTime = DateTime(weekStart.year, weekStart.month, weekStart.day).millisecondsSinceEpoch;
+          startTime = DateTime(weekStart.year, weekStart.month, weekStart.day)
+              .millisecondsSinceEpoch;
           interval = '30m';
           break;
 
         case 'This Month':
           final DateTime monthStart = now.subtract(Duration(days: 30));
-          startTime = DateTime(monthStart.year, monthStart.month, monthStart.day).millisecondsSinceEpoch;
+          startTime =
+              DateTime(monthStart.year, monthStart.month, monthStart.day)
+                  .millisecondsSinceEpoch;
           interval = '1d';
           break;
 
@@ -150,7 +176,8 @@ class CryptoController {
           throw Exception('Unsupported period: $period');
       }
 
-      final Uri url = Uri.parse('$binanceBaseUrl?symbol=$symbol&interval=$interval&startTime=$startTime&endTime=$endTime');
+      final Uri url = Uri.parse(
+          '$binanceBaseUrl?symbol=$symbol&interval=$interval&startTime=$startTime&endTime=$endTime');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -159,7 +186,6 @@ class CryptoController {
         double highestPrice = double.negativeInfinity;
         double lowestPrice = double.infinity;
         double startPrice = 0.0;
-
 
         int positionXaxis = 0;
         for (var i = 0; i < jsonResponse.length; i++) {
@@ -171,13 +197,16 @@ class CryptoController {
             startPrice = close;
           }
 
-          final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
+          final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp)
+              .toLocal();
           double timeValue;
           String timeString;
 
           if (period == 'Today') {
             timeValue = (positionXaxis + 1).toDouble();
-            timeString = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+            timeString =
+            '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString()
+                .padLeft(2, '0')}';
           } else if (period == 'This Week') {
             timeValue = (positionXaxis + 1).toDouble();
             timeString = '${date.day}/${date.month}';
@@ -199,87 +228,52 @@ class CryptoController {
         crypto.high24h = highestPrice;
         crypto.low24h = lowestPrice;
         crypto.currentValue = spots.last.value;
-        crypto.percentChange24h = ((crypto.currentValue - startPrice) / startPrice) * 100;
+        crypto.percentChange24h =
+            ((crypto.currentValue - startPrice) / startPrice) * 100;
 
         return spots;
       } else {
         final errorMessage = handleBinanceError(response.statusCode);
-        showError(context, 'Error fetching historical data for ${crypto.symbol}: $errorMessage');
+        showError(context, 'Error fetching historical data for ${crypto
+            .symbol}: $errorMessage');
         return [];
       }
     } catch (error) {
       final errorMessage = handleError(error);
-      showError(context, 'Error fetching historical data for ${crypto.symbol}: $errorMessage');
+      showError(context,
+          'Error fetching historical data for ${crypto.symbol}: $errorMessage');
       return [];
     }
   }
 
-  Future<Crypto?> searchCryptoOnline(String query, BuildContext context, UserApp user) async {
+  Future<Crypto?> searchCryptoOnline(String query, BuildContext context,
+      UserApp user) async {
+    if (!(await _checkConnectivity(context))) return null;
+
     String symboltoResearch = query.toUpperCase();
-    String symbol = symboltoResearch;
+    final response = await http.get(Uri.parse('$CoingeckoListCrypto'));
 
-    if (symboltoResearch.length > 3) {
-      String? foundSymbol = await getSymbolFromName(context, query);
-      if (foundSymbol != null) {
-        symboltoResearch = foundSymbol + 'USDT';
-        symbol = foundSymbol;
-      } else {
-        return null;
-      }
-    } else {
-      symboltoResearch += 'USDT';
-    }
-
-    final Uri url = Uri.parse('$binanceBaseUrl?symbol=$symboltoResearch&interval=5m&limit=288');
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = json.decode(response.body);
-        if (jsonResponse.isNotEmpty) {
-          var latestData = jsonResponse.last;
-          var firstData = jsonResponse.first;
-          double currentValue = double.parse(latestData[4]);
-          double price24hAgo = double.parse(firstData[4]);
-
-          Crypto crypto = Crypto(
-            name: query.toUpperCase(),
-            symbol: symbol,
-            currentValue: currentValue,
-            percentChange24h: ((currentValue - price24hAgo) / price24hAgo) * 100,
-            isFavorite: false,
-            user: user.UserEmail
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      for (var crypto in jsonResponse) {
+        if (crypto['symbol'] == symboltoResearch) {
+          return Crypto(
+              name: crypto['name'],
+              symbol: crypto['symbol'],
+              currentValue: 0.0,
+              percentChange24h: 0.0,
+              isFavorite: false,
+              user: user.UserEmail
           );
-
-          return crypto;
         }
       }
-    } catch (error) {
-      showError(context, 'Error fetching online crypto: ${error.toString()}');
+      showError(context, "Crypto not found");
+      return null;
+    } else {
+      showError(context,
+          "Error fetching crypto: ${handleBinanceError(response.statusCode)}");
+      return null;
     }
-
-    return null;
   }
 
-  Future<String?> getSymbolFromName(BuildContext context, String name) async {
-    final Uri url = Uri.parse(CoingeckoListCrypto);
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        List<dynamic> coins = json.decode(response.body);
-
-        for (var coin in coins) {
-          if (coin['name'].toString().toLowerCase() == name.toLowerCase()) {
-            return coin['symbol'].toString().toUpperCase();
-          }
-        }
-      }
-    } catch (error) {
-      final errorMessage = handleError(error);
-      showError(context, 'Error fetching data: $errorMessage');
-    }
-
-    return null;
-  }
 }

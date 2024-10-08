@@ -27,7 +27,7 @@ class _TransactionFormState extends State<TransactionForm> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   bool _isSaving = false;
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isSaving = true;
@@ -43,7 +43,7 @@ class _TransactionFormState extends State<TransactionForm> {
         now.second,
       );
 
-      widget.transactionController.saveTransaction(
+      await widget.transactionController.saveTransaction(
         amountController: _amountController,
         titleController: _titleController,
         selectedDate: selectedDateTime,
