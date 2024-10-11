@@ -54,7 +54,6 @@ class _TransactionFormState extends State<TransactionForm> {
         _amountController.clear();
         _titleController.clear();
         widget.transactionController.canReload = true;
-        widget.transactionController.canLine = true;
 
         if (mounted) {
           Navigator.of(context).pop();

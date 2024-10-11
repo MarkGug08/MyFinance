@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../../../Controller/transaction_controller.dart';
@@ -8,7 +7,7 @@ import '../../../Widget/menu_dropdown.dart';
 
 class TransactionLineChartWidget extends StatefulWidget {
   final UserApp user;
-  TransactionController controller = TransactionController();
+  final TransactionController controller;
 
   TransactionLineChartWidget({required this.user, required this.controller});
 
@@ -17,31 +16,18 @@ class TransactionLineChartWidget extends StatefulWidget {
 }
 
 class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget> {
-  late Future<List<TransactionSpot>> _transactionSpots;
   String _selectedPeriod = 'Today';
 
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    widget.controller.updateTransactionHistory(_selectedPeriod, context, widget.user);
   }
 
   @override
   void didUpdateWidget(TransactionLineChartWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller.canLine) {
-
-      _fetchData();
-      widget.controller.canLine = false;
-    }
-  }
-
-  Future<void> _fetchData() async {
-    widget.controller.canLine = true;
-    widget.controller.canReload = true;
-    _transactionSpots = widget.controller.getTransactionHistory(_selectedPeriod, context, widget.user);
-
-
+      widget.controller.updateTransactionHistory(_selectedPeriod, context, widget.user);
   }
 
   @override
@@ -76,14 +62,14 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                   onPeriodChanged: (newPeriod) {
                     setState(() {
                       _selectedPeriod = newPeriod;
-                      _fetchData();
+                      widget.controller.updateTransactionHistory(_selectedPeriod, context, widget.user);
                     });
                   },
                 ),
               ),
               Expanded(
-                child: FutureBuilder<List<TransactionSpot>>(
-                  future: _transactionSpots,
+                child: StreamBuilder<List<TransactionSpot>>(
+                  stream: widget.controller.transactionStream,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -94,15 +80,10 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                     }
 
                     List<TransactionSpot> transactionSpots = snapshot.data!;
-                    List<FlSpot> spots = transactionSpots
-                        .map((e) => FlSpot(e.time, e.value))
-                        .toList();
-                    List<TooltipData> tooltipData = transactionSpots
-                        .map((e) => TooltipData(e.timeString, e.time, e.value))
-                        .toList();
+                    List<FlSpot> spots = transactionSpots.map((e) => FlSpot(e.time, e.value)).toList();
+                    List<TooltipData> tooltipData = transactionSpots.map((e) => TooltipData(e.timeString, e.time, e.value)).toList();
 
-                    final Color lineColor =
-                    transactionSpots.last.value >= 0 ? Colors.green : Colors.red;
+                    final Color lineColor = transactionSpots.last.value >= 0 ? Colors.green : Colors.red;
 
                     return Line_Chart(
                       spots: spots,
@@ -120,3 +101,4 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
     );
   }
 }
+

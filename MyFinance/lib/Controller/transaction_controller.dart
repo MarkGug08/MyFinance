@@ -20,11 +20,25 @@ class TransactionSpot {
 
 class TransactionController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final StreamController<List<TransactionSpot>> _transactionStreamController = StreamController.broadcast();
   double Income = 0;
   double Expenses = 0;
   bool canReload = false;
   bool canLine = false;
   List<UserTransaction> transactions = [];
+
+  Stream<List<TransactionSpot>> get transactionStream => _transactionStreamController.stream;
+
+
+  void updateTransactionHistory(String period, BuildContext context, UserApp user) async {
+    List<TransactionSpot> transactionSpots = await getTransactionHistory(period, context, user);
+    _transactionStreamController.add(transactionSpots);
+  }
+
+  void dispose() {
+    _transactionStreamController.close();
+  }
+
 
   Future<bool> _checkConnectivity(BuildContext context) async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -47,7 +61,7 @@ class TransactionController {
   }) async {
     if (!(await _checkConnectivity(context))) return;
 
-    
+
     try {
       double amount = double.parse(amountController.text);
       if (!tipeTransaction && amount > 0) {
@@ -96,7 +110,7 @@ class TransactionController {
     }
 
     canReload = true;
-    canLine = true;
+
   }
 
   Future<void> getTransaction(UserApp user, BuildContext context) async {
@@ -193,6 +207,7 @@ class TransactionController {
       user.Income = Income;
       user.Expenses = Expenses;
 
+      canReload = true;
       return transactionSpots;
     } catch (error) {
       showError(context, 'Error fetching transaction history: $error');
