@@ -6,7 +6,7 @@ import '../../../Controller/auth_controller.dart';
 import '../../../Widget/error.dart';
 
 Widget login_button(
-    GlobalKey<FormState> _formKey,
+    GlobalKey<FormState> formKey,
     BuildContext context,
     AuthController authController,
     TextEditingController emailController,
@@ -26,7 +26,7 @@ Widget login_button(
       ),
       onPressed: isLoading ? null : () async {
         setLoading(true);
-        if (_formKey.currentState!.validate()) {
+        if (formKey.currentState!.validate()) {
           try {
             User? user = await authController.signInUser(
               email: emailController.text,
@@ -57,7 +57,7 @@ Widget login_button(
         }
       },
       child: isLoading
-          ? CircularProgressIndicator(color: Colors.white)
+          ? const CircularProgressIndicator(color: Colors.white)
           : const Text(
         'Login',
         style: TextStyle(color: Colors.white),

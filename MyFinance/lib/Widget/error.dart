@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -7,7 +6,7 @@ void showError(BuildContext context, String message) {
   final snackBar = SnackBar(
     content: Text(message),
     backgroundColor: Colors.red,
-    duration: Duration(seconds: 1),
+    duration: const Duration(seconds: 1),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

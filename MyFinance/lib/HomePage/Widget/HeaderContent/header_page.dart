@@ -9,7 +9,7 @@ class HeaderWidget extends StatelessWidget {
   final UserApp user;
   TransactionController controller = TransactionController();
 
-  HeaderWidget({required this.user, required this.controller});
+  HeaderWidget({super.key, required this.user, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -20,25 +20,25 @@ class HeaderWidget extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(30.0)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30.0)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.4),
             spreadRadius: 2,
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Bentornato, User',
                   style: TextStyle(
                     color: Colors.white,
@@ -47,13 +47,13 @@ class HeaderWidget extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.account_circle, color: Colors.white, size: 28),
+                  icon: const Icon(Icons.account_circle, color: Colors.white, size: 28),
                   onPressed: () {
                     showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
                       backgroundColor: Colors.grey[850],
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                       ),
                       builder: (BuildContext context) {

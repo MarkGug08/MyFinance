@@ -61,7 +61,7 @@ Widget registerButton(
         }
       },
       child: isLoading
-          ? CircularProgressIndicator(color: Colors.white)
+          ? const CircularProgressIndicator(color: Colors.white)
           : const Text(
         'Agree and register',
         style: TextStyle(color: Colors.white),

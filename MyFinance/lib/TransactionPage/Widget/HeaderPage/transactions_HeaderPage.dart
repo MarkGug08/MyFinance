@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 PreferredSizeWidget TransactionsHeaderpage(BuildContext context, {required VoidCallback onToggleForm}) {
   return AppBar(
-    backgroundColor: Color(0xFFFAFAFA),
+    backgroundColor: const Color(0xFFFAFAFA),
     centerTitle: true,
-    title: Text('Statistics'),
+    title: const Text('Statistics'),
     actions: [
       IconButton(
-        icon: Icon(Icons.add),
+        icon: const Icon(Icons.add),
         onPressed: onToggleForm,
       ),
     ],

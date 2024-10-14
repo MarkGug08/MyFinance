@@ -18,7 +18,7 @@ Widget periodDropdown({
             value: value,
             child: Text(
               value,
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           );
         }).toList(),
@@ -27,7 +27,7 @@ Widget periodDropdown({
             onPeriodChanged(newPeriod);
           }
         },
-        icon: Icon(
+        icon: const Icon(
           Icons.arrow_drop_down,
           size: 19,
         ),

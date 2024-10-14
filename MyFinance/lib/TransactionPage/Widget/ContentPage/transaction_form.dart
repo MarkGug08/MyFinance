@@ -8,7 +8,7 @@ class TransactionForm extends StatefulWidget {
   final Function onTransactionSaved;
   final TransactionController transactionController;
 
-  TransactionForm({
+  const TransactionForm({super.key, 
     required this.user,
     required this.onTransactionSaved,
     required this.transactionController,
@@ -81,6 +81,18 @@ class _TransactionFormState extends State<TransactionForm> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            dialogBackgroundColor: Colors.grey[200],
+            colorScheme: const ColorScheme.light(
+              primary: Colors.black,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedDate != null) {
@@ -90,10 +102,35 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
+
   void _pickTime() async {
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: Colors.grey[200],
+              dialHandColor: Colors.black,
+              dialBackgroundColor: Colors.white,
+              hourMinuteColor: Colors.white,
+              hourMinuteTextColor: Colors.black,
+              hourMinuteShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(color: Colors.white),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              ),
+            ),
+
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedTime != null) {
@@ -103,10 +140,12 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.transparent
       ),
       padding: const EdgeInsets.all(10.0),
@@ -117,7 +156,7 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'Add New Transaction',
                 style: TextStyle(
                   fontSize: 22,
@@ -125,16 +164,16 @@ class _TransactionFormState extends State<TransactionForm> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Transaction Title',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
-                  prefixIcon: Icon(Icons.title, color: Colors.black),
+                  prefixIcon: const Icon(Icons.title, color: Colors.black),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -143,7 +182,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
@@ -151,9 +190,9 @@ class _TransactionFormState extends State<TransactionForm> {
                   labelText: 'Amount',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
-                  prefixIcon: Icon(Icons.money, color: Colors.black),
+                  prefixIcon: const Icon(Icons.money, color: Colors.black),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -162,18 +201,21 @@ class _TransactionFormState extends State<TransactionForm> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<bool>(
                 value: _isIncome,
                 decoration: InputDecoration(
                   labelText: 'Transaction Type',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide: const BorderSide(color: Colors.black),
+
                   ),
                 ),
-                items: [
+                dropdownColor: Colors.white,
+                items: const [
                   DropdownMenuItem(
+
                     value: true,
                     child: Text('Income'),
                   ),
@@ -190,40 +232,40 @@ class _TransactionFormState extends State<TransactionForm> {
                   }
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ListTile(
                 title: Text(
                   'Transaction Date: ${DateFormat.yMMMd().format(_selectedDate)}',
-                  style: TextStyle(color: Colors.black87),
+                  style: const TextStyle(color: Colors.black87),
                 ),
-                subtitle: Text('Tap to select a date'),
-                trailing: Icon(Icons.calendar_today, color: Colors.black),
+                subtitle: const Text('Tap to select a date'),
+                trailing: const Icon(Icons.calendar_today, color: Colors.black),
                 onTap: _pickDate,
               ),
               ListTile(
                 title: Text(
                   'Transaction Time: ${_selectedTime.format(context)}',
-                  style: TextStyle(color: Colors.black87),
+                  style: const TextStyle(color: Colors.black87),
                 ),
-                subtitle: Text('Tap to select a time'),
-                trailing: Icon(Icons.access_time, color: Colors.black),
+                subtitle: const Text('Tap to select a time'),
+                trailing: const Icon(Icons.access_time, color: Colors.black),
                 onTap: _pickTime,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: _isSaving ? null : _submitForm,
-                icon: Icon(Icons.save),
+                icon: const Icon(Icons.save),
                 label: Text(_isSaving ? 'Saving...' : 'Save Transaction'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.black,
-                  minimumSize: Size(double.infinity, 48),
+                  minimumSize: const Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
         ),

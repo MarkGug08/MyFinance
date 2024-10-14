@@ -27,7 +27,7 @@ Widget CryptoInfo({
                     name ,
                     style: TextStyle(fontSize: 16.0, color: color),
                   ),
-                  SizedBox(width: 4.0),
+                  const SizedBox(width: 4.0),
                   if(isFavorite)
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0),
@@ -40,7 +40,7 @@ Widget CryptoInfo({
                   ],
                 ),
 
-              SizedBox(height: 4.0),
+              const SizedBox(height: 4.0),
               Text(
                 symbol,
                 style: TextStyle(fontSize: 14.0, color: color),
@@ -58,9 +58,9 @@ Widget CryptoInfo({
                   color: color,
                 ),
               ),
-              SizedBox(height: 4.0),
+              const SizedBox(height: 4.0),
               Text(
-                '${changeSymbol}${percentChange.toStringAsFixed(2)}%',
+                '$changeSymbol${percentChange.toStringAsFixed(2)}%',
                 style: TextStyle(
                   color: changeColor,
                   fontSize: 14.0,

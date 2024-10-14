@@ -8,7 +8,7 @@ class buildContent extends StatelessWidget {
   final UserApp user;
   TransactionController controller = TransactionController();
 
-  buildContent({required this.user, required this.controller});
+  buildContent({super.key, required this.user, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +17,14 @@ class buildContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Transaction Movements',
             style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -34,14 +34,14 @@ class buildContent extends StatelessWidget {
                   color: Colors.grey.withOpacity(0.5),
                   spreadRadius: 1,
                   blurRadius: 5,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
             padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16.0),
             child: TransactionLineChartHomePage(user: user, transactionController: controller),
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           const Align(
             alignment: Alignment.center,
             child: Text(

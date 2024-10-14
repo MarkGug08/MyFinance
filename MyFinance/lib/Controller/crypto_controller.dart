@@ -19,7 +19,7 @@ class CryptoController {
   final String binanceBaseUrl = 'https://api.binance.com/api/v3/klines';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String CoingeckoListCrypto = 'https://api.coingecko.com/api/v3/coins/list';
-  List<Crypto> _predefinedCryptos = [];
+  final List<Crypto> _predefinedCryptos = [];
 
   Future<bool> _checkConnectivity(BuildContext context) async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -66,7 +66,7 @@ class CryptoController {
     await fetchCryptosFromFirestore(context, user);
 
     for (var crypto in _predefinedCryptos) {
-      final symbol = crypto.symbol + 'USDT';
+      final symbol = '${crypto.symbol}USDT';
       final Uri url = Uri.parse(
           '$binanceBaseUrl?symbol=$symbol&interval=5m&limit=288');
 
@@ -144,7 +144,7 @@ class CryptoController {
   Future<List<CryptoSpot>> getCryptoHistory(Crypto crypto, String period,
       BuildContext context) async {
     try {
-      final String symbol = crypto.symbol + 'USDT';
+      final String symbol = '${crypto.symbol}USDT';
       String interval = '';
       final DateTime now = DateTime.now().toUtc();
       final int startTime;
@@ -152,20 +152,20 @@ class CryptoController {
 
       switch (period) {
         case 'Today':
-          final DateTime startOf24HoursAgo = now.subtract(Duration(hours: 24));
+          final DateTime startOf24HoursAgo = now.subtract(const Duration(hours: 24));
           startTime = startOf24HoursAgo.millisecondsSinceEpoch;
           interval = '5m';
           break;
 
         case 'This Week':
-          final DateTime weekStart = now.subtract(Duration(days: 6));
+          final DateTime weekStart = now.subtract(const Duration(days: 6));
           startTime = DateTime(weekStart.year, weekStart.month, weekStart.day)
               .millisecondsSinceEpoch;
           interval = '30m';
           break;
 
         case 'This Month':
-          final DateTime monthStart = now.subtract(Duration(days: 30));
+          final DateTime monthStart = now.subtract(const Duration(days: 30));
           startTime =
               DateTime(monthStart.year, monthStart.month, monthStart.day)
                   .millisecondsSinceEpoch;
@@ -251,7 +251,7 @@ class CryptoController {
     if (!(await _checkConnectivity(context))) return null;
 
     String symboltoResearch = query.toUpperCase();
-    final response = await http.get(Uri.parse('$CoingeckoListCrypto'));
+    final response = await http.get(Uri.parse(CoingeckoListCrypto));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);

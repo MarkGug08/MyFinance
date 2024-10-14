@@ -8,7 +8,7 @@ class DraggableMenu extends StatefulWidget {
   final List<UserTransaction> transactions;
   final TransactionController controller;
 
-  DraggableMenu({required this.transactions, required this.controller});
+  const DraggableMenu({super.key, required this.transactions, required this.controller});
 
   @override
   _DraggableMenuState createState() => _DraggableMenuState();
@@ -17,15 +17,17 @@ class DraggableMenu extends StatefulWidget {
 class _DraggableMenuState extends State<DraggableMenu> {
   late List<UserTransaction> _transactions = [];
 
+
   @override
   void initState() {
     super.initState();
     _loadTransactions();
+
   }
 
-  Future<void> _loadTransactions() async {
+ Future<void> _loadTransactions() async {
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       _transactions = widget.transactions;
     });
@@ -42,14 +44,14 @@ class _DraggableMenuState extends State<DraggableMenu> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Deletion'),
-          content: Text('Are you sure you want to delete this transaction?'),
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this transaction?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
@@ -57,7 +59,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
 
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
                 scaffoldMessenger.showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text("Deleting transaction..."),
                     duration: Duration(seconds: 1),
                   ),
@@ -67,7 +69,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
                   await deleteTransaction(transaction.id, context);
 
                   scaffoldMessenger.showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("Transaction deleted successfully."),
                       duration: Duration(seconds: 1),
                     ),
@@ -78,7 +80,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
                   );
                 }
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -96,7 +98,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -105,28 +107,45 @@ class _DraggableMenuState extends State<DraggableMenu> {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 5,
                 blurRadius: 10,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
-          child: ListView.builder(
+          child: _transactions.isEmpty
+              ? Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                "No transactions available",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          )
+              : ListView.builder(
             controller: scrollController,
             itemCount: _transactions.length,
             itemBuilder: (context, index) {
-              if(index >= _transactions.length){
-                return SizedBox();
+              if (index >= _transactions.length) {
+                return const SizedBox();
               }
+
               UserTransaction transaction = _transactions[index];
 
               return Slidable(
                 key: ValueKey(transaction.id),
                 endActionPane: ActionPane(
-                  motion: ScrollMotion(),
+                  motion: const ScrollMotion(),
                   extentRatio: 0.25,
                   children: [
                     SlidableAction(
                       onPressed: (context) {
-                        _showDeleteConfirmationDialog(context, transaction, index);
+                        _showDeleteConfirmationDialog(
+                            context, transaction, index);
                       },
                       backgroundColor: Colors.transparent,
                       foregroundColor: Colors.red,
@@ -136,11 +155,10 @@ class _DraggableMenuState extends State<DraggableMenu> {
                   ],
                 ),
                 child: Container(
-                    margin: EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
-
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.2),
@@ -168,22 +186,24 @@ class _DraggableMenuState extends State<DraggableMenu> {
                             size: 24,
                           ),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 transaction.title,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                   color: Colors.black,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
-                                DateFormat.yMMMd().add_Hms().format(transaction.dateTime),
+                                DateFormat.yMMMd()
+                                    .add_Hms()
+                                    .format(transaction.dateTime),
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 14,
@@ -206,13 +226,12 @@ class _DraggableMenuState extends State<DraggableMenu> {
                     ),
                   ),
                 ),
-
               );
-
             },
           ),
         );
       },
     );
   }
+
 }

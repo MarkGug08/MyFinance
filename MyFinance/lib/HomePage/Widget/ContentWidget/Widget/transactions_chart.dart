@@ -9,7 +9,7 @@ class TransactionLineChartHomePage extends StatefulWidget {
   UserApp user;
   TransactionController transactionController = TransactionController();
 
-  TransactionLineChartHomePage ({required this.user, required this.transactionController});
+  TransactionLineChartHomePage ({super.key, required this.user, required this.transactionController});
   @override
   _TransactionLineChartHomePageState createState() => _TransactionLineChartHomePageState();
 }
@@ -35,8 +35,8 @@ class _TransactionLineChartHomePageState extends State<TransactionLineChartHomeP
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(padding: EdgeInsets.symmetric(horizontal: 1, vertical: 4),
-      child: Container(
+      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 4),
+      child: SizedBox(
         width: 350,
         height: 240,
 
@@ -44,11 +44,11 @@ class _TransactionLineChartHomePageState extends State<TransactionLineChartHomeP
           future: _transactionSpots,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No data available'));
+              return const Center(child: Text('No data available'));
             }
 
             List<TransactionSpot> transactionSpots = snapshot.data!;

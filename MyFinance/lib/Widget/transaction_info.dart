@@ -27,10 +27,10 @@ Widget TransactionInfo({
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4.0),
+                const SizedBox(height: 4.0),
                 Text(
                   '${time.day.toString().padLeft(2, '0')}/${time.month.toString().padLeft(2, '0')}/${time.year} $formattedTime',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 14.0,
                   ),
@@ -54,7 +54,7 @@ Widget TransactionInfo({
                       color: changeColor,
                     ),
                   ),
-                  SizedBox(width: 4.0),
+                  const SizedBox(width: 4.0),
                   Icon(
                     currentValue >= 0
                         ? Icons.trending_up

@@ -9,7 +9,7 @@ class MainPage extends StatefulWidget {
   UserApp user;
   TransactionController controller = TransactionController();
 
-  MainPage({required this.user});
+  MainPage({super.key, required this.user});
   @override
   _MainPageState createState() => _MainPageState();
 

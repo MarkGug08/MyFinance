@@ -7,7 +7,7 @@ class Last24 extends StatelessWidget {
   final UserApp user;
   TransactionController controller = TransactionController();
 
-  Last24({required this.user, required this.controller});
+  Last24({super.key, required this.user, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class Last24 extends StatelessWidget {
 
 
     if (last24HoursTransactions.isEmpty) {
-      return Center(child: Text('No transactions in the last 24 hours'));
+      return const Center(child: Text('No transactions in the last 24 hours'));
     }
 
 
@@ -35,12 +35,12 @@ class Last24 extends StatelessWidget {
           return Column(
             children: [
               ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                contentPadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
                 title: Text(
                   transaction.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w500,
                   ),
@@ -58,7 +58,7 @@ class Last24 extends StatelessWidget {
                   ),
                 ),
               ),
-              Divider(),
+              const Divider(),
             ],
           );
         },

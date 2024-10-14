@@ -9,7 +9,7 @@ class TransactionLineChartWidget extends StatefulWidget {
   final UserApp user;
   final TransactionController controller;
 
-  TransactionLineChartWidget({required this.user, required this.controller});
+  const TransactionLineChartWidget({super.key, required this.user, required this.controller});
 
   @override
   _TransactionLineChartWidgetState createState() => _TransactionLineChartWidgetState();
@@ -34,10 +34,10 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 15),
+        margin: const EdgeInsets.symmetric(vertical: 15),
         width: 350,
         height: 300,
-        padding: EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20.0),
@@ -46,7 +46,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -72,11 +72,11 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                   stream: widget.controller.transactionStream,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No data available'));
+                      return const Center(child: Text('No data available'));
                     }
 
                     List<TransactionSpot> transactionSpots = snapshot.data!;

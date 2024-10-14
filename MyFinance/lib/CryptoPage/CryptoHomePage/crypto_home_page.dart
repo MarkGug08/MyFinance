@@ -9,7 +9,7 @@ import 'Widget/crypto_list.dart';
 class MarketPage extends StatefulWidget {
   UserApp user;
 
-  MarketPage({required this.user});
+  MarketPage({super.key, required this.user});
 
   @override
   _MarketPageState createState() => _MarketPageState();
@@ -28,7 +28,7 @@ class _MarketPageState extends State<MarketPage> {
     super.initState();
     _fetchCryptos();
 
-    _timer = Timer.periodic(Duration(seconds: 10000), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 10000), (timer) {
       _fetchCryptos();
     });
 
@@ -79,12 +79,12 @@ class _MarketPageState extends State<MarketPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
-        backgroundColor: Color(0xFFFAFAFA),
-        title: Center(child: Text('Market')),
+        backgroundColor: const Color(0xFFFAFAFA),
+        title: const Center(child: Text('Market')),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
+          preferredSize: const Size.fromHeight(60.0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -93,7 +93,7 @@ class _MarketPageState extends State<MarketPage> {
                   child: searchbar(searchController),
                 ),
                 IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     _searchCryptoOnline();
                   },
@@ -104,7 +104,7 @@ class _MarketPageState extends State<MarketPage> {
         ),
       ),
       body: filteredCryptoList.isEmpty
-          ? Center(
+          ? const Center(
         child: Text(
           'No saved cryptocurrencies.',
           style: TextStyle(fontSize: 18, color: Colors.grey),

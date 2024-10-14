@@ -13,9 +13,9 @@ Widget previous_page_button(BuildContext context) {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.black),
+        icon: const Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AuthScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AuthScreen()));
         },
       ),
     ),
@@ -31,7 +31,7 @@ Widget link_to_Register(BuildContext context) {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => RegisterScreen()),
+            MaterialPageRoute(builder: (context) => const RegisterScreen()),
           );
         },
         child: const Text(

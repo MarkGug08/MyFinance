@@ -6,7 +6,7 @@ class AuthScreen extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final List<Widget> children;
 
-  AuthScreen({required this.formKey, required this.children});
+  const AuthScreen({super.key, required this.formKey, required this.children});
 
   @override
   Widget build(BuildContext context) {

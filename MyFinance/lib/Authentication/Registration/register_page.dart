@@ -7,6 +7,8 @@ import 'Widget/textfield_registration.dart';
 import 'Widget/welcome_text_registration.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }

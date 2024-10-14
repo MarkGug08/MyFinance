@@ -5,7 +5,7 @@ import 'package:myfinance/Models/User.dart';
 import '../../../../Authentication/Login/login_page.dart';
 
 Widget ModalMenu(UserApp user){
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   return LayoutBuilder(
     builder: (context, constraints) {
@@ -17,18 +17,18 @@ Widget ModalMenu(UserApp user){
           children: [
             Text(
               'Email: ${user.UserEmail}',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () async {
-                await _auth.signOut();
+                await auth.signOut();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -38,13 +38,13 @@ Widget ModalMenu(UserApp user){
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              icon: Icon(Icons.logout, color: Colors.white),
-              label: Text(
+              icon: const Icon(Icons.logout, color: Colors.white),
+              label: const Text(
                 'Logout',
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton.icon(
               onPressed: () {
 
@@ -57,8 +57,8 @@ Widget ModalMenu(UserApp user){
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              icon: Icon(Icons.exit_to_app, color: Colors.white),
-              label: Text(
+              icon: const Icon(Icons.exit_to_app, color: Colors.white),
+              label: const Text(
                 'Quit application',
                 style: TextStyle(color: Colors.white),
               ),

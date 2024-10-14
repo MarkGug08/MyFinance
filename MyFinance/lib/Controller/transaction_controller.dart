@@ -102,7 +102,7 @@ class TransactionController {
     if (!(await _checkConnectivity(context))) return;
 
     try {
-      print(transactionId);
+
       transactions.removeWhere((transaction) => transaction.id == transactionId);
       await _firestore.collection('transactions').doc(transactionId).delete();
     } catch (e) {
@@ -157,13 +157,13 @@ class TransactionController {
       if (period != 'All') {
         switch (period) {
           case 'Today':
-            startTime = now.subtract(Duration(hours: 24));
+            startTime = now.subtract(const Duration(hours: 24));
             break;
           case 'This Week':
-            startTime = now.subtract(Duration(days: 7));
+            startTime = now.subtract(const Duration(days: 7));
             break;
           case 'This Month':
-            startTime = now.subtract(Duration(days: 31));
+            startTime = now.subtract(const Duration(days: 31));
             break;
           default:
             throw Exception('Unsupported period: $period');

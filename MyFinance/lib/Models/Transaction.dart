@@ -1,4 +1,3 @@
-import 'package:myfinance/Models/User.dart';
 
 class UserTransaction{
   String id;

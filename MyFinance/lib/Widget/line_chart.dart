@@ -7,7 +7,7 @@ class Line_Chart extends StatelessWidget {
   final String selectedPeriod;
   final Color lineColor;
 
-  Line_Chart({
+  const Line_Chart({super.key, 
     required this.spots,
     required this.tooltipData,
     required this.selectedPeriod,
@@ -17,7 +17,7 @@ class Line_Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (spots.isEmpty) {
-      return Center(child: Text('No data available'));
+      return const Center(child: Text('No data available'));
     }
 
     final double minValue = spots.map((e) => e.y).reduce((a, b) => a < b ? a : b);
@@ -64,7 +64,7 @@ class Line_Chart extends StatelessWidget {
 
                     return Text(
                       formattedValue,
-                      style: TextStyle(fontSize: 8),
+                      style: const TextStyle(fontSize: 8),
                     );
                   } else {
                     return Container();
@@ -72,16 +72,16 @@ class Line_Chart extends StatelessWidget {
                 },
               ),
             ),
-            bottomTitles: AxisTitles(
+            bottomTitles: const AxisTitles(
               sideTitles: SideTitles(
                 showTitles: false,
                 reservedSize: 20,
               ),
             ),
-            topTitles: AxisTitles(
+            topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
-            rightTitles: AxisTitles(
+            rightTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
           ),
@@ -98,7 +98,7 @@ class Line_Chart extends StatelessWidget {
               isCurved: false,
               color: lineColor,
               barWidth: 2.5,
-              dotData: FlDotData(
+              dotData: const FlDotData(
                 show: false,
               ),
               belowBarData: BarAreaData(
@@ -128,7 +128,7 @@ class Line_Chart extends StatelessWidget {
                   final TooltipData data = tooltipData.firstWhere((e) => e.time == spot.x);
                   return LineTooltipItem(
                     '${data.timeString}\n${spot.y.toStringAsFixed(2)} USD',
-                    TextStyle(
+                    const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),

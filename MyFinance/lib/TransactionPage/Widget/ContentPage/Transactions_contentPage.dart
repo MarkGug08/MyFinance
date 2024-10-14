@@ -18,7 +18,7 @@ Widget TransactionsContentPage(BuildContext context, UserApp user, List<UserTran
                 price: user.Income,
                 priceColor: Colors.green,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               PriceCard(
                 title: "Expenses",
                 price: user.Expenses,

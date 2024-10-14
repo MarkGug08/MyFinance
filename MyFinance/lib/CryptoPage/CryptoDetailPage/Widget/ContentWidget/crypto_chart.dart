@@ -9,7 +9,7 @@ import '../../../../Widget/menu_dropdown.dart';
 class CryptoLineChartWidget extends StatefulWidget {
   final Crypto crypto;
 
-  CryptoLineChartWidget({required this.crypto});
+  const CryptoLineChartWidget({super.key, required this.crypto});
 
   @override
   _CryptoLineChartWidgetState createState() => _CryptoLineChartWidgetState();
@@ -34,7 +34,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
 
   void _scheduleNextFetch() {
     final now = DateTime.now();
-    final int minuteInterval = 5;
+    const int minuteInterval = 5;
     final int nextMinute = (now.minute ~/ minuteInterval) * minuteInterval + minuteInterval;
     final DateTime nextFetchTime = DateTime(
       now.year,
@@ -45,7 +45,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
       0,
     ).add(Duration(minutes: (nextMinute ~/ 60) * minuteInterval));
 
-    final DateTime nextFetchTimeWithSeconds = nextFetchTime.add(Duration(seconds: 8));
+    final DateTime nextFetchTimeWithSeconds = nextFetchTime.add(const Duration(seconds: 8));
     final timeUntilNextFetch = nextFetchTimeWithSeconds.difference(now);
 
     _timer?.cancel();
@@ -54,7 +54,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
       _fetchData();
       setState(() {});
 
-      _timer = Timer.periodic(Duration(minutes: 5, seconds: 8), (Timer timer) {
+      _timer = Timer.periodic(const Duration(minutes: 5, seconds: 8), (Timer timer) {
         _fetchData();
         setState(() {});
       });
@@ -76,7 +76,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
       child: Container(
         width: 350,
         height: 300,
-        padding: EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20.0),
@@ -105,7 +105,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No data available'));
+                    return const Center(child: Text('No data available'));
                   }
 
                   List<CryptoSpot> cryptoSpots = snapshot.data!;

@@ -7,10 +7,10 @@ class BalanceWidget extends StatelessWidget {
   final UserApp user;
 
   const BalanceWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +18,8 @@ class BalanceWidget extends StatelessWidget {
       future: controller.CalcolateTotalBalance(user, context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
+          return const Padding(
+            padding: EdgeInsets.all(20.0),
             child: CircularProgressIndicator(color: Colors.white),
           );
         } else if (snapshot.hasError) {
@@ -27,7 +27,7 @@ class BalanceWidget extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Text(
               'Errore: ${snapshot.error}',
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           );
         } else if (snapshot.hasData) {
@@ -70,19 +70,19 @@ class BalanceWidget extends StatelessWidget {
                   color: Colors.black.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: 8,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
             padding: const EdgeInsets.all(20.0),
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 30),
+            margin: const EdgeInsets.fromLTRB(20, 10, 20, 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.account_balance_wallet_rounded,
@@ -100,16 +100,16 @@ class BalanceWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       '\$${balance.toStringAsFixed(2)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 6),
                   ],
                 ),
                 Column(
@@ -120,15 +120,15 @@ class BalanceWidget extends StatelessWidget {
                       color: balanceIconColor,
                       size: 24,
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       balanceChangeText,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 12,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Container(
                       width: 60,
                       height: 4,
@@ -140,8 +140,8 @@ class BalanceWidget extends StatelessWidget {
             ),
           );
         } else {
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
+          return const Padding(
+            padding: EdgeInsets.all(20.0),
             child: Text(
               'No data available',
               style: TextStyle(color: Colors.white),

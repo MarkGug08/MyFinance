@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
 import 'package:myfinance/TransactionPage/transaction_page.dart';
@@ -13,7 +12,7 @@ class MainContent extends StatelessWidget {
 
   late final List<Widget> pages;
 
-  MainContent({required this.selectedIndex, required this.user, required this.controller}) {
+  MainContent({super.key, required this.selectedIndex, required this.user, required this.controller}) {
     pages = <Widget>[
       HomePage(user: user, controller: controller),
       TransactionPage(user: user, controller: controller),

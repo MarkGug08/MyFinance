@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
-import 'package:myfinance/Models/Transaction.dart';
 import 'package:myfinance/TransactionPage/Widget/ContentPage/Transactions_contentPage.dart';
 import 'package:myfinance/TransactionPage/Widget/HeaderPage/transactions_HeaderPage.dart';
 import '../Models/User.dart';
@@ -13,7 +12,7 @@ class TransactionPage extends StatefulWidget {
   final UserApp user;
   final TransactionController controller;
 
-  TransactionPage({required this.user, required this.controller});
+  const TransactionPage({super.key, required this.user, required this.controller});
 
   @override
   _TransactionPageState createState() => _TransactionPageState();
@@ -52,7 +51,7 @@ class _TransactionPageState extends State<TransactionPage> {
   }
 
   void _startAutoReload() {
-    _timer = Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
       if (widget.controller.canReload) {
         _fetchTransactions();
       }
@@ -65,10 +64,10 @@ class _TransactionPageState extends State<TransactionPage> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
 
           decoration: BoxDecoration(
-            color: Color(0xFFFAFAFA),
+            color: const Color(0xFFFAFAFA),
             borderRadius: BorderRadius.circular(15),
           ),
           child: TransactionForm(
@@ -86,7 +85,7 @@ class _TransactionPageState extends State<TransactionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: const Color(0xFFFAFAFA),
       appBar: TransactionsHeaderpage(
         context,
         onToggleForm: _showTransactionFormModal,

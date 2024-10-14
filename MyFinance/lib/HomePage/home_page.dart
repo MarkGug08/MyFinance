@@ -8,22 +8,22 @@ class HomePage extends StatelessWidget {
   final UserApp user;
   final TransactionController controller;
 
-  HomePage({required this.user, required this.controller});
+  const HomePage({super.key, required this.user, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: const Color(0xFFFAFAFA),
       body: FutureBuilder(
         future: controller.getTransaction(user, context),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           else if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong'));
+            return const Center(child: Text('Something went wrong'));
           }
 
           else {
