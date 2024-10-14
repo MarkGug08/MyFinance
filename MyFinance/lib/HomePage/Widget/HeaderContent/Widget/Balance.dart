@@ -12,6 +12,20 @@ class BalanceWidget extends StatelessWidget {
     required this.user,
   });
 
+  String formatNumber(double value) {
+    if (value >= 1e12 || value * -1 >= 1000) {
+      return '${(value / 1e12).toStringAsFixed(2)}T';
+    } else if (value >= 1e9 || value * -1 >= 1000) {
+      return '${(value / 1e9).toStringAsFixed(2)}B';
+    } else if (value >= 1e6 || value * -1 >= 1000) {
+      return '${(value / 1e6).toStringAsFixed(2)}M';
+    } else if (value >= 1e3 || value * -1 >= 1000) {
+      return '${(value / 1e3).toStringAsFixed(2)}k';
+    } else {
+      return value.toStringAsFixed(2);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<double>(
@@ -40,12 +54,13 @@ class BalanceWidget extends StatelessWidget {
           Color balanceLineColor;
 
           if (balance > previousBalance) {
-            balanceChangeText = 'Increased by \$${(balance - previousBalance).toStringAsFixed(2)}';
+
+            balanceChangeText = 'Increased by \$${formatNumber(balance - previousBalance)}';
             balanceIcon = Icons.arrow_upward;
             balanceIconColor = Colors.greenAccent;
             balanceLineColor = Colors.greenAccent;
           } else if (balance < previousBalance) {
-            balanceChangeText = 'Decreased by \$${(previousBalance - balance).toStringAsFixed(2)}';
+            balanceChangeText = 'Decreased by \$${formatNumber(balance - previousBalance)}';
             balanceIcon = Icons.arrow_downward;
             balanceIconColor = Colors.redAccent;
             balanceLineColor = Colors.redAccent;
@@ -102,7 +117,7 @@ class BalanceWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '\$${balance.toStringAsFixed(2)}',
+                      '\$${formatNumber(balance)}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,

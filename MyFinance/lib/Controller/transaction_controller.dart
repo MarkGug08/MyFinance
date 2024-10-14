@@ -157,7 +157,7 @@ class TransactionController {
       if (period != 'All') {
         switch (period) {
           case 'Today':
-            startTime = now.subtract(const Duration(hours: 24));
+            startTime = DateTime(now.year, now.month, now.day);
             break;
           case 'This Week':
             startTime = now.subtract(const Duration(days: 7));
@@ -176,8 +176,9 @@ class TransactionController {
 
       if (startTime != null) {
         filteredTransactions = filteredTransactions
-            .where((transaction) => transaction.dateTime.isAfter(startTime!))
-            .toList();
+            .where((transaction){
+              return transaction.dateTime.isAfter(startTime!) && transaction.dateTime.isBefore(now);
+        }).toList();
       }
 
       filteredTransactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));

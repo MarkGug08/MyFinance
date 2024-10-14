@@ -15,23 +15,16 @@ class DraggableMenu extends StatefulWidget {
 }
 
 class _DraggableMenuState extends State<DraggableMenu> {
-  late List<UserTransaction> _transactions = [];
+  late List<UserTransaction> _transactions;
 
 
   @override
   void initState() {
     super.initState();
-    _loadTransactions();
+    _transactions = widget.transactions;
 
   }
 
- Future<void> _loadTransactions() async {
-
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      _transactions = widget.transactions;
-    });
-  }
 
   Future<void> deleteTransaction(String transactionId, BuildContext context) async {
     await widget.controller.deleteTransaction(transactionId, context);
@@ -44,6 +37,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: const Color(0xFFFAFAFA),
           title: const Text('Confirm Deletion'),
           content: const Text('Are you sure you want to delete this transaction?'),
           actions: <Widget>[
@@ -51,7 +45,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: TextStyle(color: Colors.black)),
             ),
             TextButton(
               onPressed: () async {
@@ -80,7 +74,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
                   );
                 }
               },
-              child: const Text('Delete'),
+              child: const Text('Delete', style: TextStyle(color: Colors.black)),
             ),
           ],
         );
@@ -111,22 +105,7 @@ class _DraggableMenuState extends State<DraggableMenu> {
               ),
             ],
           ),
-          child: _transactions.isEmpty
-              ? Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "No transactions available",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          )
-              : ListView.builder(
+          child: ListView.builder(
             controller: scrollController,
             itemCount: _transactions.length,
             itemBuilder: (context, index) {
@@ -193,6 +172,8 @@ class _DraggableMenuState extends State<DraggableMenu> {
                             children: [
                               Text(
                                 transaction.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,

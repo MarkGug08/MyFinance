@@ -32,15 +32,22 @@ class _TransactionPageState extends State<TransactionPage> {
     widget.controller.canReload = false;
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult != ConnectivityResult.none) {
-      await widget.controller.getTransaction(widget.user, context);
-
+      try {
+        await widget.controller.getTransaction(widget.user, context);
+      } catch (e) {
+        if (mounted) {
+          showError(context, "Failed to fetch transactions: $e");
+        }
+      }
       if (mounted) {
         setState(() {
 
         });
       }
     }else{
-      showError(context, "No Internet connection. Please try again later.");
+      if (mounted) {
+        showError(context, "No Internet connection. Please try again later.");
+      }
     }
   }
 

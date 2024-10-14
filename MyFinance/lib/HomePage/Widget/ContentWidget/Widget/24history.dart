@@ -15,7 +15,6 @@ class Last24 extends StatelessWidget {
     DateTime now = DateTime.now();
     List<UserTransaction> last24HoursTransactions = controller.transactions
         .where((transaction) =>
-    transaction.user == user.UserEmail &&
         now.difference(transaction.dateTime).inHours < 24)
         .toList();
 
