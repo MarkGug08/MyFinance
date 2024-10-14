@@ -102,6 +102,7 @@ class TransactionController {
     if (!(await _checkConnectivity(context))) return;
 
     try {
+      print(transactionId);
       transactions.removeWhere((transaction) => transaction.id == transactionId);
       await _firestore.collection('transactions').doc(transactionId).delete();
     } catch (e) {
@@ -136,7 +137,7 @@ class TransactionController {
         }
       }
 
-      transactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+      transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     } catch (error) {
       String errorMessage = handleError(error);
       showError(context, 'Error fetching transactions: $errorMessage');

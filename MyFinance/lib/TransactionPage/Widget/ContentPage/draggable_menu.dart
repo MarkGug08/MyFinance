@@ -15,22 +15,30 @@ class DraggableMenu extends StatefulWidget {
 }
 
 class _DraggableMenuState extends State<DraggableMenu> {
-  late List<UserTransaction> _transactions;
+  late List<UserTransaction> _transactions = [];
 
   @override
   void initState() {
     super.initState();
-    _transactions = widget.transactions;
+    _loadTransactions();
+  }
+
+  Future<void> _loadTransactions() async {
+
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      _transactions = widget.transactions;
+    });
   }
 
   Future<void> deleteTransaction(String transactionId, BuildContext context) async {
     await widget.controller.deleteTransaction(transactionId, context);
   }
 
-  bool _isProcessing = false;
+
 
   Future<void> _showDeleteConfirmationDialog(BuildContext context, UserTransaction transaction, int index) async {
-    return showDialog<void>(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -46,34 +54,28 @@ class _DraggableMenuState extends State<DraggableMenu> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                if (_isProcessing) return;
-                final deletedTransaction = _transactions[index];
-                setState(() {
-                  _isProcessing = true;
-                  _transactions.removeAt(index);
-                });
 
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
-                    content: Text("Transaction deleted"),
+                    content: Text("Deleting transaction..."),
                     duration: Duration(seconds: 1),
                   ),
                 );
 
                 try {
-                  await deleteTransaction(deletedTransaction.id, context);
-                } catch (e) {
-                  setState(() {
-                    _transactions.insert(index, deletedTransaction);
-                  });
+                  await deleteTransaction(transaction.id, context);
+
                   scaffoldMessenger.showSnackBar(
-                    SnackBar(content: Text("Failed to delete transaction")),
+                    SnackBar(
+                      content: Text("Transaction deleted successfully."),
+                      duration: Duration(seconds: 1),
+                    ),
                   );
-                } finally {
-                  setState(() {
-                    _isProcessing = false;
-                  });
+                } catch (e) {
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(content: Text("Failed to delete transaction: $e")),
+                  );
                 }
               },
               child: Text('Delete'),
@@ -111,6 +113,9 @@ class _DraggableMenuState extends State<DraggableMenu> {
             controller: scrollController,
             itemCount: _transactions.length,
             itemBuilder: (context, index) {
+              if(index >= _transactions.length){
+                return SizedBox();
+              }
               UserTransaction transaction = _transactions[index];
 
               return Slidable(
