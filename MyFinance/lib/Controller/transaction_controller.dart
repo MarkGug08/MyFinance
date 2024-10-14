@@ -136,7 +136,7 @@ class TransactionController {
         }
       }
 
-      transactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+      transactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     } catch (error) {
       String errorMessage = handleError(error);
       showError(context, 'Error fetching transactions: $errorMessage');
