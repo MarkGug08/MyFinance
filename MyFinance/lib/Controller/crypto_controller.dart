@@ -246,34 +246,81 @@ class CryptoController {
     }
   }
 
-  Future<Crypto?> searchCryptoOnline(String query, BuildContext context,
-      UserApp user) async {
+  Future<Crypto?> searchCryptoOnline(String query, BuildContext context, UserApp user) async {
     if (!(await _checkConnectivity(context))) return null;
 
-    String symboltoResearch = query.toUpperCase();
-    final response = await http.get(Uri.parse(CoingeckoListCrypto));
+    String symbolToSearch = query.toUpperCase();
+    String symbol = symbolToSearch;
 
-    if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = json.decode(response.body);
-      for (var crypto in jsonResponse) {
-        if (crypto['symbol'] == symboltoResearch) {
-          return Crypto(
-              name: crypto['name'],
-              symbol: crypto['symbol'],
-              currentValue: 0.0,
-              percentChange24h: 0.0,
-              isFavorite: false,
-              user: user.UserEmail
-          );
-        }
-      }
+
+    String? foundSymbol = await getSymbolFromName(context, query);
+    if (foundSymbol != null) {
+      symbolToSearch = foundSymbol + 'USDT';
+      symbol = foundSymbol;
+    } else {
       showError(context, "Crypto not found");
       return null;
-    } else {
-      showError(context,
-          "Error fetching crypto: ${handleBinanceError(response.statusCode)}");
-      return null;
     }
+
+
+    final Uri url = Uri.parse('$binanceBaseUrl?symbol=$symbolToSearch&interval=5m&limit=288');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = json.decode(response.body);
+
+        if (jsonResponse.isNotEmpty) {
+          var latestData = jsonResponse.last;
+          var firstData = jsonResponse.first;
+
+          double currentValue = double.parse(latestData[4]);
+          double price24hAgo = double.parse(firstData[4]);
+          double percentChange24h = ((currentValue - price24hAgo) / price24hAgo) * 100;
+
+          Crypto crypto = Crypto(
+            name: query.toUpperCase(),
+            symbol: symbol,
+            currentValue: currentValue,
+            percentChange24h: percentChange24h,
+            isFavorite: false,
+            user: user.UserEmail,
+          );
+
+          return crypto;
+        }
+      }
+    } catch (error) {
+      showError(context, 'Error fetching online crypto: ${error.toString()}');
+    }
+
+    return null;
   }
+
+  Future<String?> getSymbolFromName(BuildContext context, String name) async {
+    final Uri url = Uri.parse(CoingeckoListCrypto);
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> coins = json.decode(response.body);
+        for (var coin in coins) {
+          if (coin['name'].toString().toLowerCase() == name.toLowerCase()) {
+            return coin['symbol'].toString().toUpperCase();
+          }
+        }
+      }
+    } catch (error) {
+      final errorMessage = handleError(error);
+      showError(context, 'Error fetching data: $errorMessage');
+    }
+
+    return null;
+  }
+
+
+
 
 }

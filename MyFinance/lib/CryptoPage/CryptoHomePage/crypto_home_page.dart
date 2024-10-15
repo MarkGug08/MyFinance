@@ -28,9 +28,6 @@ class _MarketPageState extends State<MarketPage> {
     super.initState();
     _fetchCryptos();
 
-    _timer = Timer.periodic(const Duration(seconds: 10000), (timer) {
-      _fetchCryptos();
-    });
 
     searchController.addListener(() {
       if (searchController.text.isEmpty) {
