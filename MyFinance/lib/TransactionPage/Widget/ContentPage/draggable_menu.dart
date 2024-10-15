@@ -26,8 +26,8 @@ class _DraggableMenuState extends State<DraggableMenu> {
   }
 
 
-  Future<void> deleteTransaction(String transactionId, BuildContext context) async {
-    await widget.controller.deleteTransaction(transactionId, context);
+  Future<bool> deleteTransaction(String transactionId, BuildContext context) async {
+    return await widget.controller.deleteTransaction(transactionId, context);
   }
 
 
@@ -60,14 +60,16 @@ class _DraggableMenuState extends State<DraggableMenu> {
                 );
 
                 try {
-                  await deleteTransaction(transaction.id, context);
+                 bool x =  await deleteTransaction(transaction.id, context);
 
-                  scaffoldMessenger.showSnackBar(
-                    const SnackBar(
-                      content: Text("Transaction deleted successfully."),
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
+                 if(x) {
+                   scaffoldMessenger.showSnackBar(
+                     const SnackBar(
+                       content: Text("Transaction deleted successfully."),
+                       duration: Duration(seconds: 1),
+                     ),
+                   );
+                 }
                 } catch (e) {
                   scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text("Failed to delete transaction: $e")),

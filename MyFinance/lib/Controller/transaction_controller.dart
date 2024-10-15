@@ -98,8 +98,8 @@ class TransactionController {
     }
   }
 
-  Future<void> deleteTransaction(String transactionId, BuildContext context) async {
-    if (!(await _checkConnectivity(context))) return;
+  Future<bool> deleteTransaction(String transactionId, BuildContext context) async {
+    if (!(await _checkConnectivity(context))) return false;
 
     try {
 
@@ -108,10 +108,11 @@ class TransactionController {
     } catch (e) {
       String error = handleError(e);
       showError(context, "Failed to delete transaction: $error");
+      return false;
     }
 
     canReload = true;
-
+    return true;
   }
 
   Future<void> getTransaction(UserApp user, BuildContext context) async {

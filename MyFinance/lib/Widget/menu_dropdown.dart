@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 Widget periodDropdown({
   required String selectedPeriod,
   required ValueChanged<String> onPeriodChanged,
+  required bool flag
 }) {
+
+  List<String> menu = Menu(flag);
+
   return Container(
     child: DropdownButtonHideUnderline(
       child: DropdownButton<String>(
         value: selectedPeriod,
-        items: <String>[
-          'Today',
-          'This Week',
-          'This Month',
-          'All'
-        ].map<DropdownMenuItem<String>>((String value) {
+        items: menu.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(
@@ -35,4 +34,22 @@ Widget periodDropdown({
       ),
     ),
   );
+}
+
+
+List<String> Menu(bool flag){
+  if(flag){
+    return [
+      'Today',
+      'This Week',
+      'This Month',
+      'All'
+    ];
+  }else{
+    return [
+      'Today',
+      'This Week',
+      'This Month',
+    ];
+  }
 }

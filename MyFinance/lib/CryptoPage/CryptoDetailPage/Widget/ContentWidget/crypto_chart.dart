@@ -94,6 +94,7 @@ class _CryptoLineChartWidgetState extends State<CryptoLineChartWidget> {
                     _fetchData();
                   });
                 },
+                flag: false
               ),
             ),
             Expanded(

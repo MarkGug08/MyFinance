@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:animated_line_chart/animated_line_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Models/User.dart';
@@ -62,7 +63,7 @@ class _TransactionLineChartHomePageState extends State<TransactionLineChartHomeP
             final Color lineColor =
             transactionSpots.last.value >= 0 ? Colors.green : Colors.red;
 
-            return Line_Chart(
+            return  Line_Chart(
               spots: spots,
               tooltipData: tooltipData,
               selectedPeriod: "All Movements",

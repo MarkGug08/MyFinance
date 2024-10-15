@@ -65,6 +65,7 @@ class _TransactionLineChartWidgetState extends State<TransactionLineChartWidget>
                       widget.controller.updateTransactionHistory(_selectedPeriod, context, widget.user);
                     });
                   },
+                  flag: true
                 ),
               ),
               Expanded(
