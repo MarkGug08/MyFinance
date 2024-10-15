@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
 
 Widget CustomAppBar(BuildContext context, String text) {
   return AppBar(
@@ -9,11 +8,11 @@ Widget CustomAppBar(BuildContext context, String text) {
     centerTitle: true,
     title: Text(
       text,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
     ),
     leading: Navigator.canPop(context)
         ? IconButton(
-      icon: Icon(Icons.arrow_back, color: Colors.white),
+      icon: const Icon(Icons.arrow_back, color: Colors.white),
       onPressed: () {
         Navigator.pop(context);
       },

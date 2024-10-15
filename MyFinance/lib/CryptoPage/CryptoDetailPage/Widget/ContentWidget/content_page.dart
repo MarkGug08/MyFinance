@@ -10,16 +10,16 @@ Widget buildContent(Crypto crypto) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Chart',
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10.0),
@@ -28,7 +28,7 @@ Widget buildContent(Crypto crypto) {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 1,
                 blurRadius: 5,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
@@ -37,7 +37,7 @@ Widget buildContent(Crypto crypto) {
             child: CryptoLineChartWidget(crypto: crypto),
           ),
         ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -46,7 +46,7 @@ Widget buildContent(Crypto crypto) {
               price: crypto.high24h,
               priceColor: Colors.green,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             PriceCard(
               title: 'Lowest Price',
               price: crypto.low24h,

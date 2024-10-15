@@ -7,7 +7,7 @@ class Line_Chart extends StatelessWidget {
   final String selectedPeriod;
   final Color lineColor;
 
-  Line_Chart({
+  const Line_Chart({super.key, 
     required this.spots,
     required this.tooltipData,
     required this.selectedPeriod,
@@ -17,7 +17,7 @@ class Line_Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (spots.isEmpty) {
-      return Center(child: Text('No data available'));
+      return const Center(child: Text('No data available'));
     }
 
     final double minValue = spots.map((e) => e.y).reduce((a, b) => a < b ? a : b);
@@ -30,6 +30,7 @@ class Line_Chart extends StatelessWidget {
 
     final double minX = spots.first.x - 0.1;
     final double maxX = spots.last.x + 0.1;
+
 
     return LineChart(
         LineChartData(
@@ -55,15 +56,11 @@ class Line_Chart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   if (value != minY && value != maxY) {
                     String formattedValue;
-                    if (value >= 1000 || value * -1 >= 1000) {
-                      formattedValue = '${(value / 1000).toStringAsFixed(2)}k';
-                    } else {
-                      formattedValue = value.toStringAsFixed(2);
-                    }
+                    formattedValue = formatNumber(value);
 
                     return Text(
                       formattedValue,
-                      style: TextStyle(fontSize: 8),
+                      style: const TextStyle(fontSize: 8),
                     );
                   } else {
                     return Container();
@@ -71,16 +68,16 @@ class Line_Chart extends StatelessWidget {
                 },
               ),
             ),
-            bottomTitles: AxisTitles(
+            bottomTitles: const AxisTitles(
               sideTitles: SideTitles(
                 showTitles: false,
                 reservedSize: 20,
               ),
             ),
-            topTitles: AxisTitles(
+            topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
-            rightTitles: AxisTitles(
+            rightTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
           ),
@@ -97,7 +94,7 @@ class Line_Chart extends StatelessWidget {
               isCurved: false,
               color: lineColor,
               barWidth: 2.5,
-              dotData: FlDotData(
+              dotData: const FlDotData(
                 show: false,
               ),
               belowBarData: BarAreaData(
@@ -127,7 +124,7 @@ class Line_Chart extends StatelessWidget {
                   final TooltipData data = tooltipData.firstWhere((e) => e.time == spot.x);
                   return LineTooltipItem(
                     '${data.timeString}\n${spot.y.toStringAsFixed(2)} USD',
-                    TextStyle(
+                    const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -154,3 +151,18 @@ class TooltipData {
 
   TooltipData(this.timeString, this.time, this.value);
 }
+
+String formatNumber(double value) {
+  if (value >= 1e12 || value * -1 >= 1000) {
+    return '${(value / 1e12).toStringAsFixed(2)}T';
+  } else if (value >= 1e9 || value * -1 >= 1000) {
+    return '${(value / 1e9).toStringAsFixed(2)}B';
+  } else if (value >= 1e6 || value * -1 >= 1000) {
+    return '${(value / 1e6).toStringAsFixed(2)}M';
+  } else if (value >= 1e3 || value * -1 >= 1000) {
+    return '${(value / 1e3).toStringAsFixed(2)}k';
+  } else {
+    return value.toStringAsFixed(2);
+  }
+}
+

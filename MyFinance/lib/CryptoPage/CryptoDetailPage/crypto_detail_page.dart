@@ -8,7 +8,7 @@ import 'Widget/HeaderWidget/header_page.dart';
 class CryptoDetailPage extends StatefulWidget {
   final Crypto crypto;
 
-  CryptoDetailPage({required this.crypto});
+  const CryptoDetailPage({super.key, required this.crypto});
 
   @override
   _CryptoDetailPageState createState() => _CryptoDetailPageState();
@@ -20,7 +20,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
       setState(() {});
     });
   }
@@ -34,7 +34,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: const Color(0xFFFAFAFA),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

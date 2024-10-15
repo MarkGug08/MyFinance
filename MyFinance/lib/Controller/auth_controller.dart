@@ -23,7 +23,7 @@ class AuthController {
 
       return user;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -39,7 +39,7 @@ class AuthController {
 
       return userCredential.user;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

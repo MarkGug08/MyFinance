@@ -1,19 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:myfinance/CryptoPage/CryptoHomePage/crypto_home_page.dart';
 import 'package:myfinance/MainPage/main_page.dart';
 import 'package:myfinance/Models/User.dart';
-
 import '../../../Controller/auth_controller.dart';
-import '../../../HomePage/home_page.dart';
 import '../../../Widget/error.dart';
 
 Widget login_button(
-    GlobalKey<FormState> _formKey,
+    GlobalKey<FormState> formKey,
     BuildContext context,
     AuthController authController,
     TextEditingController emailController,
     TextEditingController passwordController,
+    bool isLoading,
+    Function(bool) setLoading,
     ) {
   return SizedBox(
     width: double.infinity,
@@ -25,8 +24,9 @@ Widget login_button(
         ),
         backgroundColor: Colors.black,
       ),
-      onPressed: () async {
-        if (_formKey.currentState!.validate()) {
+      onPressed: isLoading ? null : () async {
+        setLoading(true);
+        if (formKey.currentState!.validate()) {
           try {
             User? user = await authController.signInUser(
               email: emailController.text,
@@ -34,7 +34,6 @@ Widget login_button(
             );
 
             if (user != null) {
-
               UserApp userApp = UserApp(Income: 0, Expenses: 0, UserEmail: user.email.toString());
 
               Navigator.pushAndRemoveUntil(
@@ -50,13 +49,20 @@ Widget login_button(
             } else {
               showError(context, 'An error occurred: ${e.toString()}');
             }
+          } finally {
+            setLoading(false);
           }
+        } else {
+          setLoading(false);
         }
       },
-      child: const Text(
+      child: isLoading
+          ? const CircularProgressIndicator(color: Colors.white)
+          : const Text(
         'Login',
         style: TextStyle(color: Colors.white),
       ),
     ),
   );
 }
+

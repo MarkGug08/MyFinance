@@ -5,64 +5,69 @@ import 'package:myfinance/Models/User.dart';
 
 import 'Widget/Balance.dart';
 
-Widget buildHeader(BuildContext context, UserApp user) {
+class HeaderWidget extends StatelessWidget {
+  final UserApp user;
   TransactionController controller = TransactionController();
 
-  return Container(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Colors.black, Colors.grey[850]!],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ),
-      borderRadius: BorderRadius.vertical(bottom: Radius.circular(30.0)),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.4),
-          spreadRadius: 2,
-          blurRadius: 10,
-          offset: Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        SizedBox(height: 20.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Bentornato, User',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.account_circle, color: Colors.white, size: 28),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.grey[850],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    ),
-                    builder: (BuildContext context) {
-                      return ModalMenu(user);
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
+  HeaderWidget({super.key, required this.user, required this.controller});
 
-        balanceWidget(controller, user),
-      ],
-    ),
-  );
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.black, Colors.grey[850]!],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30.0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            spreadRadius: 2,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 10.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Bentornato, User',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.account_circle, color: Colors.white, size: 28),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.grey[850],
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      builder: (BuildContext context) {
+                        return ModalMenu(user);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          BalanceWidget(controller: controller, user: user)
+        ],
+      ),
+    );
+  }
 }

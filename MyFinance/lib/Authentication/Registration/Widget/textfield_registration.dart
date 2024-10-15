@@ -11,11 +11,11 @@ InputDecoration buildInputDecoration(String label, {Widget? suffixIcon}) {
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+      borderSide: const BorderSide(color: Colors.grey, width: 1.0),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+      borderSide: const BorderSide(color: Colors.blue, width: 2.0),
     ),
     suffixIcon: suffixIcon,
   );
@@ -58,7 +58,7 @@ Widget emailTextField(TextEditingController controller) {
 class PasswordTextField extends StatefulWidget {
   final TextEditingController controller;
 
-  PasswordTextField(this.controller);
+  const PasswordTextField(this.controller, {super.key});
 
   @override
   _PasswordTextFieldState createState() => _PasswordTextFieldState();

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 Widget TransactionInfo({
-  required String description,
+  required String title,
   required double currentValue,
   required DateTime time,
   required Color color,
 }) {
   final changeColor = currentValue >= 0 ? Colors.green : Colors.red;
 
-
-  String formattedTime = '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  String formattedTime =
+      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,28 +17,30 @@ Widget TransactionInfo({
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                description,
-                style: TextStyle(fontSize: 16.0, color: color),
-              ),
-              SizedBox(height: 4.0),
-              Text(
-                '${time.day.toString().padLeft(2, '0')}/${time.month.toString().padLeft(2, '0')}/${time.year} $formattedTime',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.0,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 16.0, color: color),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+                const SizedBox(height: 4.0),
+                Text(
+                  '${time.day.toString().padLeft(2, '0')}/${time.month.toString().padLeft(2, '0')}/${time.year} $formattedTime',
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14.0,
+                  ),
+                ),
+              ],
+            ),
           ),
 
 
           Column(
-
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Row(
@@ -52,7 +54,7 @@ Widget TransactionInfo({
                       color: changeColor,
                     ),
                   ),
-                  SizedBox(width: 4.0),
+                  const SizedBox(width: 4.0),
                   Icon(
                     currentValue >= 0
                         ? Icons.trending_up
@@ -62,7 +64,6 @@ Widget TransactionInfo({
                   ),
                 ],
               ),
-
             ],
           ),
         ],

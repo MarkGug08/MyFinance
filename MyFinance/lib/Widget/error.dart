@@ -6,10 +6,12 @@ void showError(BuildContext context, String message) {
   final snackBar = SnackBar(
     content: Text(message),
     backgroundColor: Colors.red,
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 1),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+
+
 
 String handleError(dynamic error) {
   if (error is SocketException) {
@@ -18,8 +20,10 @@ String handleError(dynamic error) {
     return 'Server error: Unable to retrieve data from the server.';
   } else if (error is FormatException) {
     return 'Data error: Failed to process the data from the server.';
+  }else if (error is FirebaseException){
+    return 'Firebase error occurred: ${error.message}';
   } else {
-    return 'Unexpected error: ${error.toString()}';
+    return 'Unexpected error: ${error.message}';
   }
 }
 
@@ -60,3 +64,4 @@ String getFirebaseAuthErrorMessage(FirebaseAuthException e) {
       return 'An unknown error occurred. Please try again later.';
   }
 }
+

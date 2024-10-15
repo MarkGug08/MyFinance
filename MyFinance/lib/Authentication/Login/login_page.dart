@@ -6,11 +6,20 @@ import 'Widget/navigate_to_page.dart';
 import 'Widget/textfield_login.dart';
 import 'Widget/login_button.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthController _authController = AuthController();
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +35,23 @@ class LoginScreen extends StatelessWidget {
         const SizedBox(height: 10.0),
         PasswordTextField(_passwordController),
         const SizedBox(height: 40.0),
-        login_button(_formKey, context, _authController, _emailController, _passwordController),
+        login_button(
+          _formKey,
+          context,
+          _authController,
+          _emailController,
+          _passwordController,
+          _isLoading,
+              (bool value) {
+            setState(() {
+              _isLoading = value; 
+            });
+          },
+        ),
         const SizedBox(height: 10.0),
-        link_to_Register(context)
+        link_to_Register(context),
       ],
     );
   }
 }
+

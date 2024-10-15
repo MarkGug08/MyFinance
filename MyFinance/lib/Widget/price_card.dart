@@ -8,19 +8,19 @@ Widget PriceCard({
   return Expanded(
     child: Container(
       decoration: BoxDecoration(
-        color: Color(0xFFFAFAFA),
+        color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       padding: const EdgeInsets.all(16.0),
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -30,7 +30,7 @@ Widget PriceCard({
           ),
           Text(
             '\$${price.toStringAsFixed(2)}',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: Colors.black,

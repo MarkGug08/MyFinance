@@ -6,7 +6,6 @@ import '../../CryptoDetailPage/crypto_detail_page.dart';
 
 Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
   return Container(
-    color: Color(0xFFFAFAFA),
     child: ListView.builder(
       itemCount: cryptoList.length,
       itemBuilder: (context, index) {
@@ -22,7 +21,7 @@ Widget cryptolist(List<Crypto> cryptoList, Function(Crypto) toggleFavorite) {
                 onPressed: (context) {
                   toggleFavorite(crypto);
                 },
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
                 foregroundColor: crypto.isFavorite ? Colors.red : Colors.black,
                 icon: crypto.isFavorite ? Icons.bookmark_remove : Icons.bookmark,
                 label: crypto.isFavorite ? 'Remove' : 'Favorite',

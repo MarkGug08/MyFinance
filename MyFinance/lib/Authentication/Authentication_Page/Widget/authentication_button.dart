@@ -32,13 +32,13 @@ Widget AuthenticationButton(String typeofButton, double buttonWidth, BuildContex
 void GoToLoginPage(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => LoginScreen()),
+    MaterialPageRoute(builder: (context) => const LoginScreen()),
   );
 }
 
 void GoToRegistrationPage(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => RegisterScreen()),
+    MaterialPageRoute(builder: (context) => const RegisterScreen()),
   );
 }

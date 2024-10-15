@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:myfinance/Controller/transaction_controller.dart';
 import 'package:myfinance/Models/Transaction.dart';
 import 'package:myfinance/TransactionPage/Widget/ContentPage/draggable_menu.dart';
 import 'package:myfinance/TransactionPage/Widget/ContentPage/transaction_chart.dart';
-import 'package:myfinance/TransactionPage/Widget/ContentPage/transaction_form.dart';
 import 'package:myfinance/Widget/price_card.dart';
 import '../../../Models/User.dart';
 
-Widget TransactionsContentPage(BuildContext context, UserApp user, bool isFormVisible, List<UserTransaction> transactions) {
+Widget TransactionsContentPage(BuildContext context, UserApp user, List<UserTransaction> transactions, TransactionController controller) {
   return Stack(
     children: [
       Column(
@@ -18,7 +18,7 @@ Widget TransactionsContentPage(BuildContext context, UserApp user, bool isFormVi
                 price: user.Income,
                 priceColor: Colors.green,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               PriceCard(
                 title: "Expenses",
                 price: user.Expenses,
@@ -28,28 +28,11 @@ Widget TransactionsContentPage(BuildContext context, UserApp user, bool isFormVi
           ),
           SizedBox(
             width: double.infinity,
-            child: TransactionLineChartWidget(user: user),
+            child: TransactionLineChartWidget(user: user, controller: controller,),
           ),
         ],
       ),
-
-      draggableMenu(context, transactions),
-
-      if (isFormVisible)
-        Positioned(
-          top: 20,
-          left: 10,
-          right: 10,
-          child: Material(
-            elevation: 5,
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              padding: EdgeInsets.all(16),
-              color: Colors.white,
-              child: TransactionForm(user: user),
-            ),
-          ),
-        ),
+      DraggableMenu(transactions: transactions, controller: controller),
     ],
   );
 }
