@@ -253,11 +253,13 @@ class CryptoController {
     String symbol = symbolToSearch;
 
 
+
     String? foundSymbol = await getSymbolFromName(context, query);
-    if (foundSymbol != null) {
+
+    if (foundSymbol != null && foundSymbol.length > 1) {
       symbolToSearch = foundSymbol + 'USDT';
       symbol = foundSymbol;
-    } else {
+    } else if(foundSymbol == null){
       showError(context, "Crypto not found");
       return null;
     }
@@ -306,11 +308,15 @@ class CryptoController {
 
       if (response.statusCode == 200) {
         List<dynamic> coins = json.decode(response.body);
+
         for (var coin in coins) {
           if (coin['name'].toString().toLowerCase() == name.toLowerCase()) {
             return coin['symbol'].toString().toUpperCase();
           }
         }
+      }else{
+        showError(context, "Too many request, try later");
+        return 'a';
       }
     } catch (error) {
       final errorMessage = handleError(error);

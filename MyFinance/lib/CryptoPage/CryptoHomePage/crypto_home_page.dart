@@ -7,9 +7,9 @@ import '../../Models/Crypto.dart';
 import 'Widget/crypto_list.dart';
 
 class MarketPage extends StatefulWidget {
-  UserApp user;
+  final UserApp user;
 
-  MarketPage({super.key, required this.user});
+  const MarketPage({super.key, required this.user});
 
   @override
   _MarketPageState createState() => _MarketPageState();
@@ -27,8 +27,6 @@ class _MarketPageState extends State<MarketPage> {
   void initState() {
     super.initState();
     _fetchCryptos();
-
-
     searchController.addListener(() {
       if (searchController.text.isEmpty) {
         setState(() {
@@ -50,6 +48,7 @@ class _MarketPageState extends State<MarketPage> {
 
   void _searchCryptoOnline() async {
     String query = searchController.text.toLowerCase();
+
 
     try {
       Crypto? crypto = await cryptoController.searchCryptoOnline(query, context, widget.user);
