@@ -41,9 +41,10 @@ Widget registerButton(
                 Expenses: 0,
                 UserEmail: user.email.toString(),
               );
-              Navigator.push(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => MainPage(user: userApp)),
+                    (Route<dynamic> route) => false,
               );
             }
           } catch (e) {
