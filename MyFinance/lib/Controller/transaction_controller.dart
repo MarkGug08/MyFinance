@@ -171,9 +171,7 @@ class TransactionController {
         }
       }
 
-      List<UserTransaction> filteredTransactions = transactions
-          .where((transaction) => transaction.user == user.UserEmail)
-          .toList();
+      List<UserTransaction> filteredTransactions = transactions;
 
       if (startTime != null) {
         filteredTransactions = filteredTransactions
@@ -224,8 +222,11 @@ class TransactionController {
 
 
     try {
+
+      final DateTime now = DateTime.now();
+
       List<UserTransaction> filteredTransactions = transactions
-          .where((transaction) => transaction.user == user.UserEmail)
+          .where((transaction) => transaction.dateTime.isBefore(now))
           .toList();
 
       filteredTransactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));
