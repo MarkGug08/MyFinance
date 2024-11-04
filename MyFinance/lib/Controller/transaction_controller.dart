@@ -171,14 +171,16 @@ class TransactionController {
         }
       }
 
-      List<UserTransaction> filteredTransactions = transactions
-          .where((transaction) => transaction.user == user.UserEmail)
-          .toList();
+      List<UserTransaction> filteredTransactions = transactions;
 
       if (startTime != null) {
         filteredTransactions = filteredTransactions
             .where((transaction){
               return transaction.dateTime.isAfter(startTime!) && transaction.dateTime.isBefore(now);
+        }).toList();
+      }else{
+        filteredTransactions = filteredTransactions.where((transaction) {
+          return transaction.dateTime.isBefore(now);
         }).toList();
       }
 
@@ -224,8 +226,11 @@ class TransactionController {
 
 
     try {
+
+      final DateTime now = DateTime.now();
+
       List<UserTransaction> filteredTransactions = transactions
-          .where((transaction) => transaction.user == user.UserEmail)
+          .where((transaction) => transaction.dateTime.isBefore(now))
           .toList();
 
       filteredTransactions.sort((a, b) => a.dateTime.compareTo(b.dateTime));
@@ -287,11 +292,13 @@ class TransactionController {
 
   Future<double> CalcolateTotalBalance(UserApp user, BuildContext context) async {
 
-
+    DateTime now = DateTime.now();
     double balance = 0;
 
     for (UserTransaction x in transactions) {
-      balance += x.amount;
+      if(x.dateTime.isBefore(now)){
+        balance += x.amount;
+      }
     }
 
     return balance;
