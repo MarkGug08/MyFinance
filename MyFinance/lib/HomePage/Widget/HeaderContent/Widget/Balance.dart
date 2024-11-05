@@ -43,8 +43,8 @@ class BalanceWidget extends StatelessWidget {
           Color balanceIconColor;
           Color balanceLineColor;
 
-          if (balance > previousBalance) {
 
+          if (balance > previousBalance) {
             balanceChangeText = 'Increased by \$${formatNumber(balance - previousBalance)}';
             balanceIcon = Icons.arrow_upward;
             balanceIconColor = Colors.greenAccent;
