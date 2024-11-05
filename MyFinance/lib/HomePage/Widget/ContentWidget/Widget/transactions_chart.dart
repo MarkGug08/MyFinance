@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:animated_line_chart/animated_line_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:myfinance/Models/User.dart';

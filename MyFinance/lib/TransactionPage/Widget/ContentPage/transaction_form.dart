@@ -123,7 +123,7 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
               ),
             ),
 
