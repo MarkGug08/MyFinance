@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:myfinance/Models/User.dart';
 import 'package:myfinance/Controller/transaction_controller.dart';
 
+import '../../../../Widget/format_number.dart';
+
 class BalanceWidget extends StatelessWidget {
   final TransactionController controller;
   final UserApp user;
@@ -12,19 +14,7 @@ class BalanceWidget extends StatelessWidget {
     required this.user,
   });
 
-  String formatNumber(double value) {
-    if (value >= 1e12 || value * -1 >= 1000) {
-      return '${(value / 1e12).toStringAsFixed(2)}T';
-    } else if (value >= 1e9 || value * -1 >= 1000) {
-      return '${(value / 1e9).toStringAsFixed(2)}B';
-    } else if (value >= 1e6 || value * -1 >= 1000) {
-      return '${(value / 1e6).toStringAsFixed(2)}M';
-    } else if (value >= 1e3 || value * -1 >= 1000) {
-      return '${(value / 1e3).toStringAsFixed(2)}k';
-    } else {
-      return value.toStringAsFixed(2);
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {

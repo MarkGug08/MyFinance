@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import 'format_number.dart';
+
 class Line_Chart extends StatelessWidget {
   final List<FlSpot> spots;
   final List<TooltipData> tooltipData;
@@ -51,7 +53,7 @@ class Line_Chart extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 30,
+                reservedSize: 40,
                 interval: yRange / 5,
                 getTitlesWidget: (value, meta) {
                   if (value != minY && value != maxY) {
@@ -152,17 +154,5 @@ class TooltipData {
   TooltipData(this.timeString, this.time, this.value);
 }
 
-String formatNumber(double value) {
-  if (value >= 1e12 || value * -1 >= 1000) {
-    return '${(value / 1e12).toStringAsFixed(2)}T';
-  } else if (value >= 1e9 || value * -1 >= 1000) {
-    return '${(value / 1e9).toStringAsFixed(2)}B';
-  } else if (value >= 1e6 || value * -1 >= 1000) {
-    return '${(value / 1e6).toStringAsFixed(2)}M';
-  } else if (value >= 1e3 || value * -1 >= 1000) {
-    return '${(value / 1e3).toStringAsFixed(2)}k';
-  } else {
-    return value.toStringAsFixed(2);
-  }
-}
+
 
