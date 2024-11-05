@@ -35,12 +35,14 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
-      body: Column(
+      body: SingleChildScrollView(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildHeader(context, widget.crypto),
           buildContent(widget.crypto),
         ],
+      ),
       ),
     );
   }

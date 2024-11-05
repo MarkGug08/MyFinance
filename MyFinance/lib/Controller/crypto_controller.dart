@@ -257,7 +257,7 @@ class CryptoController {
     String? foundSymbol = await getSymbolFromName(context, query);
 
     if (foundSymbol != null && foundSymbol.length > 1) {
-      symbolToSearch = foundSymbol + 'USDT';
+      symbolToSearch = '${foundSymbol}USDT';
       symbol = foundSymbol;
     } else if(foundSymbol == null){
       showError(context, "Crypto not found");

@@ -26,12 +26,14 @@ class HomePage extends StatelessWidget {
           }
 
           else {
-            return Column(
+            return SingleChildScrollView(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 HeaderWidget(user: user, controller: controller),
                 buildContent(user: user, controller: controller),
               ],
+                ),
             );
           }
         },

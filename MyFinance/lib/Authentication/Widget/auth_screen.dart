@@ -29,12 +29,14 @@ class AuthScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16.0),
                 ),
                 padding: const EdgeInsets.all(24.0),
+                child: SingleChildScrollView(
                 child: Form(
                   key: formKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: children,
                   ),
+                ),
                 ),
               ),
             ),

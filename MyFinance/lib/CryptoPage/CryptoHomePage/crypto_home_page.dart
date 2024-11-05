@@ -81,6 +81,7 @@ class _MarketPageState extends State<MarketPage> {
         title: const Center(child: Text('Market')),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60.0),
+          child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -98,6 +99,7 @@ class _MarketPageState extends State<MarketPage> {
             ),
           ),
         ),
+        ),
       ),
       body: filteredCryptoList.isEmpty
           ? const Center(
@@ -107,6 +109,7 @@ class _MarketPageState extends State<MarketPage> {
         ),
       )
           : cryptolist(filteredCryptoList, toggleFavorite),
+
     );
   }
 
