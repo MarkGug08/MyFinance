@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance/Authentication/Authentication_Page/authentication_page.dart';
+import 'package:myfinance/Authentication/Login/login_page.dart';
 import 'package:myfinance/Authentication/Registration/register_page.dart';
 
 Widget previous_page_button(BuildContext context) {
@@ -36,6 +37,29 @@ Widget link_to_Register(BuildContext context) {
         },
         child: const Text(
           'Register now',
+          style: TextStyle(
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget link_to_Login(BuildContext context){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      const Text("Already have an account?"),
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        },
+        child: const Text(
+          '  Sign in',
           style: TextStyle(
             color: Colors.blue,
           ),

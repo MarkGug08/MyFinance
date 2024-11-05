@@ -9,7 +9,6 @@ Widget registerButton(
     GlobalKey<FormState> formKey,
     BuildContext context,
     AuthController authController,
-    TextEditingController usernameController,
     TextEditingController emailController,
     TextEditingController passwordController,
     bool isLoading,
@@ -30,7 +29,6 @@ Widget registerButton(
         if (formKey.currentState!.validate()) {
           try {
             User? user = await authController.registerUser(
-              username: usernameController.text,
               email: emailController.text,
               password: passwordController.text,
             );

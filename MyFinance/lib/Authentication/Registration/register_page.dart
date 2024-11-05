@@ -15,7 +15,6 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthController _authController = AuthController();
@@ -32,8 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(height: 50.0),
         welcome_text(),
         const SizedBox(height: 40.0),
-        nameTextField(_usernameController),
-        const SizedBox(height: 10.0),
         emailTextField(_emailController),
         const SizedBox(height: 10.0),
         PasswordTextField(_passwordController),
@@ -42,7 +39,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _formKey,
           context,
           _authController,
-          _usernameController,
           _emailController,
           _passwordController,
           _isLoading,
@@ -53,6 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           },
         ),
         const SizedBox(height: 10.0),
+        link_to_Login(context),
       ],
     );
   }

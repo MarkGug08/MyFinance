@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   Future<User?> registerUser({
-    required String username,
     required String email,
     required String password,
   }) async {
@@ -16,7 +14,6 @@ class AuthController {
       User? user = userCredential.user;
 
       if (user != null) {
-        await user.updateProfile(displayName: username);
         await user.reload();
         user = _auth.currentUser;
       }
