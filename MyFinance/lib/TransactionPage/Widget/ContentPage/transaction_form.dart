@@ -19,12 +19,14 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
+  final now = DateTime.now();
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _titleController = TextEditingController();
   bool _isIncome = true;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
+  late int _seconds = 0;
   bool _isSaving = false;
 
   Future<void> _submitForm() async {
@@ -33,14 +35,14 @@ class _TransactionFormState extends State<TransactionForm> {
         _isSaving = true;
       });
 
-      final now = DateTime.now();
+
       final selectedDateTime = DateTime(
         _selectedDate.year,
         _selectedDate.month,
         _selectedDate.day,
         _selectedTime.hour,
         _selectedTime.minute,
-        now.second,
+        _seconds
       );
 
       await widget.transactionController.saveTransaction(
@@ -144,6 +146,7 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
+    _seconds = now.second;
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent
