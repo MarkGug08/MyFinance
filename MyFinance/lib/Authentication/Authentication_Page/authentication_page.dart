@@ -28,7 +28,8 @@ class AuthScreen extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: LayoutBuilder(
+              child: SingleChildScrollView(
+                child: LayoutBuilder(
                 builder: (context, constraints) {
                   double buttonWidth = constraints.maxWidth * 0.8;
                   return Column(
@@ -41,6 +42,7 @@ class AuthScreen extends StatelessWidget {
                     ],
                   );
                 },
+                ),
               ),
             ),
           ),

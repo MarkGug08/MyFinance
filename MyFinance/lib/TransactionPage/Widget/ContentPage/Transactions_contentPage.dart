@@ -6,33 +6,46 @@ import 'package:myfinance/TransactionPage/Widget/ContentPage/transaction_chart.d
 import 'package:myfinance/Widget/price_card.dart';
 import '../../../Models/User.dart';
 
-Widget TransactionsContentPage(BuildContext context, UserApp user, List<UserTransaction> transactions, TransactionController controller) {
+Widget TransactionsContentPage(
+    BuildContext context,
+    UserApp user,
+    List<UserTransaction> transactions,
+    TransactionController controller,
+    ) {
   return Stack(
     children: [
-      Column(
-        children: [
-          Row(
-            children: [
-              PriceCard(
-                title: "Income",
-                price: user.Income,
-                priceColor: Colors.green,
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                PriceCard(
+                  title: "Income",
+                  price: user.Income,
+                  priceColor: Colors.green,
+                ),
+                const SizedBox(width: 10),
+                PriceCard(
+                  title: "Expenses",
+                  price: user.Expenses,
+                  priceColor: Colors.red,
+                ),
+              ],
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: TransactionLineChartWidget(
+                user: user,
+                controller: controller,
               ),
-              const SizedBox(width: 10),
-              PriceCard(
-                title: "Expenses",
-                price: user.Expenses,
-                priceColor: Colors.red,
-              ),
-            ],
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: TransactionLineChartWidget(user: user, controller: controller,),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
-      DraggableMenu(transactions: transactions, controller: controller),
+      DraggableMenu(
+        transactions: transactions,
+        controller: controller,
+      ),
     ],
   );
 }
