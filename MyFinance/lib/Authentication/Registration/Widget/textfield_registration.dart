@@ -48,7 +48,7 @@ Widget emailTextField(TextEditingController controller) {
         return 'Enter your email';
       }
       if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-        return 'Enter a valid email';
+        return 'Enter a valid email (email@provider.com)';
       }
       return null;
     },
