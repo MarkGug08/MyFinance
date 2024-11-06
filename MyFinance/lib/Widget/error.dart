@@ -2,15 +2,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+bool _isSnackbarVisible = false;
+
 void showError(BuildContext context, String message) {
+  if (_isSnackbarVisible) return;
+
+  _isSnackbarVisible = true;
+
   final snackBar = SnackBar(
     content: Text(message),
     backgroundColor: Colors.red,
     duration: const Duration(seconds: 1),
+    behavior: SnackBarBehavior.floating,
   );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-}
 
+  ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((_) {
+
+    _isSnackbarVisible = false;
+  });
+}
 
 
 String handleError(dynamic error) {
@@ -53,7 +63,7 @@ String getFirebaseAuthErrorMessage(FirebaseAuthException e) {
     case 'wrong-password':
       return 'Wrong password provided for that user.';
     case 'invalid-email':
-      return 'The email address is not valid.';
+      return 'The email address is not valid (email@provider.com)';
     case 'email-already-in-use':
       return 'The account already exists for that email.';
     case 'weak-password':

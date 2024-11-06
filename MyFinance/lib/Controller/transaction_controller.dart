@@ -243,8 +243,6 @@ class TransactionController {
         double timeValue = (positionXaxis + 1).toDouble();
         String timeString = '${transaction.dateTime.day}/${transaction.dateTime.month} ${transaction.dateTime.hour}:${transaction.dateTime.minute}:${transaction.dateTime.second}';
 
-        CalcolateTransactionsMovements(transaction.amount);
-
         balance += transaction.amount;
         transactionSpots.add(TransactionSpot(timeValue, timeString, balance));
         positionXaxis++;

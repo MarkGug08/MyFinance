@@ -181,6 +181,8 @@ class _TransactionFormState extends State<TransactionForm> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a title';
+                  }else if(value.length > 20){
+                    return 'Please enter a title with max 20 characters';
                   }
                   return null;
                 },
@@ -201,10 +203,15 @@ class _TransactionFormState extends State<TransactionForm> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an amount';
                   }else{
-                    double? amount = double.tryParse(value);
-                    if(amount! > 1e9){
-                      return 'Number is too big (max is 1 billion)';
+                    try{
+                      double? amount = double.tryParse(value);
+                      if(amount! > 1e9){
+                        return 'Number is too big (max is 1 billion)';
+                      }
+                    }catch(error){
+                      return 'Invalid format';
                     }
+
                   }
                   return null;
                 },

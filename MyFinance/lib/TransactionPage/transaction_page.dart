@@ -9,10 +9,10 @@ import '../Widget/error.dart';
 import 'Widget/ContentPage/transaction_form.dart';
 
 class TransactionPage extends StatefulWidget {
-  final UserApp user;
+  UserApp user;
   final TransactionController controller;
 
-  const TransactionPage({super.key, required this.user, required this.controller});
+  TransactionPage({super.key, required this.user, required this.controller});
 
   @override
   _TransactionPageState createState() => _TransactionPageState();
